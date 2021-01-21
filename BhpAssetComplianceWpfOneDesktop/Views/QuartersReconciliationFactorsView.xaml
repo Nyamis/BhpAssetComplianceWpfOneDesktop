@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="BhpAssetComplianceWpfOneDesktop.Views.QuartersReconciliationFactorsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BhpAssetComplianceWpfOneDesktop.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="650">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <ContentControl Content="{Binding MyPosterHeader}" Margin="25,10,300,360" FontSize="16" Grid.Row="0"/>
+
+        <Label x:Name="label1" Content="Rolling Twelve Months Template" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
+        <Label x:Name="label2" Content="Month Date"  HorizontalAlignment="Left" Margin="30,90,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
+        <DatePicker SelectedDate="{Binding Date}" HorizontalAlignment="Left" Margin="119,91,0,0" VerticalAlignment="Top" Width="112"/>
+        <Button x:Name="GenerarAFT_btn" Content="Generate Template" HorizontalAlignment="Left" Margin="30,137,0,0" VerticalAlignment="Top" Width="109"
+                Command="{Binding GenerarT}"/>
+        <Button x:Name="CargarAFTr_btn" Content="Load Template" HorizontalAlignment="Left" Margin="166,137,0,0" VerticalAlignment="Top" Width="109"
+                Command="{Binding CargarT}"/>
+        <TextBlock Text="{Binding UpdateA}" HorizontalAlignment="Left" Margin="295,139,0,0" VerticalAlignment="Top" Height="33" Width="130"/>
+
+    </Grid>
+</UserControl>
