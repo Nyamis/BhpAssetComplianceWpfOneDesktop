@@ -335,6 +335,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         BudgetBaseline = ws1.Cells[2, 3].Value.ToString()
                     });
 
+
                     if (ws2.Cells[2, 1].Value == null)
                     {
                         ws2.Cells[2, 1].Value = -99;
