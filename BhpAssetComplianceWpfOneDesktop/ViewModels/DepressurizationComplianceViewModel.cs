@@ -97,9 +97,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         {
             Date = DateTime.Now;
             FiscalYear = Date.Year;
-            IsEnabled1 = false;
-            IsEnabled2 = true;
-            IsEnabled3 = false;
             CargarI1 = new DelegateCommand(ImagePath);
             GenerarDMT = new DelegateCommand(GenerateDepressurizationMonthlyTemplate);
             CargarDMT = new DelegateCommand(LoadDepressurizationMonthlyTemplate, CanLoadDMT).ObservesProperty(() => IsEnabled1).ObservesProperty(() => IsEnabled2);
@@ -126,7 +123,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
         private void GenerateDepressurizationMonthlyTemplate()
         {
-            List<string> lstHeader = new List<string>() { "Zona", "Observado (MPa)", "Compliance (%)" };
+            List<string> lstHeader = new List<string>() { "Zona", "Observado (MPa)", "Compliance (%)", "Pit" };
             List<string> lstZone = new List<string>() { "Pared Noreste Fuera Rajo", "Pared Noreste", "Pared Noreste Talud Bajo", "Pared Los Colorados", "Pared Los Colorados Talud Bajo", "Pared Este Fuera Rajo", "Pared Este Talud Medio" };
             ExcelPackage pck = new ExcelPackage();
 
@@ -135,7 +132,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             pck.Workbook.Properties.Company = "BHP";
 
             var ws = pck.Workbook.Worksheets.Add("MonthlyDepressurization");
-           // ws.Protection.IsProtected = true;
+
             for (int i = 0; i < lstHeader.Count; i++)
             {
                 ws.Cells[1, i + 1].Value = lstHeader[i];
@@ -144,7 +141,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 ws.Column(1 + i).Width = 16;
                 ws.Cells[1, 1 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 ws.Cells[1, 1 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D9E1F2"));
-         //       ws.Column(2 + i).Style.Locked = false;
             }
             ws.Column(1).Width = 27;
 
@@ -153,26 +149,11 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 ws.Cells[2 + i, 1].Value = lstZone[i];
             }
 
-            //if (Date.Month == 1 || Date.Month == 2 || Date.Month == 3 || Date.Month == 4 || Date.Month == 5 || Date.Month == 6)
-            //{
-            //    ws.Cells["A2"].Value = $"{Date.ToString("MMM")} FY{Date.Year}".ToUpper();
-            //}
-            //else if (Date.Month == 9)
-            //{
-            //    ws.Cells["A2"].Value = $"SEP. FY{Date.Year + 1}".ToUpper();
-            //}
-            //else
-            //{
-            //    ws.Cells["A2"].Value = $"{Date.ToString("MMM")} FY{Date.Year + 1}".ToUpper();
-            //}
-
-            //ws.Cells["A1:A2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-
             for (int i = 0; i <= 12; i++)
             {
                 ws.Cells[i + 1, 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"A{1 + i}:C{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"A{1 + i}:C{1 + i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                ws.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                ws.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
 
             byte[] fileText = pck.GetAsByteArray();
@@ -201,10 +182,10 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
         public class MonthlyCompliance
         {
-           // public DateTime Date { get; set; }
             public string Zone { get; set; }
-            public float Observado { get; set; }
-            public float Compliance { get; set; }
+            public double Observado { get; set; }
+            public double Compliance { get; set; }
+            public string Pit { get; set; }
         }
 
         readonly List<MonthlyCompliance> lstCompliance = new List<MonthlyCompliance>();
@@ -244,21 +225,27 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
                     for (int i = 1; i < rows; i++)
                     {
-                        if (ws.Cells[i + 1, 2].Value != null)
+                        if (ws.Cells[i + 1, 1].Value != null)
                         {
                             for (int j = 0; j < 2; j++)
                             {
-                                if (ws.Cells[1 + i, 3 + j].Value == null)
+                                if (ws.Cells[1 + i, 2 + j].Value == null)
                                 {
-                                    ws.Cells[1 + i, 3 + j].Value = -99;
+                                    ws.Cells[1 + i, 2 + j].Value = -99;
                                 }
+                            }
+
+                            if (ws.Cells[1 + i, 4].Value == null)
+                            {
+                                ws.Cells[1 + i, 4].Value = " ";
                             }
 
                             lstCompliance.Add(new MonthlyCompliance()
                             {
                                 Zone = ws.Cells[1 + i, 1].Value.ToString(),
-                                Observado = float.Parse(ws.Cells[1 + i, 2].Value.ToString()),
-                                Compliance = float.Parse(ws.Cells[1 + i, 3].Value.ToString()),
+                                Observado = double.Parse(ws.Cells[1 + i, 2].Value.ToString()),
+                                Compliance = double.Parse(ws.Cells[1 + i, 3].Value.ToString()),
+                                Pit = ws.Cells[1 + i, 4].Value.ToString()
                             });
                         }
                     }
@@ -291,6 +278,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             ws2.Cells[i + lastRow, 2].Value = lstCompliance[i].Zone;
                             ws2.Cells[i + lastRow, 3].Value = lstCompliance[i].Observado;
                             ws2.Cells[i + lastRow, 4].Value = lstCompliance[i].Compliance;
+                            ws2.Cells[i + lastRow, 5].Value = lstCompliance[i].Pit;
                         }
 
                         string target = @"c:\users\nyamis\oneDrive - bmining\BHP\DepressurizationCompliancePictureData.csv";
@@ -350,7 +338,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             for (int i = 0; i < lstPlace.Count; i++)
             {
                 ws.Cells[4 + i, 1].Value = lstPlace[i];
-                //ws.Cells[4 + i, 1].Style.Locked = true;
             }
             ws.Cells["A4:A13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
             ws.Cells["A4:A13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D9E1F2"));
@@ -409,7 +396,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         {
             public DateTime Date { get; set; }
             public string Zone { get; set; }
-            public float Target { get; set; }
+            public double Target { get; set; }
         }
 
         readonly List<TargetD> lstTarget = new List<TargetD>();
@@ -434,9 +421,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     FileStream fs = File.OpenWrite(op.FileName);
                     fs.Close();
 
-                    //string FY = ws.Cells["B2"].Value.ToString();
-                    //int Year = Int32.Parse(FY.Trim(new Char[] { 'F', 'Y' }));
-
                     DateTime Db = DateTime.Now;
 
                     for (int i = 0; i < 12; i++)
@@ -451,14 +435,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             Db = new DateTime(FiscalYear, M, 1, 00, 00, 00).AddMilliseconds(000);
                         }
-
-                        //for (int j = 0; j < 17; j++)
-                        //{
-                        //    if (ws.Cells[4 + j, 2 + i].Value == null)
-                        //    {
-                        //        ws.Cells[4 + j, 2 + i].Value = -99;
-                        //    }
-                        //}
 
                         int rows = ws.Dimension.Rows;
 
@@ -475,21 +451,11 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 {
                                     Date = Db,
                                     Zone = ws.Cells[4 + j, 1].Value.ToString(),
-                                    Target = float.Parse(ws.Cells[4 + j, 2 + i].Value.ToString())
+                                    Target = double.Parse(ws.Cells[4 + j, 2 + i].Value.ToString())
                                 });
                             }
                         }
 
-
-                        //for (int j = 0; j < 7; j++)
-                        //{
-                        //    lstTarget.Add(new TargetD()
-                        //    {
-                        //        Date = Db,
-                        //        Zone = ws.Cells[4 + j, 1].Value.ToString(),
-                        //        Target = float.Parse(ws.Cells[4 + j, 2 + i].Value.ToString())
-                        //    });
-                        //}
                     }
 
                     pck.Dispose();
@@ -519,7 +485,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             ws2.Cells[i + lastRow, 1].Value = lstTarget[i].Date;
                             ws2.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            //ws2.Cells[i + 2, 1].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss.000";
                             ws2.Cells[i + lastRow, 2].Value = lstTarget[i].Zone;
                             ws2.Cells[i + lastRow, 3].Value = lstTarget[i].Target;
                         }

@@ -70,13 +70,16 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         {
             Date = DateTime.Now;
             FiscalYear = Date.Year;
-            IsEnabled1 = true;
+            IsEnabled1 = false;
             IsEnabled2 = false;
             GenerarMCRT = new DelegateCommand(GenerateRealTemplate);
             CargarMCRT = new DelegateCommand(LoadRealTemplate).ObservesCanExecute(() => IsEnabled1);
             GenerarMCBT = new DelegateCommand(GenerateBudgetTemplate);
             CargarMCBT = new DelegateCommand(LoadBudgetTemplate).ObservesCanExecute(() => IsEnabled2);
         }
+
+        
+
 
         private void GenerateRealTemplate()
         {
@@ -113,10 +116,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 ws.Column(1 + i).Width = 14;
             }
 
-            //ws.Cells["A6"].Style.Font.Bold = true;
-            //ws.Cells["A6"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            //ws.Cells["A6"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            //ws.Cells["A6"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#AEAAAA"));
 
             for (int i = 0; i < lstCategory1.Count; i++)
             {
@@ -160,9 +159,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             ws.Cells["C5:J5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#A9D08E"));
             ws.Cells["E5:H5"].Style.Fill.PatternType = ExcelFillStyle.Solid;
             ws.Cells["E5:H5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#F4B084"));
-
-            //CultureInfo ci = new CultureInfo("en-US");
-            //ws.Cells[6, 2].Value = $"{Date.ToString("MMMM", ci)}";
 
             var ws2 = pck.Workbook.Worksheets.Add("Real Movement Production");
             List<string> lstZone2 = new List<string>() { "Los Colorados", "Laguna Seca", "Laguna Seca 2", "Oxide", "Sulphide Leach", "Coloso" };
@@ -683,10 +679,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
             public double TotalTonnes { get; set; }
 
-            //public double MillProductionTonnes { get; set; }
-            //public double CathodesProductionTonnes { get; set; }
-
-            //public double TotalProductionTonnes { get; set; }
         }
         
         readonly List<RealPitDisintegrated> lstRealPitDisintegrated = new List<RealPitDisintegrated>();
@@ -822,6 +814,14 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
                     ExcelWorksheet ws2 = pck.Workbook.Worksheets["Real Pit Disintegrated"];
 
+                    for (int i = 0; i < 8; i++)
+                    {
+                        if (ws2.Cells[6, 3 + i].Value == null)
+                        {
+                            ws2.Cells[6, 3 + i].Value = -99;
+                        }
+                    }
+
                     lstRealPitDisintegrated.Add(new RealPitDisintegrated()
                     {
                         ExpitEsTonnes = double.Parse(ws2.Cells[6, 3].Value.ToString()) / 1000000,
@@ -843,6 +843,14 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
                     ExcelWorksheet ws3 = pck.Workbook.Worksheets["Mill FC"];
 
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (ws3.Cells[4 + i, 3].Value == null)
+                        {
+                            ws3.Cells[4 + i, 3].Value = -99;
+                        }
+                    }
+
                     lstRealMillFc.Add(new RealMillFc()
                     {
                         OreGradeCut = double.Parse(ws3.Cells[4, 3].Value.ToString()),
@@ -852,7 +860,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
                     ExcelWorksheet ws4 = pck.Workbook.Worksheets["Loading FC"];
 
-                    //int rows = ws4.Dimension.Rows;
                     int[] a = { 0, 16, 32, 48, 64, 80, 96, 112, 128 };
                     for (int i = a.GetLowerBound(0); i <= a.GetUpperBound(0); i++)
                     {
@@ -865,7 +872,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 ws4.Cells[4 + a[i] + j, 3].Value = 0;
                             }
                         }
-
 
                         lstRealLoadingFc.Add(new RealLoadingFc()
                         {
@@ -1637,6 +1643,14 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 ws2.Cells[3 + j, 4 + i].Value = 0;
                             }
 
+                        }
+
+                        for (int j = 0; j < 8; j++)
+                        {
+                            if (ws3.Cells[6 + i, 3 + j].Value == null)
+                            {
+                                ws3.Cells[6 + i, 3 + j].Value = 0;
+                            }
                         }
 
                         lstBudgetPrincipal.Add(new BudgetPrincipal()

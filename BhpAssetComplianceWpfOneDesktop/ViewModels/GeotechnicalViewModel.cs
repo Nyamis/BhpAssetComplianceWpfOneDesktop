@@ -125,6 +125,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 ws.Cells[1, i + 1].Style.Font.Bold = true;
                 ws.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 ws.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#A9D08E"));
+                ws.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             }
 
             for (int i = 0; i < 100; i++)
@@ -163,6 +164,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 ws2.Cells[1, i + 1].Style.Font.Bold = true;
                 ws2.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 ws2.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#A9D08E"));
+                ws2.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             }
 
             for (int i = 0; i < 100; i++)
@@ -190,8 +192,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 s.Error = "Select from List of Values ...";
             }
 
-            ws.Column(4).Width = 50;
-            ws2.Column(4).Width = 50;
+            ws.Column(4).Width = 100;
+            ws2.Column(4).Width = 100;
 
             byte[] fileText = pck.GetAsByteArray();
 
@@ -236,14 +238,27 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 ExcelWorksheet ws2 = pck.Workbook.Worksheets["Escondida Norte"];
 
                 try
-                {
+                {                   
                     FileStream fs = File.OpenWrite(op.FileName);
                     fs.Close();
                     int rows = ws.Dimension.Rows;
+
                     for (int i = 1; i < rows; i++)
                     {
                         if (ws.Cells[i + 1, 1].Value != null)
                         {
+                            if (ws.Cells[i + 1, 2].Value == null)
+                            {
+                                ws.Cells[i + 1, 2].Value = " ";
+                            }
+                            if (ws.Cells[i + 1, 3].Value == null)
+                            {
+                                ws.Cells[i + 1, 3].Value = "Neutral";
+                            }
+                            if (ws.Cells[i + 1, 4].Value == null)
+                            {
+                                ws.Cells[i + 1, 4].Value = " ";
+                            }
                             lstNotes.Add(new Notes()
                             {
                                 Place = "Escondida Pit",
@@ -261,6 +276,18 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     {
                         if (ws2.Cells[i + 1, 1].Value != null)
                         {
+                            if (ws2.Cells[i + 1, 2].Value == null)
+                            {
+                                ws2.Cells[i + 1, 2].Value = " ";
+                            }
+                            if (ws2.Cells[i + 1, 3].Value == null)
+                            {
+                                ws2.Cells[i + 1, 3].Value = "Neutral";
+                            }
+                            if (ws2.Cells[i + 1, 4].Value == null)
+                            {
+                                ws2.Cells[i + 1, 4].Value = " ";
+                            }
                             lstNotes.Add(new Notes()
                             {
                                 Place = "Escondida Norte Pit",
@@ -340,7 +367,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     fs.Close();
 
                     DateTime newDate = new DateTime(Date.Year, Date.Month, 1, 00, 00, 00);
-                    //DateTime newDate2 = newDate.AddMilliseconds(000);
                     int lastRow = ws.Dimension.End.Row + 1;
 
                     for (int i = 0; i < lstNotes.Count; i++)
@@ -351,6 +377,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         ws.Cells[i + lastRow, 3].Value = lstNotes[i].NoteType;
                         ws.Cells[i + lastRow, 4].Value = lstNotes[i].Phase;
                         ws.Cells[i + lastRow, 5].Value = lstNotes[i].State;
+
                         if (lstNotes[i].State == "Positive")
                         {
                             ws.Cells[i + lastRow, 6].Value = 0;

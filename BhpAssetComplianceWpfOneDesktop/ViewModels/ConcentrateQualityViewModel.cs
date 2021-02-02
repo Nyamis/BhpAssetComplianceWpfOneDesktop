@@ -147,21 +147,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 }
             }
 
-            //if (Date.Month == 1 || Date.Month == 2 || Date.Month == 3 || Date.Month == 4 || Date.Month == 5 || Date.Month == 6)
-            //{
-            //    ws.Cells["A4"].Value = $"{Date.ToString("MMM")} FY{Date.Year}".ToUpper();
-            //}
-            //else if (Date.Month == 9)
-            //{
-            //    ws.Cells["A4"].Value = $"SEP. FY{Date.Year + 1}".ToUpper();
-            //}
-            //else
-            //{
-            //    ws.Cells["A4"].Value = $"{Date.ToString("MMM")} FY{Date.Year + 1}".ToUpper();
-            //}
-
             ws.Cells["A2:U2"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-            //ws.Cells["A2:A4"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
 
             for (int i = 0; i < 14; i++)
             {
@@ -196,7 +182,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
         public class Freight
         {
-            //public DateTime Date { get; set; }
             public string Name { get; set; }
             public int Number { get; set; }
             public DateTime Start { get; set; }
@@ -236,44 +221,12 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 FileInfo FilePath = new FileInfo(op.FileName);
                 ExcelPackage pck = new ExcelPackage(FilePath);
                 
-
                 try
                 {
                     ExcelWorksheet ws = pck.Workbook.Worksheets["RealFreight"];
 
                     FileStream fs = File.OpenWrite(op.FileName);
                     fs.Close();
-
-                    //string FY = ws.Cells["A4"].Value.ToString();
-                    //int Year = Int32.Parse(FY.Substring((FY.Length - 4), 4));
-                    //string Month = FY.Substring(0, FY.IndexOf(" "));
-
-                    //int M;
-
-                    //CultureInfo myCIintl = new CultureInfo("es-ES", false);
-                    //if (Month == "SEP.")
-                    //{
-                    //    M = 9;
-
-                    //}
-                    //else
-                    //{
-                    //    M = DateTime.ParseExact(Month, "MMM", myCIintl).Month;
-                    //}
-                    //M = DateTime.ParseExact(Month, "MMM", myCIintl).Month;
-
-                    //DateTime Db = DateTime.Now;
-
-                    //if (M == 0 || M == 1 || M == 2 || M == 3 || M == 4 || M == 5)
-                    //{
-                    //    Db = new DateTime(Year, M, 1, 00, 00, 00).AddMilliseconds(000);
-                    //}
-                    //else if (M == 6 || M == 7 || M == 8 || M == 9 || M == 10 || M == 11)
-                    //{
-                    //    Db = new DateTime(Year - 1, M, 1, 00, 00, 00).AddMilliseconds(000);
-                    //}
-
-
 
                     int rows = ws.Dimension.Rows;
 
@@ -348,7 +301,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             ws2.Cells[i + lastRow, 1].Value = newDate;
                             ws2.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            //ws2.Cells[i + 2, 1].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss.000";
                             ws2.Cells[i + lastRow, 2].Value = lstFreights[i].Name;
                             ws2.Cells[i + lastRow, 3].Value = lstFreights[i].Number;
                             ws2.Cells[i + lastRow, 4].Value = lstFreights[i].Start;
@@ -509,9 +461,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     FileStream fs = File.OpenWrite(op.FileName);
                     fs.Close();
 
-                    //string FY = ws.Cells["B2"].Value.ToString();
-                    //int Year = Int32.Parse(FY.Trim(new Char[] { 'F', 'Y' }));
-
                     DateTime Db = DateTime.Now;
 
                     for (int i = 0; i < 12; i++)
@@ -532,7 +481,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             if (ws.Cells[4 + j, 4 + i].Value == null)
                             {
-                                ws.Cells[4 + j, 4 + i].Value = 0;
+                                ws.Cells[4 + j, 4 + i].Value = -99;
                             }
                         }
 
@@ -584,7 +533,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             ws2.Cells[i + lastRow, 1].Value = lstItems[i].Date;
                             ws2.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            //ws2.Cells[i + 2, 1].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss.000";
                             ws2.Cells[i + lastRow, 2].Value = lstItems[i].Au;
                             ws2.Cells[i + lastRow, 3].Value = lstItems[i].Ag;
                             ws2.Cells[i + lastRow, 4].Value = lstItems[i].Mo;

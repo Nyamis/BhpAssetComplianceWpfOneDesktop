@@ -325,11 +325,23 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     {
                         if (ws.Cells[i + 6, 1].Value != null)
                         {
+                            if(ws.Cells[2, 2].Value == null)
+                            {
+                                ws.Cells[2, 2].Value = -99;
+                            }
+                            ddca
+
+
+                            if (ws.Cells[2, 3].Value == null)
+                            {
+                                ws.Cells[2, 3].Value = -99;
+                            }
+
                             for (int j = 0; j < 4; j++)
                             {
                                 if (ws.Cells[6 + i, 2 + j].Value == null)
                                 {
-                                    ws.Cells[6 + i, 2 + j].Value = 0;
+                                    ws.Cells[6 + i, 2 + j].Value = -99;
                                 }
                             }
 
@@ -341,7 +353,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 OretoMillBudget = double.Parse(ws.Cells[6 + i, 2].Value.ToString()),
                                 OretoMillActual = double.Parse(ws.Cells[6 + i, 3].Value.ToString()),
                                 HardnessBudget = double.Parse(ws.Cells[6 + i, 4].Value.ToString()),
-                                HardnessActual = double.Parse(ws.Cells[6 + i, 5].Value.ToString()),
+                                HardnessActual = double.Parse(ws.Cells[6 + i, 5].Value.ToString())
                             });
                         }
                     }
@@ -353,11 +365,21 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     {
                         if (ws4.Cells[i + 6, 1].Value != null)
                         {
+                            if (ws4.Cells[2, 2].Value == null)
+                            {
+                                ws4.Cells[2, 2].Value = -99;
+                            }
+
+                            if (ws4.Cells[2, 3].Value == null)
+                            {
+                                ws4.Cells[2, 3].Value = -99;
+                            }
+
                             for (int j = 0; j < 4; j++)
                             {
                                 if (ws4.Cells[6 + i, 2 + j].Value == null)
                                 {
-                                    ws4.Cells[6 + i, 2 + j].Value = 0;
+                                    ws4.Cells[6 + i, 2 + j].Value = -99;
                                 }
                             }
 
@@ -369,7 +391,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 RecoveryBudget = double.Parse(ws4.Cells[6 + i, 2].Value.ToString()) / 100,
                                 RecoveryActual = double.Parse(ws4.Cells[6 + i, 3].Value.ToString()) / 100,
                                 FeedCuBudget = double.Parse(ws4.Cells[6 + i, 4].Value.ToString()) / 100,
-                                FeedCuActual = double.Parse(ws4.Cells[6 + i, 5].Value.ToString()) / 100,
+                                FeedCuActual = double.Parse(ws4.Cells[6 + i, 5].Value.ToString()) / 100
                             });
                         }
                     }
@@ -377,31 +399,22 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     ExcelWorksheet ws2 = pck.Workbook.Worksheets["OLAP"];
                     for (int i = 0; i < 3; i++)
                     {
-                        double d;
-                        double d2;
-                        if (ws2.Cells[2 + i, 6].Value.ToString() == "Average CuT")
+
+                        for (int j = 0; j < 3; j++)
                         {
-                            d = double.Parse(ws2.Cells[2 + i, 7].Value.ToString());
-                            d2 = double.Parse(ws2.Cells[2 + i, 8].Value.ToString());
-                        }
-                        else
-                        {
-                            d = double.Parse(ws2.Cells[2 + i, 7].Value.ToString()) / 100;
-                            d2 = double.Parse(ws2.Cells[2 + i, 8].Value.ToString()) / 100;
+                            if (ws2.Cells[2 + i, 2 + j].Value == null)
+                            {
+                                ws2.Cells[2 + i, 2 + j].Value = -99;
+                            }
                         }
 
-                        //float f;
-                        //float f2;
-                        //if (ws2.Cells[2 + i, 1].Value.ToString() == "Stacked Ore (kt)")
-                        //{
-                        //    f = float.Parse(ws2.Cells[2 + i, 2].Value.ToString()) / 1000;
-                        //    f2 = float.Parse(ws2.Cells[2 + i, 3].Value.ToString()) / 1000;
-                        //}
-                        //else
-                        //{
-                        //    f = float.Parse(ws2.Cells[2 + i, 2].Value.ToString());
-                        //    f2 = float.Parse(ws2.Cells[2 + i, 3].Value.ToString());
-                        //}
+                        for (int j = 0; j < 2; j++)
+                        {
+                            if (ws2.Cells[2 + i, 7 + j].Value == null)
+                            {
+                                ws2.Cells[2 + i, 7 + j].Value = -99;
+                            }
+                        }
 
                         lstOLAP.Add(new OLAP()
                         {
@@ -410,39 +423,29 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             Actual = double.Parse(ws2.Cells[2 + i, 3].Value.ToString()),
                             Compliance = double.Parse(ws2.Cells[2 + i, 4].Value.ToString()),
                             Distribution = ws2.Cells[2 + i, 6].Value.ToString(),
-                            DistributionBudget = d,
-                            DistributionActual = d2,
+                            DistributionBudget = double.Parse(ws2.Cells[2 + i, 7].Value.ToString()) / 100,
+                            DistributionActual = double.Parse(ws2.Cells[2 + i, 8].Value.ToString()) / 100
                         });
                     }
 
                     ExcelWorksheet ws3 = pck.Workbook.Worksheets["Sulphide"];
                     for (int i = 0; i < 3; i++)
                     {
-                        double d;
-                        double d2;
-                        if (ws3.Cells[2 + i, 6].Value.ToString() == "Average CuT")
+                        for(int j = 0; j < 3; j++)
                         {
-                            d = double.Parse(ws3.Cells[2 + i, 7].Value.ToString());
-                            d2 = double.Parse(ws3.Cells[2 + i, 8].Value.ToString());
-                        }
-                        else
-                        {
-                            d = double.Parse(ws3.Cells[2 + i, 7].Value.ToString()) / 100;
-                            d2 = double.Parse(ws3.Cells[2 + i, 8].Value.ToString()) / 100;
+                            if(ws3.Cells[2 + i, 2 + j].Value == null)
+                            {
+                                ws3.Cells[2 + i, 2 + j].Value = -99;
+                            }
                         }
 
-                        //float f;
-                        //float f2;
-                        //if (ws3.Cells[2 + i, 1].Value.ToString() == "Stacked Ore (kt)")
-                        //{
-                        //    f = float.Parse(ws3.Cells[2 + i, 2].Value.ToString()) / 1000;
-                        //    f2 = float.Parse(ws3.Cells[2 + i, 3].Value.ToString()) / 1000;
-                        //}
-                        //else
-                        //{
-                        //    f = float.Parse(ws3.Cells[2 + i, 2].Value.ToString());
-                        //    f2 = float.Parse(ws3.Cells[2 + i, 3].Value.ToString());
-                        //}
+                        for (int j = 0; j < 2; j++)
+                        {
+                            if (ws3.Cells[2 + i, 7 + j].Value == null)
+                            {
+                                ws3.Cells[2 + i, 7 + j].Value = -99;
+                            }
+                        }
 
                         lstSulphide.Add(new Sulphide()
                         {
@@ -451,8 +454,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             Actual = double.Parse(ws3.Cells[2 + i, 3].Value.ToString()),
                             Compliance = double.Parse(ws3.Cells[2 + i, 4].Value.ToString()),
                             Distribution = ws3.Cells[2 + i, 6].Value.ToString(),
-                            DistributionBudget = d,
-                            DistributionActual = d2,
+                            DistributionBudget = double.Parse(ws3.Cells[2 + i, 7].Value.ToString()) / 100,
+                            DistributionActual = double.Parse(ws3.Cells[2 + i, 8].Value.ToString()) / 100
                         });
                     }
 

@@ -133,7 +133,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 ws.Cells[$"A{i}:C{i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                 ws.Cells[$"A{i}:C{i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                 ws.Column(i).Width = 18;
-
             }
 
             ws.Column(3).Width = 18;
@@ -144,7 +143,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             ws4.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             ws4.Cells["A1:B1"].Style.Font.Bold = true;
             ws4.Column(1).Width = 15;
-            ws4.Column(2).Width = 100;
+            ws4.Column(2).Width = 150;
             ws4.Cells["A1:B1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
             ws4.Cells["A1:B1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#5C9FCC"));
 
@@ -256,29 +255,28 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
         public class L1Expit
         {
-            public float ExpitBudgetTonnes { get; set; }
-            public float ExpitActualPercent { get; set; }
+            public double? ExpitBudgetTonnes { get; set; }
+            public double? ExpitActualPercent { get; set; }
             public string BudgetBaseline { get; set; }
-
         }
 
         readonly List<L1Expit> lstL1Expit = new List<L1Expit>();
 
         public class AdherenceToB01L1
         {
-            public float UnplannedDelayTonnes { get; set; }
-            public float VolumeYtdPercent { get; set; }
-            public float SpatialYtdPercent { get; set; }
-            public float AdherenceL1YtdPercent { get; set; }
+            public double UnplannedDelayTonnes { get; set; }
+            public double VolumeYtdPercent { get; set; }
+            public double SpatialYtdPercent { get; set; }
+            public double AdherenceL1YtdPercent { get; set; }
         }
 
         readonly List<AdherenceToB01L1> lstAdherenceToB01L1 = new List<AdherenceToB01L1>();
 
         public class DelayRecover
         {
-            public float YtdPushBackTonnes { get; set; }
+            public double YtdPushBackTonnes { get; set; }
             public string PhaseName { get; set; }
-            public float DelayRecoverPushbackTonnes { get; set; }
+            public double DelayRecoverPushbackTonnes { get; set; }
         }
 
         readonly List<DelayRecover> lstDelayRecover = new List<DelayRecover>();
@@ -306,33 +304,59 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
             if (op.ShowDialog() == true)
             {
-               
+                FileInfo FilePath = new FileInfo(op.FileName);
+                ExcelPackage pck = new ExcelPackage(FilePath);
+                ExcelWorksheet ws1 = pck.Workbook.Worksheets["L1Expit"];
+                ExcelWorksheet ws2 = pck.Workbook.Worksheets["AdherenceToB01L1"];
+                ExcelWorksheet ws3 = pck.Workbook.Worksheets["DelayRecover"];
+                ExcelWorksheet ws4 = pck.Workbook.Worksheets["Comments"];
 
                 try
                 {
-                    FileInfo FilePath = new FileInfo(op.FileName);
-                    ExcelPackage pck = new ExcelPackage(FilePath);
-                    ExcelWorksheet ws1 = pck.Workbook.Worksheets["L1Expit"];
-                    ExcelWorksheet ws2 = pck.Workbook.Worksheets["AdherenceToB01L1"];
-                    ExcelWorksheet ws3 = pck.Workbook.Worksheets["DelayRecover"];
-                    ExcelWorksheet ws4 = pck.Workbook.Worksheets["Comments"];
-
                     FileStream fs = File.OpenWrite(op.FileName);
                     fs.Close();
 
+                    if (ws1.Cells[2, 1].Value == null)
+                    {
+                        ws1.Cells[2, 1].Value = -99;
+                    }
+                    if (ws1.Cells[2, 2].Value == null)
+                    {
+                        ws1.Cells[2, 2].Value = -99;
+                    }
+                    if (ws1.Cells[2, 3].Value == null)
+                    {
+                        ws1.Cells[2, 3].Value = " ";
+                    }
                     lstL1Expit.Add(new L1Expit()
                     {
-                        ExpitBudgetTonnes = float.Parse(ws1.Cells[2, 1].Value.ToString()),
-                        ExpitActualPercent = float.Parse(ws1.Cells[2, 2].Value.ToString()) * 100,
+                        ExpitBudgetTonnes = double.Parse(ws1.Cells[2, 1].Value.ToString()),
+                        ExpitActualPercent = double.Parse(ws1.Cells[2, 2].Value.ToString()),
                         BudgetBaseline = ws1.Cells[2, 3].Value.ToString()
                     });
 
+                    if (ws2.Cells[2, 1].Value == null)
+                    {
+                        ws2.Cells[2, 1].Value = -99;
+                    }
+                    if (ws2.Cells[2, 2].Value == null)
+                    {
+                        ws2.Cells[2, 2].Value = -99;
+                    }
+                    if (ws2.Cells[2, 3].Value == null)
+                    {
+                        ws2.Cells[2, 3].Value = -99;
+                    }
+                    if (ws2.Cells[2, 4].Value == null)
+                    {
+                        ws2.Cells[2, 4].Value = -99;
+                    }
                     lstAdherenceToB01L1.Add(new AdherenceToB01L1()
                     {
-                        UnplannedDelayTonnes = float.Parse(ws2.Cells[2, 1].Value.ToString()),
-                        VolumeYtdPercent = float.Parse(ws2.Cells[2, 2].Value.ToString()),
-                        SpatialYtdPercent = float.Parse(ws2.Cells[2, 3].Value.ToString()) ,
-                        AdherenceL1YtdPercent = float.Parse(ws2.Cells[2, 4].Value.ToString()) 
+                        UnplannedDelayTonnes = double.Parse(ws2.Cells[2, 1].Value.ToString()),
+                        VolumeYtdPercent = double.Parse(ws2.Cells[2, 2].Value.ToString()),
+                        SpatialYtdPercent = double.Parse(ws2.Cells[2, 3].Value.ToString()) ,
+                        AdherenceL1YtdPercent = double.Parse(ws2.Cells[2, 4].Value.ToString()) 
 
                     });
 
@@ -341,11 +365,19 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     {
                         if (ws3.Cells[i + 1, 2].Value != null)
                         {
+                            if (ws3.Cells[2, 1].Value == null)
+                            {
+                                ws3.Cells[2, 1].Value = -99;
+                            }
+                            if (ws3.Cells[i + 1, 3].Value == null)
+                            {
+                                ws3.Cells[i + 1, 3].Value = -99;
+                            }
                             lstDelayRecover.Add(new DelayRecover()
                             {
-                                YtdPushBackTonnes = float.Parse(ws3.Cells[2, 1].Value.ToString()),
+                                YtdPushBackTonnes = double.Parse(ws3.Cells[2, 1].Value.ToString()),
                                 PhaseName = ws3.Cells[i + 1, 2].Value.ToString(),
-                                DelayRecoverPushbackTonnes = float.Parse(ws3.Cells[i + 1, 3].Value.ToString()),
+                                DelayRecoverPushbackTonnes = double.Parse(ws3.Cells[i + 1, 3].Value.ToString()),
                             });
                         }
                     }
@@ -359,7 +391,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
                             if (ws4.Cells[i + 1, 1].Value.ToNullSafeString() == "")
                             {
-                                tag = "Empty";
+                                tag = "All";
                             }
                             else
                             {

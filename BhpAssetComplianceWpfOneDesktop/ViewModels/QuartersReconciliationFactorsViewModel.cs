@@ -378,8 +378,34 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
                     ExcelWorksheet ws = pck.Workbook.Worksheets["Rolling Twelve Months"];
 
+                    for(int i = 0; i < 4; i++)
+                    {
+                        for(int j = 0; j < 10; j++)
+                        {
+                            if(ws.Cells[7 + i, 4 + j].Value == null)
+                            {
+                                ws.Cells[7 + i, 4 + j].Value = -99;
+                            }
+                        }
+                        for (int j = 0; j < 9; j++)
+                        {
+                            if (ws.Cells[18 + i, 4 + j].Value == null)
+                            {
+                                ws.Cells[18 + i, 4 + j].Value = -99;
+                            }
+                        }
+                        for (int j = 0; j < 6; j++)
+                        {
+                            if (ws.Cells[29 + i, 4 + j].Value == null)
+                            {
+                                ws.Cells[29 + i, 4 + j].Value = -99;
+                            }
+                        }
+                    }
+
                     for (int i = 0; i < 4; i++)
                     {
+                        
                         lstF0.Add(new F0()
                         {
                             Quarter = ws.Cells[7 + i, 3].Value.ToString(),
@@ -464,7 +490,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             ws2.Cells[i + lastRow1, 1].Value = newDate;
                             ws2.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            //ws2.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss.000";
                             ws2.Cells[i + lastRow1, 2].Value = lstF0[i].Quarter;
                             ws2.Cells[i + lastRow1, 3].Value = lstF0[i].MillOre;
                             ws2.Cells[i + lastRow1, 4].Value = lstF0[i].OLOre;
@@ -484,7 +509,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             ws3.Cells[i + lastRow2, 1].Value = newDate;
                             ws3.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            // ws3.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss.000";
                             ws3.Cells[i + lastRow2, 2].Value = lstF1[i].Quarter;
                             ws3.Cells[i + lastRow2, 3].Value = lstF1[i].MillOre;
                             ws3.Cells[i + lastRow2, 4].Value = lstF1[i].OLOre;
@@ -504,7 +528,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             ws4.Cells[i + lastRow3, 1].Value = newDate;
                             ws4.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            //ws4.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss.000";
                             ws4.Cells[i + lastRow3, 2].Value = lstF2[i].Quarter;
                             ws4.Cells[i + lastRow3, 3].Value = lstF2[i].MillOre;
                             ws4.Cells[i + lastRow3, 4].Value = lstF2[i].OLOre;
@@ -521,7 +544,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             ws5.Cells[i + lastRow4, 1].Value = newDate;
                             ws5.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            //ws5.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss.000";
                             ws5.Cells[i + lastRow4, 2].Value = lstF3[i].Quarter;
                             ws5.Cells[i + lastRow4, 3].Value = lstF3[i].MillCuFines;
                         }
