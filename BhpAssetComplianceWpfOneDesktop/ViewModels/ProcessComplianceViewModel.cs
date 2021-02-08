@@ -329,8 +329,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             {
                                 ws.Cells[2, 2].Value = -99;
                             }
-                            ddca
-
 
                             if (ws.Cells[2, 3].Value == null)
                             {
