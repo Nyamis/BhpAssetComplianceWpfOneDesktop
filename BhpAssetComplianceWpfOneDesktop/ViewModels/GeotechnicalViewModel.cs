@@ -21,6 +21,12 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
     {
         protected override string MyPosterName { get; set; } = StringResources.Geotechnical;
 
+        public string generateContent { get; set; } = StringResources.GenerateTemplate;
+        public string loadContent { get; set; } = StringResources.LoadTemplate;
+        public string loadImageContent { get; set; } = StringResources.LoadImage;
+        public string dateContent { get; set; } = StringResources.Date;
+        public string processContent { get; set; } = StringResources.Process;
+
         private string _imageE;
         public string imageE
         {
@@ -421,7 +427,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     byte[] fileText = pck.GetAsByteArray();
                     File.WriteAllBytes(fileName, fileText);
 
-                    UpdateText = $"Actualizado: {DateTime.Now}";
+                    UpdateText = $"{StringResources.Updated}: {DateTime.Now}";
 
                 }
                 catch (Exception ex)

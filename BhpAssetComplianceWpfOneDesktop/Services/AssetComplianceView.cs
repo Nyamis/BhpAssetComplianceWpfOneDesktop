@@ -47,6 +47,11 @@ namespace BhpAssetComplianceWpfOneDesktop.Services
             _regionManager.RequestNavigate(RegionNames.MainRegion, ViewNames.QuartersReconciliationFactorsView);
         }
 
-        
+        public void HistoricalRecordView()
+        {
+            _regionManager.RequestNavigate(RegionNames.MainRegion, ViewNames.HistoricalRecordView);
+        }
+
+
     }
 }

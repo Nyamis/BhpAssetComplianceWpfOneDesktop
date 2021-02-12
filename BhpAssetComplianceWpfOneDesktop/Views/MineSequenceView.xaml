@@ -18,25 +18,25 @@
 
         <Label x:Name="label1" Content="Escondida" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
         <Image  Source="{Binding Source}" Name="I1" HorizontalAlignment="Left" Height="180" Margin="30,79,0,0" VerticalAlignment="Top" Width="180" Stretch="Fill"/>
-        <Button x:Name="CargarI1_btn" Content="Load Image" HorizontalAlignment="Left" Margin="30,278,0,0" VerticalAlignment="Top" Width="98"
+        <Button x:Name="CargarI1_btn" Content="{Binding loadImageContent}" HorizontalAlignment="Left" Margin="30,278,0,0" VerticalAlignment="Top" Width="98"
                 Command="{Binding CargarI1}"/>
 
         <Label x:Name="label2" Content="Escondida Norte" FontWeight="Bold" HorizontalAlignment="Left" Margin="236,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
         <Image Source="{Binding Source2}" Name="I2" HorizontalAlignment="Left" Height="180" Margin="241,79,0,0" VerticalAlignment="Top" Width="180" Stretch="Fill"/>
-        <Button x:Name="CargarI2_btn" Content="Load Image" HorizontalAlignment="Left" Margin="241,278,0,0" VerticalAlignment="Top" Width="98"
+        <Button x:Name="CargarI2_btn" Content="{Binding loadImageContent}" HorizontalAlignment="Left" Margin="241,278,0,0" VerticalAlignment="Top" Width="98"
                 Command="{Binding CargarI2}"/>
 
-        <Button x:Name="GenerarT_btn" Content="Generate Template" HorizontalAlignment="Right" Margin="0,79,40,0" VerticalAlignment="Top" Width="110"
+        <Button x:Name="GenerarT_btn" Content="{Binding generateContent}" HorizontalAlignment="Right" Margin="0,79,40,0" VerticalAlignment="Top" Width="110"
                 Command="{Binding GenerarT}"/>
 
-        <Label x:Name="label" Content="Fecha Template" HorizontalAlignment="Right" Margin="0,129,45,0" VerticalAlignment="Top" Width="110"/>
+        <Label x:Name="label" Content="{Binding dateContent}" HorizontalAlignment="Right" Margin="0,129,45,0" VerticalAlignment="Top" Width="110"/>
         <DatePicker SelectedDate="{Binding Date}" HorizontalAlignment="Right" Margin="0,154,40,0" VerticalAlignment="Top" Width="110"/>
 
-        <Button x:Name="CargarT_btn" Content="Load Template" HorizontalAlignment="Right" Margin="0,217,40,0" VerticalAlignment="Top" Width="110"
+        <Button x:Name="CargarT_btn" Content="{Binding loadContent}" HorizontalAlignment="Right" Margin="0,217,40,0" VerticalAlignment="Top" Width="110"
                 Command="{Binding CargarT}"/>
 
 
-        <Button x:Name="Procesar_btn" Content="Process" HorizontalAlignment="Right" Margin="0,278,40,0" VerticalAlignment="Top" Width="110"
+        <Button x:Name="Procesar_btn" Content="{Binding processContent}" HorizontalAlignment="Right" Margin="0,278,40,0" VerticalAlignment="Top" Width="110"
                 Command="{Binding Procesar}"/>
         <TextBlock Text="{Binding UpdateText}" HorizontalAlignment="right" Margin="0,305,40,0" VerticalAlignment="Top" Height="33" Width="130"/>
 

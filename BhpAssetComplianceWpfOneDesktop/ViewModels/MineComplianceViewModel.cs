@@ -1,6 +1,5 @@
 ﻿using BhpAssetComplianceWpfOneDesktop.Models;
 using BhpAssetComplianceWpfOneDesktop.Resources;
-using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using Prism.Commands;
@@ -17,6 +16,13 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
     public class MineComplianceViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.MineCompliance;
+
+        public string generateContent { get; set; } = StringResources.GenerateTemplate;
+        public string loadContent { get; set; } = StringResources.LoadTemplate;
+        public string dateContent { get; set; } = StringResources.Date;
+        public string fiscalYearContent { get; set; } = StringResources.FiscalYear;
+        public string realContent { get; set; } = StringResources.MineComplianceRealTemplate;
+        public string budgetContent { get; set; } = StringResources.MineComplianceBudgetTemplate;
 
         private string _UpdateA;
         public string UpdateA
@@ -1125,7 +1131,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         byte[] fileText2 = pck2.GetAsByteArray();
                         File.WriteAllBytes(fileName, fileText2);
 
-                        UpdateA = $"Actualizado: {DateTime.Now}";
+                        UpdateA = $"{StringResources.Updated}: {DateTime.Now}";
                     }
                     catch (Exception ex)
                     {
@@ -1862,7 +1868,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         byte[] fileText2 = pck2.GetAsByteArray();
                         File.WriteAllBytes(fileName, fileText2);
 
-                        UpdateB = $"Actualizado: {DateTime.Now}";
+                        UpdateB = $"{StringResources.Updated}: {DateTime.Now}";
 
                     }
                     catch (Exception ex)
@@ -1872,8 +1878,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 }
 
 
-               
-
+            
 
 
 

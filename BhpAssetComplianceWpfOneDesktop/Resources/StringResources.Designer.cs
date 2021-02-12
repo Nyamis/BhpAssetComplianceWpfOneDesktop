@@ -61,11 +61,47 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actual Month Freight Template.
+        /// </summary>
+        public static string ActualMonthFreightTemplate {
+            get {
+                return ResourceManager.GetString("ActualMonthFreightTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BHP AssetCompliance.
         /// </summary>
         public static string ApplicationName {
             get {
                 return ResourceManager.GetString("ApplicationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Area.
+        /// </summary>
+        public static string Area {
+            get {
+                return ResourceManager.GetString("Area", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Budget Freight Template.
+        /// </summary>
+        public static string BudgetFreightTemplate {
+            get {
+                return ResourceManager.GetString("BudgetFreightTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comment.
+        /// </summary>
+        public static string Comment {
+            get {
+                return ResourceManager.GetString("Comment", resourceCulture);
             }
         }
         
@@ -79,11 +115,38 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string Date {
+            get {
+                return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Depressurization Compliance.
         /// </summary>
         public static string DepressurizationCompliance {
             get {
                 return ResourceManager.GetString("DepressurizationCompliance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fiscal Year.
+        /// </summary>
+        public static string FiscalYear {
+            get {
+                return ResourceManager.GetString("FiscalYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate Template.
+        /// </summary>
+        public static string GenerateTemplate {
+            get {
+                return ResourceManager.GetString("GenerateTemplate", resourceCulture);
             }
         }
         
@@ -97,6 +160,42 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Historical Record.
+        /// </summary>
+        public static string HistoricalRecord {
+            get {
+                return ResourceManager.GetString("HistoricalRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load Image.
+        /// </summary>
+        public static string LoadImage {
+            get {
+                return ResourceManager.GetString("LoadImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load Record.
+        /// </summary>
+        public static string LoadRecord {
+            get {
+                return ResourceManager.GetString("LoadRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load Template.
+        /// </summary>
+        public static string LoadTemplate {
+            get {
+                return ResourceManager.GetString("LoadTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mine Compliance.
         /// </summary>
         public static string MineCompliance {
@@ -106,11 +205,65 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mine Compliance Budget Template.
+        /// </summary>
+        public static string MineComplianceBudgetTemplate {
+            get {
+                return ResourceManager.GetString("MineComplianceBudgetTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mine Compliance Real Template.
+        /// </summary>
+        public static string MineComplianceRealTemplate {
+            get {
+                return ResourceManager.GetString("MineComplianceRealTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mine Sequence.
         /// </summary>
         public static string MineSequence {
             get {
                 return ResourceManager.GetString("MineSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monthly Compliance depressurization Template.
+        /// </summary>
+        public static string MonthlyCompliancedepressurizationTemplate {
+            get {
+                return ResourceManager.GetString("MonthlyCompliancedepressurizationTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monthly Process Compliance Template.
+        /// </summary>
+        public static string MonthlyProcessComplianceTemplate {
+            get {
+                return ResourceManager.GetString("MonthlyProcessComplianceTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string Other {
+            get {
+                return ResourceManager.GetString("Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process.
+        /// </summary>
+        public static string Process {
+            get {
+                return ResourceManager.GetString("Process", resourceCulture);
             }
         }
         
@@ -129,6 +282,33 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         public static string QuartersReconciliationFactors {
             get {
                 return ResourceManager.GetString("QuartersReconciliationFactors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rolling Twelve Months Template.
+        /// </summary>
+        public static string RollingTwelveMonthsTemplate {
+            get {
+                return ResourceManager.GetString("RollingTwelveMonthsTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target Depressurization Template.
+        /// </summary>
+        public static string TargetDepressurizationTemplate {
+            get {
+                return ResourceManager.GetString("TargetDepressurizationTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated.
+        /// </summary>
+        public static string Updated {
+            get {
+                return ResourceManager.GetString("Updated", resourceCulture);
             }
         }
     }

@@ -117,28 +117,88 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActualMonthFreightTemplate" xml:space="preserve">
+    <value>Actual Month Freight Template</value>
+  </data>
   <data name="ApplicationName" xml:space="preserve">
     <value>BHP AssetCompliance</value>
+  </data>
+  <data name="Area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="BudgetFreightTemplate" xml:space="preserve">
+    <value>Budget Freight Template</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Comment</value>
   </data>
   <data name="ConcentrateQuality" xml:space="preserve">
     <value>Concentrate Quality</value>
   </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
   <data name="DepressurizationCompliance" xml:space="preserve">
     <value>Depressurization Compliance</value>
+  </data>
+  <data name="FiscalYear" xml:space="preserve">
+    <value>Fiscal Year</value>
+  </data>
+  <data name="GenerateTemplate" xml:space="preserve">
+    <value>Generate Template</value>
   </data>
   <data name="Geotechnical" xml:space="preserve">
     <value>Geotechnical Notes</value>
   </data>
+  <data name="HistoricalRecord" xml:space="preserve">
+    <value>Historical Record</value>
+  </data>
+  <data name="LoadImage" xml:space="preserve">
+    <value>Load Image</value>
+  </data>
+  <data name="LoadRecord" xml:space="preserve">
+    <value>Load Record</value>
+  </data>
+  <data name="LoadTemplate" xml:space="preserve">
+    <value>Load Template</value>
+  </data>
   <data name="MineCompliance" xml:space="preserve">
     <value>Mine Compliance</value>
   </data>
+  <data name="MineComplianceBudgetTemplate" xml:space="preserve">
+    <value>Mine Compliance Budget Template</value>
+  </data>
+  <data name="MineComplianceRealTemplate" xml:space="preserve">
+    <value>Mine Compliance Real Template</value>
+  </data>
   <data name="MineSequence" xml:space="preserve">
     <value>Mine Sequence</value>
+  </data>
+  <data name="MonthlyCompliancedepressurizationTemplate" xml:space="preserve">
+    <value>Monthly Compliance depressurization Template</value>
+  </data>
+  <data name="MonthlyProcessComplianceTemplate" xml:space="preserve">
+    <value>Monthly Process Compliance Template</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Process" xml:space="preserve">
+    <value>Process</value>
   </data>
   <data name="ProcessCompliance" xml:space="preserve">
     <value>Process Compliance</value>
   </data>
   <data name="QuartersReconciliationFactors" xml:space="preserve">
     <value>Quarters Reconciliation Factors</value>
+  </data>
+  <data name="RollingTwelveMonthsTemplate" xml:space="preserve">
+    <value>Rolling Twelve Months Template</value>
+  </data>
+  <data name="TargetDepressurizationTemplate" xml:space="preserve">
+    <value>Target Depressurization Template</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>Updated</value>
   </data>
 </root>

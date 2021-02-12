@@ -60,6 +60,7 @@
     <Compile Include="ViewModels\ConcentrateQualityViewModel.cs" />
     <Compile Include="ViewModels\DepressurizationComplianceViewModel.cs" />
     <Compile Include="ViewModels\GeotechnicalViewModel.cs" />
+    <Compile Include="ViewModels\HistoricalRecordViewModel.cs" />
     <Compile Include="ViewModels\MineSequenceViewModel.cs" />
     <Compile Include="ViewModels\ProcessComplianceViewModel.cs" />
     <Compile Include="ViewModels\QuartersReconciliationFactorsViewModel.cs" />
@@ -71,6 +72,9 @@
     </Compile>
     <Compile Include="Views\GeotechnicalView.xaml.cs">
       <DependentUpon>GeotechnicalView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HistoricalRecordView.xaml.cs">
+      <DependentUpon>HistoricalRecordView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MineComplianceView.xaml.cs">
       <DependentUpon>MineComplianceView.xaml</DependentUpon>
@@ -97,6 +101,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GeotechnicalView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HistoricalRecordView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

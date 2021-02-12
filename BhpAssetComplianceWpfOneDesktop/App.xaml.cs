@@ -26,7 +26,8 @@ namespace BhpAssetComplianceWpfOneDesktop
             containerRegistry.RegisterForNavigation<ProcessComplianceView>(ViewNames.ProcessComplianceView);
             containerRegistry.RegisterForNavigation<ConcentrateQualityView>(ViewNames.ConcentrateQualityView);
             containerRegistry.RegisterForNavigation<QuartersReconciliationFactorsView>(ViewNames.QuartersReconciliationFactorsView);
-            
+            containerRegistry.RegisterForNavigation<HistoricalRecordView>(ViewNames.HistoricalRecordView);
+
         }
 
         protected override void OnInitialized()
