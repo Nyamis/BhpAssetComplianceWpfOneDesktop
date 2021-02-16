@@ -2,10 +2,19 @@
                     xmlns:dataTemplate="clr-namespace:BhpAssetComplianceWpfOneDesktop.ViewModels.DataTemplate"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <DataTemplate DataType="{x:Type dataTemplate:PosterHeaderDataTemplateViewModel}">
-            <TextBlock Text="{Binding MyPosterName}"/>
+        <TextBlock Text="{Binding MyPosterName}"/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type dataTemplate:RibbonButtonDataTemplateViewModel}">
-        <Button Content="{Binding MyHeader}" Command="{Binding PushCommand}"/>
+        <Button Command="{Binding PushCommand}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Image Source="/Resources/Icons/Truck.png" RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="0"></Image>
+                <TextBlock Text="{Binding MyHeader}" Grid.Column="1"/>
+            </Grid>
+        </Button>
     </DataTemplate>
 </ResourceDictionary>
