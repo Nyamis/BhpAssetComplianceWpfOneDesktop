@@ -309,7 +309,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             };
 
             if (op.ShowDialog() == true)
-            {               
+            {
                 try
                 {
                     FileInfo FilePath = new FileInfo(op.FileName);
@@ -325,13 +325,10 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     {
                         if (ws.Cells[i + 6, 1].Value != null)
                         {
-                            if(ws.Cells[2, 2].Value == null)
+                            if (ws.Cells[2, 2].Value == null)
                             {
                                 ws.Cells[2, 2].Value = -99;
                             }
-                            ddca
-
-
                             if (ws.Cells[2, 3].Value == null)
                             {
                                 ws.Cells[2, 3].Value = -99;
@@ -431,9 +428,9 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     ExcelWorksheet ws3 = pck.Workbook.Worksheets["Sulphide"];
                     for (int i = 0; i < 3; i++)
                     {
-                        for(int j = 0; j < 3; j++)
+                        for (int j = 0; j < 3; j++)
                         {
-                            if(ws3.Cells[2 + i, 2 + j].Value == null)
+                            if (ws3.Cells[2 + i, 2 + j].Value == null)
                             {
                                 ws3.Cells[2 + i, 2 + j].Value = -99;
                             }
@@ -471,7 +468,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 FileInfo filePath = new FileInfo(fileName);
 
                 if (filePath.Exists)
-                {                    
+                {
                     try
                     {
                         ExcelPackage pck2 = new ExcelPackage(filePath);

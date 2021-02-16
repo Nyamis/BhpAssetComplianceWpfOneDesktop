@@ -11,12 +11,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Content="{Binding MyPosterHeader}" Margin="25,10,391.2,360" FontSize="16" Grid.Row="0"/>
+        <ContentControl Content="{Binding MyPosterHeader}" FontSize="16" Grid.Row="0"/>
+        <DatePicker SelectedDate="{Binding Date}" Grid.Row="1"/>
 
-        <Label x:Name="label1" Content="Actual Month Freight Template" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
+        <!--<Label x:Name="label1" Content="Actual Month Freight Template" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
         <Label x:Name="label2" Content="Month Date"  HorizontalAlignment="Left" Margin="30,90,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
         <DatePicker SelectedDate="{Binding Date}" HorizontalAlignment="Left" Margin="119,91,0,0" VerticalAlignment="Top" Width="112"/>
         <Button x:Name="GenerarAFT_btn" Content="Generate Template" HorizontalAlignment="Left" Margin="30,137,0,0" VerticalAlignment="Top" Width="109"
@@ -32,7 +33,7 @@
                 Command="{Binding GenerarBFT}"/>
         <Button x:Name="CargarBFTr_btn" Content="Load Template" HorizontalAlignment="Left" Margin="166,278,0,0" VerticalAlignment="Top" Width="109"
                 Command="{Binding CargarBFT}"/>
-        <TextBlock Text="{Binding UpdateB}" HorizontalAlignment="Left" Margin="295,280,0,0" VerticalAlignment="Top" Height="33" Width="130"/>
+        <TextBlock Text="{Binding UpdateB}" HorizontalAlignment="Left" Margin="295,280,0,0" VerticalAlignment="Top" Height="33" Width="130"/>-->
 
 
     </Grid>
