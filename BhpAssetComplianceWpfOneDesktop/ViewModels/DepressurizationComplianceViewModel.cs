@@ -3,10 +3,6 @@ using BhpAssetComplianceWpfOneDesktop.Resources;
 using BhpAssetComplianceWpfOneDesktop.Utility;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prism.Mvvm;
 using Prism.Commands;
 using System.Windows;
 using OfficeOpenXml;
@@ -23,6 +19,15 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
     public class DepressurizationComplianceViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.DepressurizationCompliance;
+
+        public string generateContent { get; set; } = StringResources.GenerateTemplate;
+        public string loadContent { get; set; } = StringResources.LoadTemplate;
+        public string dateContent { get; set; } = StringResources.Date;
+        public string fiscalYearContent { get; set; } = StringResources.FiscalYear;
+        public string monthlyContent { get; set; } = StringResources.MonthlyCompliancedepressurizationTemplate;
+        public string targetContent { get; set; } = StringResources.TargetDepressurizationTemplate;
+        public string loadImageContent { get; set; } = StringResources.LoadImage;
+
 
         private string _image;
         public string image
@@ -298,7 +303,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         byte[] fileText2 = pck2.GetAsByteArray();
 
                         File.WriteAllBytes(fileName, fileText2);
-                        UpdateA = $"Actualizado: {DateTime.Now}";
+                        UpdateA = $"{StringResources.Updated}: {DateTime.Now}";
 
                     }
                     catch (Exception ex)
@@ -492,7 +497,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         byte[] fileText2 = pck2.GetAsByteArray();
                         File.WriteAllBytes(fileName, fileText2);
 
-                        UpdateB = $"Actualizado: {DateTime.Now}";
+                        UpdateB = $"{StringResources.Updated}: {DateTime.Now}";
                     }
                     catch (Exception ex)
                     {

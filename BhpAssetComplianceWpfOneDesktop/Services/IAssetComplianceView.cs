@@ -16,5 +16,6 @@ namespace BhpAssetComplianceWpfOneDesktop.Services
         void ProcessComplianceView();
         void ConcentrateQualityView();
         void QuartersReconciliationFactorsView();
+        void HistoricalRecordView();
     }
 }

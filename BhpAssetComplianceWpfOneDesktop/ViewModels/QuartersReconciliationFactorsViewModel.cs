@@ -20,6 +20,11 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
     {
         protected override string MyPosterName { get; set; } = StringResources.QuartersReconciliationFactors;
 
+        public string generateContent { get; set; } = StringResources.GenerateTemplate;
+        public string loadContent { get; set; } = StringResources.LoadTemplate;
+        public string dateContent { get; set; } = StringResources.Date;
+        public string titleContent { get; set; } = StringResources.RollingTwelveMonthsTemplate;
+
         private string _UpdateA;
         public string UpdateA
         {
@@ -551,7 +556,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         byte[] fileText2 = pck2.GetAsByteArray();
                         File.WriteAllBytes(fileName, fileText2);
 
-                        UpdateA = $"Actualizado: {DateTime.Now}";
+                        UpdateA = $"{StringResources.Updated}: {DateTime.Now}";
 
                     }
                     catch (Exception ex)

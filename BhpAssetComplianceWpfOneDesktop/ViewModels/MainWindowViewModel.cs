@@ -29,6 +29,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 new RibbonButtonDataTemplateViewModel(StringResources.QuartersReconciliationFactors,assetComplianceView.QuartersReconciliationFactorsView),
                 new RibbonButtonDataTemplateViewModel(StringResources.ProcessCompliance,assetComplianceView.ProcessComplianceView),
                 new RibbonButtonDataTemplateViewModel(StringResources.ConcentrateQuality,assetComplianceView.ConcentrateQualityView),
+                new RibbonButtonDataTemplateViewModel(StringResources.HistoricalRecord,assetComplianceView.HistoricalRecordView),
+
             };
         }
     }

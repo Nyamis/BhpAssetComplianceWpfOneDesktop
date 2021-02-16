@@ -16,12 +16,12 @@
 
         <ContentControl Content="{Binding MyPosterHeader}" Margin="25,10,391.2,360" FontSize="16" Grid.Row="0"/>
 
-        <Label x:Name="label1" Content="Monthly Process Compliance Template" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <Label x:Name="label2" Content="Month Date"  HorizontalAlignment="Left" Margin="30,90,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
+        <Label x:Name="label1" Content="{Binding titleContent}" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
+        <Label x:Name="label2" Content="{Binding dateContent}"  HorizontalAlignment="Left" Margin="30,90,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
         <DatePicker SelectedDate="{Binding Date}" HorizontalAlignment="Left" Margin="119,91,0,0" VerticalAlignment="Top" Width="112"/>
-        <Button x:Name="GenerarAFT_btn" Content="Generate Template" HorizontalAlignment="Left" Margin="30,137,0,0" VerticalAlignment="Top" Width="109"
+        <Button x:Name="GenerarAFT_btn" Content="{Binding generateContent}" HorizontalAlignment="Left" Margin="30,137,0,0" VerticalAlignment="Top" Width="109"
                 Command="{Binding GenerarT}"/>
-        <Button x:Name="CargarAFTr_btn" Content="Load Template" HorizontalAlignment="Left" Margin="166,137,0,0" VerticalAlignment="Top" Width="109"
+        <Button x:Name="CargarAFTr_btn" Content="{Binding loadContent}" HorizontalAlignment="Left" Margin="166,137,0,0" VerticalAlignment="Top" Width="109"
                 Command="{Binding CargarT}"/>
         <TextBlock Text="{Binding UpdateA}" HorizontalAlignment="Left" Margin="295,139,0,0" VerticalAlignment="Top" Height="33" Width="130"/>
 

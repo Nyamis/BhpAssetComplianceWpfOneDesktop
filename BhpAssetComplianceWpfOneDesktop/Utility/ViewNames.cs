@@ -12,5 +12,6 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
         public const string ProcessComplianceView = "ProcessComplianceView";
         public const string ConcentrateQualityView = "ConcentrateQualityView";
         public const string QuartersReconciliationFactorsView = "QuartersReconciliationFactorsView";
+        public const string HistoricalRecordView = "HistoricalRecordView";
     }
 }
