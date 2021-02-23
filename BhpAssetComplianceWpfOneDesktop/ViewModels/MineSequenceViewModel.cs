@@ -511,11 +511,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
         private bool CanProcess()
         {
-            if (IsEnabled & IsEnabled2 & IsEnabled3)
-            {
-                return true;
-            }
-            return false;
+            return IsEnabled & IsEnabled2 & IsEnabled3;
         }
     }
 }

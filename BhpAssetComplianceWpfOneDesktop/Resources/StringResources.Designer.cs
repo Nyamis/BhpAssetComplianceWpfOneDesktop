@@ -311,5 +311,14 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
                 return ResourceManager.GetString("Updated", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year and month.
+        /// </summary>
+        public static string YearAndMonth {
+            get {
+                return ResourceManager.GetString("YearAndMonth", resourceCulture);
+            }
+        }
     }
 }

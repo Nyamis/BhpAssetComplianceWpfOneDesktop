@@ -33,7 +33,7 @@ namespace BhpAssetComplianceWpfOneDesktop
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            Container.Resolve<IAssetComplianceView>().MineSequenceView();
+            Container.Resolve<IAssetComplianceView>().ConcentrateQualityView();
         }
     }
 }
