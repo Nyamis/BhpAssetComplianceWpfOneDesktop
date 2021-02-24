@@ -2,7 +2,17 @@
                     xmlns:dataTemplate="clr-namespace:BhpAssetComplianceWpfOneDesktop.ViewModels.DataTemplate"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <DataTemplate DataType="{x:Type dataTemplate:PosterHeaderDataTemplateViewModel}">
-        <TextBlock Text="{Binding MyPosterName}"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="{Binding MyPosterName}" FontWeight="Bold" FontSize="20" Grid.Row="0"
+                       Style="{StaticResource TextBlockStyle}"/>
+            <Rectangle Fill="Black" HorizontalAlignment="Stretch" 
+                        Grid.Row="1" Margin="{StaticResource DefaultMargin}"/>
+        </Grid>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type dataTemplate:RibbonButtonDataTemplateViewModel}">

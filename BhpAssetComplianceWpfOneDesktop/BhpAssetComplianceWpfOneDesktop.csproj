@@ -89,6 +89,10 @@
     <Compile Include="Views\QuartersReconciliationFactorsView.xaml.cs">
       <DependentUpon>QuartersReconciliationFactorsView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\BaseStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\DataTemplateDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
