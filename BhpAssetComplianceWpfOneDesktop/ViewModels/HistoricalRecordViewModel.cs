@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using BhpAssetComplianceWpfOneDesktop.Models;
 using BhpAssetComplianceWpfOneDesktop.Resources;
 using Prism.Commands;
 using System.Windows;
 using OfficeOpenXml;
 using System.IO;
+using BhpAssetComplianceWpfOneDesktop.Constants;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
     public class HistoricalRecordViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.HistoricalRecord;
+        protected override string MyPosterIcon { get; set; } = IconKeys.KvdSummary;
 
         public string dateContent { get; set; } = StringResources.Date;
         public string areaContent { get; set; } = StringResources.Area;

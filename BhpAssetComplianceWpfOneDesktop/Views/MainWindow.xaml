@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:utility="clr-namespace:BhpAssetComplianceWpfOneDesktop.Utility"
+        xmlns:resources="clr-namespace:BhpAssetComplianceWpfOneDesktop.Resources"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="{Binding MyTitle}" Height="390" Width="780">
+        Title="{Binding MyTitle}" Height="600" Width="800">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -12,8 +13,42 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <ItemsControl ItemsSource="{Binding OurRibbonItems}" Grid.Column="0" ></ItemsControl>
+        <Border Style="{StaticResource MainBorderStyle}" Grid.Column="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-        <ContentControl Grid.Column="1" x:Name="Main" prism:RegionManager.RegionName="{x:Static utility:RegionNames.MainRegion}"/>
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <TextBlock Text="{x:Static resources:StringResources.Poster}" Style="{StaticResource PrimaryTextBlockStyle}" Grid.Column="1"/>
+                    </Grid>
+                    <Border Style="{StaticResource BorderSeparatorStyle}" Grid.Row="1" />
+                </Grid>
+
+
+                <ItemsControl ItemsSource="{Binding OurRibbonItems}" Grid.Row="1"/>
+
+            </Grid>
+
+
+        </Border>
+
+        <Border Style="{StaticResource MainBorderStyle}" Grid.Column="1">
+            <ContentControl x:Name="Main" prism:RegionManager.RegionName="{x:Static utility:RegionNames.MainRegion}"/>
+        </Border>
+
     </Grid>
 </Window>

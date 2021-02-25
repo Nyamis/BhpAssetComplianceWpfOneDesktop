@@ -259,6 +259,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Poster.
+        /// </summary>
+        public static string Poster {
+            get {
+                return ResourceManager.GetString("Poster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Process.
         /// </summary>
         public static string Process {

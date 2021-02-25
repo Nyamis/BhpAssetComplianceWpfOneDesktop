@@ -36,14 +36,14 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Static resources:StringResources.Date}"
-                                   Style="" Grid.Column="0"/>
+                                   Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
                         <DatePicker  SelectedDate="{Binding Date}" Grid.Column="1"/>
                     </Grid>
 
                     <Grid Grid.Row="1">
                         <WrapPanel>
-                            <Button Content="Generate Template" Command="{Binding GenerarAFT}"/>
-                            <Button Content="Load Template" Command="{Binding CargarAFT}"/>
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerarAFT}"/>
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding CargarAFT}"/>
                             <TextBlock Text="{Binding UpdateA}"/>
                         </WrapPanel>
                     </Grid>
@@ -62,15 +62,16 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Fiscal Year" Grid.Column="0"/>
+                        <TextBlock Text="{x:Static resources:StringResources.FiscalYear}"
+                                   Style="{StaticResource TextBlockStyle}"  Grid.Column="0"/>
                         <TextBox Text="{Binding FiscalYear , ValidatesOnExceptions=True}" Grid.Column="1"/>
                     </Grid>
 
                     <Grid Grid.Row="1">
                         <WrapPanel>
-                            <Button Content="Generate Template" Command="{Binding GenerarBFT}"/>
-                            <Button Content="Load Template" Command="{Binding CargarBFT}"/>
-                            <TextBlock Text="{Binding UpdateB}"/>
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerarBFT}"/>
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding CargarBFT}"/>
+                            <TextBlock Text="{Binding UpdateB}" Style="{StaticResource TextBlockStyle}"/>
                         </WrapPanel>
                     </Grid>
                 </Grid>

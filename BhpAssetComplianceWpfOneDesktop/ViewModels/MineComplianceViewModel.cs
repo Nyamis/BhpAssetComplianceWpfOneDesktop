@@ -1,5 +1,4 @@
-﻿using BhpAssetComplianceWpfOneDesktop.Models;
-using BhpAssetComplianceWpfOneDesktop.Resources;
+﻿using BhpAssetComplianceWpfOneDesktop.Resources;
 using System;
 using System.Collections.Generic;
 using Prism.Commands;
@@ -9,6 +8,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Drawing;
 using System.Globalization;
+using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
@@ -16,6 +16,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
     public class MineComplianceViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.MineCompliance;
+        protected override string MyPosterIcon { get; set; } = IconKeys.MineMovement;
 
         public string generateContent { get; set; } = StringResources.GenerateTemplate;
         public string loadContent { get; set; } = StringResources.LoadTemplate;

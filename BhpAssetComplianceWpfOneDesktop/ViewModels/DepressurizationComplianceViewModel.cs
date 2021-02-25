@@ -1,5 +1,4 @@
-﻿using BhpAssetComplianceWpfOneDesktop.Models;
-using BhpAssetComplianceWpfOneDesktop.Resources;
+﻿using BhpAssetComplianceWpfOneDesktop.Resources;
 using BhpAssetComplianceWpfOneDesktop.Utility;
 using System;
 using System.Collections.Generic;
@@ -13,12 +12,14 @@ using System.Globalization;
 using OfficeOpenXml.Style;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using BhpAssetComplianceWpfOneDesktop.Constants;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
     public class DepressurizationComplianceViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.DepressurizationCompliance;
+        protected override string MyPosterIcon { get; set; } = IconKeys.Depressurization;
 
         public string generateContent { get; set; } = StringResources.GenerateTemplate;
         public string loadContent { get; set; } = StringResources.LoadTemplate;

@@ -1,5 +1,4 @@
-﻿using BhpAssetComplianceWpfOneDesktop.Models;
-using BhpAssetComplianceWpfOneDesktop.Resources;
+﻿using BhpAssetComplianceWpfOneDesktop.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +12,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Drawing;
 using System.Globalization;
+using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
@@ -20,6 +20,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
     public class ProcessComplianceViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.ProcessCompliance;
+        protected override string MyPosterIcon { get; set; } = IconKeys.ProcessCompliance;
 
         private string _UpdateA;
         public string UpdateA

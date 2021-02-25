@@ -1,5 +1,4 @@
-﻿using BhpAssetComplianceWpfOneDesktop.Models;
-using BhpAssetComplianceWpfOneDesktop.Resources;
+﻿using BhpAssetComplianceWpfOneDesktop.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +11,7 @@ using OfficeOpenXml;
 using System.IO;
 using Microsoft.Win32;
 using System.Drawing;
+using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
@@ -19,6 +19,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
     public class QuartersReconciliationFactorsViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.QuartersReconciliationFactors;
+        protected override string MyPosterIcon { get; set; } = IconKeys.ReconciliationFactors;
 
         public string generateContent { get; set; } = StringResources.GenerateTemplate;
         public string loadContent { get; set; } = StringResources.LoadTemplate;

@@ -4,6 +4,7 @@ using BhpAssetComplianceWpfOneDesktop.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using System.Windows.Input;
+using BhpAssetComplianceWpfOneDesktop.Constants;
 using BhpAssetComplianceWpfOneDesktop.ViewModels.DataTemplate;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
@@ -22,14 +23,14 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         {
             OurRibbonItems = new ObservableCollection<RibbonButtonDataTemplateViewModel>
             {
-                new RibbonButtonDataTemplateViewModel(StringResources.MineSequence,assetComplianceView.MineSequenceView),
-                new RibbonButtonDataTemplateViewModel(StringResources.MineCompliance,assetComplianceView.MineComplianceView),
-                new RibbonButtonDataTemplateViewModel(StringResources.DepressurizationCompliance,assetComplianceView.DepressurizationComplianceView),
-                new RibbonButtonDataTemplateViewModel(StringResources.Geotechnical,assetComplianceView.GeotechnicalView),
-                new RibbonButtonDataTemplateViewModel(StringResources.QuartersReconciliationFactors,assetComplianceView.QuartersReconciliationFactorsView),
-                new RibbonButtonDataTemplateViewModel(StringResources.ProcessCompliance,assetComplianceView.ProcessComplianceView),
-                new RibbonButtonDataTemplateViewModel(StringResources.ConcentrateQuality,assetComplianceView.ConcentrateQualityView),
-                new RibbonButtonDataTemplateViewModel(StringResources.HistoricalRecord,assetComplianceView.HistoricalRecordView),
+                new RibbonButtonDataTemplateViewModel(StringResources.MineSequence,assetComplianceView.MineSequenceView,IconKeys.MineSequence),
+                new RibbonButtonDataTemplateViewModel(StringResources.MineCompliance,assetComplianceView.MineComplianceView,IconKeys.MineMovement),
+                new RibbonButtonDataTemplateViewModel(StringResources.DepressurizationCompliance,assetComplianceView.DepressurizationComplianceView,IconKeys.Depressurization),
+                new RibbonButtonDataTemplateViewModel(StringResources.Geotechnical,assetComplianceView.GeotechnicalView,IconKeys.Geotechnics),
+                new RibbonButtonDataTemplateViewModel(StringResources.QuartersReconciliationFactors,assetComplianceView.QuartersReconciliationFactorsView,IconKeys.ReconciliationFactors),
+                new RibbonButtonDataTemplateViewModel(StringResources.ProcessCompliance,assetComplianceView.ProcessComplianceView,IconKeys.ProcessCompliance),
+                new RibbonButtonDataTemplateViewModel(StringResources.ConcentrateQuality,assetComplianceView.ConcentrateQualityView,IconKeys.ConcentrateQuality),
+                new RibbonButtonDataTemplateViewModel(StringResources.HistoricalRecord,assetComplianceView.HistoricalRecordView,IconKeys.KvdSummary),
 
             };
         }
