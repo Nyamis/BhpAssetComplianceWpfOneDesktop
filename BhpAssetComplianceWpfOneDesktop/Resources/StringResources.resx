@@ -201,4 +201,10 @@
   <data name="Updated" xml:space="preserve">
     <value>Updated</value>
   </data>
+  <data name="YearAndMonth" xml:space="preserve">
+    <value>Year and month</value>
+  </data>
+  <data name="Poster" xml:space="preserve">
+    <value>Poster</value>
+  </data>
 </root>

@@ -1,13 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BhpAssetComplianceWpfOneDesktop.Constants
+﻿namespace BhpAssetComplianceWpfOneDesktop.Constants
 {
-    public class IconKeys
+    public static class IconKeys
     {
-        public const string Truck = "/Resources/Icons/Truck.png";
+        private static string Folder = @"\Resources\Icons\Blue\";
+
+        
+
+        public static string Poster = $"{Folder}Poster.png";
+
+        public static string Depressurization = $"{Folder}Despresurización.png";
+        public static string ReconciliationFactors = $"{Folder}Factores de reconciliación.png";
+        public static string Geotechnics = $"{Folder}Geotecnia.png";
+        public static string ProcessCompliance = $"{Folder}Cumplimiento proceso.png";
+        public static string MineMovement = $"{Folder}Movimiento mina.png";
+        public static string KvdSummary = $"{Folder}Resumen kvd.png";
+        public static string MineSequence = $"{Folder}Secuencia minera.png";
+        public static string ConcentrateQuality = $"{Folder}Calidad concentrado.png";
     }
 }

@@ -1,5 +1,4 @@
-﻿using BhpAssetComplianceWpfOneDesktop.Models;
-using BhpAssetComplianceWpfOneDesktop.Resources;
+﻿using BhpAssetComplianceWpfOneDesktop.Resources;
 using BhpAssetComplianceWpfOneDesktop.Utility;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,7 @@ using Microsoft.Win32;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using System.Windows.Media;
+using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
@@ -22,6 +22,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
     public class MineSequenceViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.MineSequence;
+        protected override string MyPosterIcon { get; set; } = IconKeys.MineSequence;
 
         public string generateContent { get; set; } = StringResources.GenerateTemplate;
 
@@ -511,11 +512,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
         private bool CanProcess()
         {
-            if (IsEnabled & IsEnabled2 & IsEnabled3)
-            {
-                return true;
-            }
-            return false;
+            return IsEnabled & IsEnabled2 & IsEnabled3;
         }
     }
 }

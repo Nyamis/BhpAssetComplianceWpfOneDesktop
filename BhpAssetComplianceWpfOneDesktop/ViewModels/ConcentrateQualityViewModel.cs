@@ -1,26 +1,24 @@
-﻿using BhpAssetComplianceWpfOneDesktop.Models;
+﻿using BhpAssetComplianceWpfOneDesktop.Constants;
 using BhpAssetComplianceWpfOneDesktop.Resources;
+using Microsoft.Win32;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using Prism.Commands;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prism.Mvvm;
-using Prism.Commands;
-using System.Windows;
-using OfficeOpenXml;
-using System.IO;
-using Microsoft.Win32;
 using System.Drawing;
 using System.Globalization;
-using OfficeOpenXml.Style;
+using System.IO;
+using System.Windows;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
     public class ConcentrateQualityViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.ConcentrateQuality;
+        protected override string MyPosterIcon { get; set; } = IconKeys.ConcentrateQuality;
 
+        // TODO: Borrar variables que no se esten usando
         public string generateContent { get; set; } = StringResources.GenerateTemplate;
         public string loadContent { get; set; } = StringResources.LoadTemplate;
         public string dateContent { get; set; } = StringResources.Date;
@@ -36,6 +34,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         }
 
         private string _UpdateB;
+        // TODO: Poner nombre más autoexplicativos
         public string UpdateB
         {
             get { return _UpdateB; }
@@ -424,7 +423,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 MessageBox.Show(ex.Message, "Upload Error");
             }
         }
-
+        //TODO: Formatear esto con un nombre más comprensible y sacar de la clase
         public class Item
         {
             public DateTime Date { get; set; }
@@ -445,6 +444,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             public double ConcentrateGrade { get; set; }
         }
 
+        // TODO: Refactoring para un nombres comprensibles y subir a la zona de propiedades
         readonly List<Item> lstItems = new List<Item>();
         private void LoadBudgetFreightTemplate()
         {
@@ -457,8 +457,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
             if (op.ShowDialog() == true)
             {
-               
-
                 try
                 {
                     FileInfo FilePath = new FileInfo(op.FileName);

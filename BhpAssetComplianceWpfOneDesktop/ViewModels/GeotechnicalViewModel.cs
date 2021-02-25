@@ -1,5 +1,4 @@
-﻿using BhpAssetComplianceWpfOneDesktop.Models;
-using BhpAssetComplianceWpfOneDesktop.Resources;
+﻿using BhpAssetComplianceWpfOneDesktop.Resources;
 using BhpAssetComplianceWpfOneDesktop.Utility;
 using Prism.Mvvm;
 using System;
@@ -12,6 +11,7 @@ using Microsoft.Win32;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using System.Windows.Media;
+using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
 using OfficeOpenXml.DataValidation;
 
@@ -20,6 +20,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
     public class GeotechnicalViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.Geotechnical;
+        protected override string MyPosterIcon { get; set; } = IconKeys.Geotechnics;
 
         public string generateContent { get; set; } = StringResources.GenerateTemplate;
         public string loadContent { get; set; } = StringResources.LoadTemplate;

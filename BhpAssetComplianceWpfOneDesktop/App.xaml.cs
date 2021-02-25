@@ -1,8 +1,10 @@
-﻿using BhpAssetComplianceWpfOneDesktop.Services;
+﻿using System;
+using BhpAssetComplianceWpfOneDesktop.Services;
 using BhpAssetComplianceWpfOneDesktop.Utility;
 using BhpAssetComplianceWpfOneDesktop.Views;
 using Prism.Ioc;
 using System.Windows;
+using System.Windows.Media;
 
 namespace BhpAssetComplianceWpfOneDesktop
 {
@@ -33,7 +35,7 @@ namespace BhpAssetComplianceWpfOneDesktop
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            Container.Resolve<IAssetComplianceView>().MineSequenceView();
+            Container.Resolve<IAssetComplianceView>().ConcentrateQualityView();
         }
     }
 }

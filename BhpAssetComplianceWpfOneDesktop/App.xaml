@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/Metro/Metro.MSControls.Core.Implicit.xaml" />
                 <ResourceDictionary Source="Themes/Metro/Metro.MSControls.Toolkit.Implicit.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BhpAssetComplianceWpfOneDesktop;component/Resources/BaseStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/BhpAssetComplianceWpfOneDesktop;component/Resources/DataTemplateDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

@@ -1,11 +1,13 @@
 ﻿using BhpAssetComplianceWpfOneDesktop.ViewModels.DataTemplate;
 using Prism.Mvvm;
 
-namespace BhpAssetComplianceWpfOneDesktop.Models
+namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
     public abstract class BasePosterViewModel : BindableBase
     {
         protected abstract string MyPosterName { get; set; }
+        protected abstract string MyPosterIcon { get; set; }
+
 
         private PosterHeaderDataTemplateViewModel _myPosterHeader;
         public PosterHeaderDataTemplateViewModel MyPosterHeader
@@ -16,7 +18,7 @@ namespace BhpAssetComplianceWpfOneDesktop.Models
 
         protected BasePosterViewModel()
         {
-            MyPosterHeader = new PosterHeaderDataTemplateViewModel(MyPosterName);
+            MyPosterHeader = new PosterHeaderDataTemplateViewModel(MyPosterName,MyPosterIcon);
         }
     }
 }

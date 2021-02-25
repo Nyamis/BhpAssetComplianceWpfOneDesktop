@@ -259,6 +259,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Poster.
+        /// </summary>
+        public static string Poster {
+            get {
+                return ResourceManager.GetString("Poster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Process.
         /// </summary>
         public static string Process {
@@ -309,6 +318,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         public static string Updated {
             get {
                 return ResourceManager.GetString("Updated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year and month.
+        /// </summary>
+        public static string YearAndMonth {
+            get {
+                return ResourceManager.GetString("YearAndMonth", resourceCulture);
             }
         }
     }
