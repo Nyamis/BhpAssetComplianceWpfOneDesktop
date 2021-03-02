@@ -16,19 +16,20 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Content="{Binding MyPosterHeader}" FontSize="16" Grid.Row="0"/>
+        <ContentControl Content="{Binding MyPosterHeader}" Grid.Row="0"/>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <GroupBox Header="Actual Month Freight Template" Grid.Column="0">
+            <GroupBox Header="{x:Static resources:StringResources.ActualMonthFreightTemplate}" Grid.Column="0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
+              
 
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
@@ -50,7 +51,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Budget Freight Template" Grid.Column="1">
+            <GroupBox Header="{x:Static resources:StringResources.BudgetFreightTemplate}" Grid.Column="1">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>

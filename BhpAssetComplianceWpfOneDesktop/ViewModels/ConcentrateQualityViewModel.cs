@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows;
+using BhpAssetComplianceWpfOneDesktop.Models.ConcentrateQualityModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
@@ -18,7 +19,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         protected override string MyPosterName { get; set; } = StringResources.ConcentrateQuality;
         protected override string MyPosterIcon { get; set; } = IconKeys.ConcentrateQuality;
 
-        // TODO: Borrar variables que no se esten usando
+        // TODO: Borrar variables que no se esten usando y usarlas como se presenta en el sistema
         public string generateContent { get; set; } = StringResources.GenerateTemplate;
         public string loadContent { get; set; } = StringResources.LoadTemplate;
         public string dateContent { get; set; } = StringResources.Date;
@@ -26,7 +27,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         public string actualContent { get; set; } = StringResources.ActualMonthFreightTemplate;
         public string budgetContent { get; set; } = StringResources.BudgetFreightTemplate;
 
-        private string _UpdateA;
+        // TODO: Colocar nombres que hagan sentido
+        private string _UpdateA; // TODO: Respetar en la variables privadas la notación _updateA
         public string UpdateA
         {
             get { return _UpdateA; }
@@ -56,6 +58,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         }
 
         private bool _isEnabled1;
+        // TODO: Nombres de variables autoexplicativos
         public bool IsEnabled1
         {
             get { return _isEnabled1; }
@@ -69,14 +72,14 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             set { SetProperty(ref _isEnabled2, value); }
         }
 
-
-        public DelegateCommand GenerarAFT { get; private set; }
-        public DelegateCommand CargarAFT { get; private set; }
-        public DelegateCommand GenerarBFT { get; private set; }
-        public DelegateCommand CargarBFT { get; private set; }
+        // TODO: Idioma y evitar abreviaturas
+        public DelegateCommand GenerarAFT { get; set; }
+        public DelegateCommand CargarAFT { get; set; }
+        public DelegateCommand GenerarBFT { get; set; }
+        public DelegateCommand CargarBFT { get; set; }
 
         public ConcentrateQualityViewModel()
-        {            
+        {
             Date = DateTime.Now;
             FiscalYear = Date.Year;
             IsEnabled1 = false;
@@ -89,7 +92,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
         private void GenerateActualFreightTemplate()
         {
-            List<string> lstHeader = new List<string>() { "Nombre M/N", "N°", "Inicio embarque", "Termino embarque" };
+            // TODO: Cambiar a headers y usar var
+            var lstHeader = new List<string>() { "Nombre M/N", "N°", "Inicio embarque", "Termino embarque" };
             List<string> lstItem = new List<string>() { "WMT", "DMT", "Moisture.", "Cu", "As", "Fe", "Au", "Ag", "S", "Insol.", "Cd", "Zn", "Hg", "SiO2", "Al2O3", "Sb", "Mo" };
             List<string> lstUnit = new List<string>() { "Pesometer t", "Pesometer t", "%", "%", "%", "%", "g/t", "g/t", "%", "%", "%", "%", "g/t", "%", "%", "%", "%" };
 
@@ -186,36 +190,14 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             }
         }
 
-        public class Freight
-        {
-            public string Name { get; set; }
-            public int Number { get; set; }
-            public DateTime Start { get; set; }
-            public DateTime End { get; set; }
-            public double WMT { get; set; }
-            public double DMT { get; set; }
-            public double Moisture { get; set; }
-            public double Cu { get; set; }
-            public double As { get; set; }
-            public double Fe { get; set; }
-            public double Au { get; set; }
-            public double Ag { get; set; }
-            public double S { get; set; }
-            public double Insoluble { get; set; }
-            public double Cd { get; set; }
-            public double Zn { get; set; }
-            public double Hg { get; set; }
-            public double SiO2 { get; set; }
-            public double Al2O3 { get; set; }
-            public double Sb { get; set; }
-            public double Mo { get; set; }
-        }
-
-        readonly List<Freight> lstFreights = new List<Freight>();
+       
+        // TODO: Mover este campo a arriba y usar la notación _freights
+        readonly List<ConcentrateQualityFreight> lstFreights = new List<ConcentrateQualityFreight>();
 
         private void LoadActualFreightTemplate()
         {
             lstFreights.Clear();
+            // TODO: Usar var
             OpenFileDialog op = new OpenFileDialog
             {
                 Title = "Select File",
@@ -226,7 +208,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             {
                 FileInfo FilePath = new FileInfo(op.FileName);
                 ExcelPackage pck = new ExcelPackage(FilePath);
-                
+
                 try
                 {
                     ExcelWorksheet ws = pck.Workbook.Worksheets["RealFreight"];
@@ -248,11 +230,11 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                     ws.Cells[3 + i, 5 + j].Value = -99;
                                 }
 
-                            }                          
+                            }
 
-                            lstFreights.Add(new Freight()
+                            lstFreights.Add(new ConcentrateQualityFreight()
                             {
-                               
+
                                 Name = ws.Cells[3 + i, 1].Value.ToString(),
                                 Number = Int32.Parse(ws.Cells[3 + i, 2].Value.ToString()),
                                 Start = Convert.ToDateTime(ws.Cells[3 + i, 3].Value.ToString()),
@@ -275,11 +257,11 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 Sb = double.Parse(ws.Cells[3 + i, 20].Value.ToString()) * 10000,
                                 Mo = double.Parse(ws.Cells[3 + i, 21].Value.ToString())
                             });
-                           
+
                         }
 
                     }
-                   
+
                     pck.Dispose();
                 }
                 catch (Exception ex)
@@ -423,7 +405,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 MessageBox.Show(ex.Message, "Upload Error");
             }
         }
-        //TODO: Formatear esto con un nombre más comprensible y sacar de la clase
+        //TODO: Formatear esto con un nombre más comprensible y sacar de la clase y mover a la carpeta modelos
         public class Item
         {
             public DateTime Date { get; set; }
@@ -459,19 +441,23 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             {
                 try
                 {
+                    // TODO: Usar nomenclatura para variable filePath
                     FileInfo FilePath = new FileInfo(op.FileName);
                     ExcelPackage pck = new ExcelPackage(FilePath);
-                    ExcelWorksheet ws = pck.Workbook.Worksheets["BudgetFreight"];
+                    ExcelWorksheet ws = pck.Workbook.Worksheets["BudgetFreight"]; // TODO: Llevar a un archivo de constantes
 
                     FileStream fs = File.OpenWrite(op.FileName);
                     fs.Close();
 
+                    // TODO: Usar variable
                     DateTime Db = DateTime.Now;
 
                     for (int i = 0; i < 12; i++)
                     {
+                        // TODO: Evitar variables con letras, usar variable _month
                         int M = DateTime.ParseExact(ws.Cells[3, 4 + i].Value.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
 
+                        // TODO: utilizar una función en utility para esta conversion
                         if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4 || i == 5)
                         {
                             Db = new DateTime(FiscalYear - 1, M, 1, 00, 00, 00).AddMilliseconds(000);
@@ -518,16 +504,16 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 {
                     MessageBox.Show(ex.Message, "Upload Error");
                 }
-
+                // TODO: esta esta hardcoded
                 string fileName = @"c:\users\nyamis\oneDrive - bmining\BHP\FreightData.xlsx";
                 FileInfo filePath = new FileInfo(fileName);
 
                 if (filePath.Exists)
-                {                  
+                {
                     try
                     {
                         ExcelPackage pck2 = new ExcelPackage(filePath);
-                        ExcelWorksheet ws2 = pck2.Workbook.Worksheets["BudgetFreight"];
+                        ExcelWorksheet ws2 = pck2.Workbook.Worksheets["BudgetFreight"]; // TODO: Constantes
 
                         FileStream fs = File.OpenWrite(fileName);
                         fs.Close();
