@@ -1,4 +1,5 @@
 ﻿using BhpAssetComplianceWpfOneDesktop.Constants;
+using BhpAssetComplianceWpfOneDesktop.Models.ConcentrateQualityModels;
 using BhpAssetComplianceWpfOneDesktop.Resources;
 using Microsoft.Win32;
 using OfficeOpenXml;
@@ -10,7 +11,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows;
-using BhpAssetComplianceWpfOneDesktop.Models.ConcentrateQualityModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
@@ -72,7 +72,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             set { SetProperty(ref _isEnabled2, value); }
         }
 
-        // TODO: Idioma y evitar abreviaturas
+        // TODO: Idioma y evitar abreviaturas 
         public DelegateCommand GenerarAFT { get; set; }
         public DelegateCommand CargarAFT { get; set; }
         public DelegateCommand GenerarBFT { get; set; }
@@ -102,9 +102,10 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             pck.Workbook.Properties.Title = "Real Month Freight Template";
             pck.Workbook.Properties.Company = "BHP";
 
-            var ws = pck.Workbook.Worksheets.Add("RealFreight");
-            ws.Cells["A2:U2"].Style.Font.Bold = true;
-            ws.Cells["A2:U2"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
+            // TODO: usar mejores variables de números
+            var ws = pck.Workbook.Worksheets.Add("RealFreight"); // TODO: Constantes
+            ws.Cells["A2:U2"].Style.Font.Bold = true; // TODO: Evitar usar referencias "A1" y usar números
+            ws.Cells["A2:U2"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));  // TODO: Utilizar constantes para colores
             ws.Cells["E3:U3"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
             ws.Cells["A2:U2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             ws.Cells["E3:U3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -190,7 +191,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             }
         }
 
-       
+
         // TODO: Mover este campo a arriba y usar la notación _freights
         readonly List<ConcentrateQualityFreight> lstFreights = new List<ConcentrateQualityFreight>();
 
@@ -460,7 +461,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         // TODO: utilizar una función en utility para esta conversion
                         if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4 || i == 5)
                         {
-                            Db = new DateTime(FiscalYear - 1, M, 1, 00, 00, 00).AddMilliseconds(000);
+                            Db = new DateTime(FiscalYear - 1, M, 1, 00, 00, 00).AddMilliseconds(000); // TODO: No es necesario el add milliseconds
                         }
                         else if (i == 6 || i == 7 || i == 8 || i == 9 || i == 10 || i == 11)
                         {
@@ -549,7 +550,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Upload Error");
+                        MessageBox.Show(ex.Message, "Upload Error"); // TODO: Constantes
                     }
                 }
 

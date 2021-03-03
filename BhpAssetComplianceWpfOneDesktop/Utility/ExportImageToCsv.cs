@@ -11,9 +11,9 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
         public static string ConvertImageToString(string imageFilePath)
         {
             var image = Image.FromFile(imageFilePath);
-            var _imageConverter = new ImageConverter();
-            var imageByte = (byte[])_imageConverter.ConvertTo(image, typeof(byte[]));
-            return Convert.ToBase64String(imageByte);
+            var imageConverter = new ImageConverter();
+            var imageByte = (byte[])imageConverter.ConvertTo(image, typeof(byte[]));
+            return Convert.ToBase64String(imageByte ?? Array.Empty<byte>());
         }
 
         public static void AppendImageToCSV(string imageFilePath, string place, DateTime date, string targetFilePath)
@@ -64,7 +64,6 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
 
             }
             return -1;
-
         }
 
         public static int SearchByDateMineSequence(DateTime date, string targetFilePath)
@@ -76,31 +75,24 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
 
                 var splits = line.Split(',');
                 if (splits[0] == "Date")
-                {
                     count++;
-                }
                 else
                 {
-                    var lineDate = DateTime.Parse(splits[0]).Date;                  
+                    var lineDate = DateTime.Parse(splits[0]).Date;
                     if (lineDate == date.Date)
-                    {
                         return count;
-                    }
                     count++;
-
                 }
 
             }
             return -1;
-
         }
 
         public static void RemoveItem(string targetFilePath, int index)
         {
-            var strLines = File.ReadLines(targetFilePath).ToList();
-            strLines.RemoveAt(index);
-            File.WriteAllLines(targetFilePath, strLines);
-
+            var lines = File.ReadLines(targetFilePath).ToList();
+            lines.RemoveAt(index);
+            File.WriteAllLines(targetFilePath, lines);
         }
 
         public static string ToNullSafeString(this object obj)
