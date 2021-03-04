@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BhpAssetComplianceWpfOneDesktop.Views"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:resources="clr-namespace:BhpAssetComplianceWpfOneDesktop.Resources"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -11,7 +10,6 @@
              d:DesignHeight="450" d:DesignWidth="650">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -38,14 +36,14 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Static resources:StringResources.Date}"
                                    Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
-                        <DatePicker  SelectedDate="{Binding Date}" Grid.Column="1"/>
+                        <DatePicker  SelectedDate="{Binding MyDateActual}" Grid.Column="1"/>
                     </Grid>
 
                     <Grid Grid.Row="1">
                         <WrapPanel>
-                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerarAFT}"/>
-                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding CargarAFT}"/>
-                            <TextBlock Text="{Binding UpdateA}"/>
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateActualFreightTemplateCommand}"/>
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadActualFreightTemplateCommand}"/>
+                            <TextBlock Text="{Binding MyLastDateRefreshActualValues}"/>
                         </WrapPanel>
                     </Grid>
                 </Grid>
@@ -65,14 +63,14 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Static resources:StringResources.FiscalYear}"
                                    Style="{StaticResource TextBlockStyle}"  Grid.Column="0"/>
-                        <TextBox Text="{Binding FiscalYear , ValidatesOnExceptions=True}" Grid.Column="1"/>
+                        <TextBox Text="{Binding MyFiscalYear , ValidatesOnExceptions=True}" Grid.Column="1"/>
                     </Grid>
 
                     <Grid Grid.Row="1">
                         <WrapPanel>
-                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerarBFT}"/>
-                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding CargarBFT}"/>
-                            <TextBlock Text="{Binding UpdateB}" Style="{StaticResource TextBlockStyle}"/>
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateBudgetFreightCommand}"/>
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadBudgetFreightTemplateCommand}"/>
+                            <TextBlock Text="{Binding MyLastRefreshBudgetValues}" Style="{StaticResource TextBlockStyle}"/>
                         </WrapPanel>
                     </Grid>
                 </Grid>
