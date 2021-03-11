@@ -59,8 +59,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constants\ConcentrateQualityConstants.cs" />
     <Compile Include="Constants\IconKeys.cs" />
     <Compile Include="Utility\ExportImageToCsv.cs" />
+    <Compile Include="Models\ConcentrateQualityModels\ConcentrateQualityFreight.cs" />
     <Compile Include="ViewModels\ConcentrateQualityViewModel.cs" />
     <Compile Include="ViewModels\DepressurizationComplianceViewModel.cs" />
     <Compile Include="ViewModels\GeotechnicalViewModel.cs" />
@@ -239,7 +241,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Engines\" />
-    <Folder Include="Models\ConcentrateQuality\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Themes\IG\HowToApplyTheme.txt" />

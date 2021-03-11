@@ -1,4 +1,5 @@
 ﻿using BhpAssetComplianceWpfOneDesktop.Constants;
+using BhpAssetComplianceWpfOneDesktop.Models.ConcentrateQualityModels;
 using BhpAssetComplianceWpfOneDesktop.Resources;
 using Microsoft.Win32;
 using OfficeOpenXml;
@@ -18,7 +19,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         protected override string MyPosterName { get; set; } = StringResources.ConcentrateQuality;
         protected override string MyPosterIcon { get; set; } = IconKeys.ConcentrateQuality;
 
-        // TODO: Borrar variables que no se esten usando
+        // TODO: Borrar variables que no se esten usando y usarlas como se presenta en el sistema
         public string generateContent { get; set; } = StringResources.GenerateTemplate;
         public string loadContent { get; set; } = StringResources.LoadTemplate;
         public string dateContent { get; set; } = StringResources.Date;
@@ -26,143 +27,148 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         public string actualContent { get; set; } = StringResources.ActualMonthFreightTemplate;
         public string budgetContent { get; set; } = StringResources.BudgetFreightTemplate;
 
-        private string _UpdateA;
-        public string UpdateA
+        // TODO: Colocar nombres que hagan sentido
+        private string _myLastDateRefreshActualValues; // TODO: Respetar en la variables privadas la notación _updateA
+        public string MyLastDateRefreshActualValues
         {
-            get { return _UpdateA; }
-            set { SetProperty(ref _UpdateA, value); }
+            get { return _myLastDateRefreshActualValues; }
+            set { SetProperty(ref _myLastDateRefreshActualValues, value); }
         }
 
-        private string _UpdateB;
-        // TODO: Poner nombre más autoexplicativos
-        public string UpdateB
+        private string _myLastRefreshBudgetValues;
+        public string MyLastRefreshBudgetValues
         {
-            get { return _UpdateB; }
-            set { SetProperty(ref _UpdateB, value); }
+            get { return _myLastRefreshBudgetValues; }
+            set { SetProperty(ref _myLastRefreshBudgetValues, value); }
         }
 
-        DateTime _Date;
-        public DateTime Date
+        private DateTime _myDateActual;
+        public DateTime MyDateActual
         {
-            get { return _Date; }
-            set { SetProperty(ref _Date, value); }
+            get { return _myDateActual; }
+            set { SetProperty(ref _myDateActual, value); }
         }
 
-        private int _FiscalYear;
-        public int FiscalYear
+        private int _myFiscalYear;
+        public int MyFiscalYear
         {
-            get { return _FiscalYear; }
-            set { SetProperty(ref _FiscalYear, value); }
+            get { return _myFiscalYear; }
+            set { SetProperty(ref _myFiscalYear, value); }
         }
 
-        private bool _isEnabled1;
-        public bool IsEnabled1
+        private bool _isEnabledLoadActualValues;
+        public bool IsEnabledLoadActualValues
         {
-            get { return _isEnabled1; }
-            set { SetProperty(ref _isEnabled1, value); }
+            get { return _isEnabledLoadActualValues; }
+            set { SetProperty(ref _isEnabledLoadActualValues, value); }
         }
 
-        private bool _isEnabled2;
-        public bool IsEnabled2
+        private bool _isEnabledLoadBudgetValues;
+        public bool IsEnabledLoadBudgetValues
         {
-            get { return _isEnabled2; }
-            set { SetProperty(ref _isEnabled2, value); }
+            get { return _isEnabledLoadBudgetValues; }
+            set { SetProperty(ref _isEnabledLoadBudgetValues, value); }
         }
 
+        public DelegateCommand GenerateActualFreightTemplateCommand { get; set; }
+        public DelegateCommand LoadActualFreightTemplateCommand { get; set; }
+        public DelegateCommand GenerateBudgetFreightTemplateCommand { get; set; }
+        public DelegateCommand LoadBudgetFreightTemplateCommand { get; set; }
 
-        public DelegateCommand GenerarAFT { get; private set; }
-        public DelegateCommand CargarAFT { get; private set; }
-        public DelegateCommand GenerarBFT { get; private set; }
-        public DelegateCommand CargarBFT { get; private set; }
+
+        private readonly List<ConcentrateQualityFreight> _freights = new List<ConcentrateQualityFreight>();
 
         public ConcentrateQualityViewModel()
-        {            
-            Date = DateTime.Now;
-            FiscalYear = Date.Year;
-            IsEnabled1 = false;
-            IsEnabled2 = false;
-            GenerarAFT = new DelegateCommand(GenerateActualFreightTemplate);
-            CargarAFT = new DelegateCommand(LoadActualFreightTemplate).ObservesCanExecute(() => IsEnabled1);
-            GenerarBFT = new DelegateCommand(GenerateBudgetFreightTemplate);
-            CargarBFT = new DelegateCommand(LoadBudgetFreightTemplate).ObservesCanExecute(() => IsEnabled2);
+        {
+            MyDateActual = DateTime.Now;
+            MyFiscalYear = MyDateActual.Year;
+            IsEnabledLoadActualValues = false;
+            IsEnabledLoadBudgetValues = false;
+            GenerateActualFreightTemplateCommand = new DelegateCommand(GenerateActualFreightTemplate);
+            LoadActualFreightTemplateCommand = new DelegateCommand(LoadActualFreightTemplate).ObservesCanExecute(() => IsEnabledLoadActualValues);
+            GenerateBudgetFreightTemplateCommand = new DelegateCommand(GenerateBudgetFreightTemplate);
+            LoadBudgetFreightTemplateCommand = new DelegateCommand(LoadBudgetFreightTemplate).ObservesCanExecute(() => IsEnabledLoadBudgetValues);
         }
 
         private void GenerateActualFreightTemplate()
         {
-            List<string> lstHeader = new List<string>() { "Nombre M/N", "N°", "Inicio embarque", "Termino embarque" };
-            List<string> lstItem = new List<string>() { "WMT", "DMT", "Moisture.", "Cu", "As", "Fe", "Au", "Ag", "S", "Insol.", "Cd", "Zn", "Hg", "SiO2", "Al2O3", "Sb", "Mo" };
-            List<string> lstUnit = new List<string>() { "Pesometer t", "Pesometer t", "%", "%", "%", "%", "g/t", "g/t", "%", "%", "%", "%", "g/t", "%", "%", "%", "%" };
+            // TODO: Cambiar a headers y usar var
+            var headers = new List<string> { "Nombre M/N", "N°", "Inicio embarque", "Termino embarque" };
+            var items = new List<string> { "WMT", "DMT", "Moisture.", "Cu", "As", "Fe", "Au", "Ag", "S", "Insol.", "Cd", "Zn", "Hg", "SiO2", "Al2O3", "Sb", "Mo" };
+            var units = new List<string> { "Pesometer t", "Pesometer t", "%", "%", "%", "%", "g/t", "g/t", "%", "%", "%", "%", "g/t", "%", "%", "%", "%" };
 
-            ExcelPackage pck = new ExcelPackage();
-            pck.Workbook.Properties.Author = "BHP";
-            pck.Workbook.Properties.Title = "Real Month Freight Template";
-            pck.Workbook.Properties.Company = "BHP";
+            var excelPackage = new ExcelPackage();
+            excelPackage.Workbook.Properties.Author = "BHP";
+            excelPackage.Workbook.Properties.Title = "Real Month Freight Template";
+            excelPackage.Workbook.Properties.Company = "BHP";
 
-            var ws = pck.Workbook.Worksheets.Add("RealFreight");
-            ws.Cells["A2:U2"].Style.Font.Bold = true;
-            ws.Cells["A2:U2"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-            ws.Cells["E3:U3"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-            ws.Cells["A2:U2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws.Cells["E3:U3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws.Column(1).Width = 22;
 
-            ws.Cells["A2:A3"].Merge = true;
-            ws.Cells["B2:B3"].Merge = true;
-            ws.Cells["C2:C3"].Merge = true;
-            ws.Cells["D2:D3"].Merge = true;
+            var worksheet = excelPackage.Workbook.Worksheets.Add(ConcentrateQualityConstants.RealFreightWorksheet);
+            // TODO: usar mejores variables de números
+            worksheet.Cells["A2:U2"].Style.Font.Bold = true; // TODO: Evitar usar referencias "A1" y usar números
+            worksheet.Cells["A2:U2"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));  // TODO: Utilizar constantes para colores
+            worksheet.Cells["E3:U3"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
+            worksheet.Cells["A2:U2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells["E3:U3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Column(1).Width = 22;
 
-            for (int i = 0; i < lstHeader.Count; i++)
+            worksheet.Cells["A2:A3"].Merge = true;
+            worksheet.Cells["B2:B3"].Merge = true;
+            worksheet.Cells["C2:C3"].Merge = true;
+            worksheet.Cells["D2:D3"].Merge = true;
+
+            for (var i = 0; i < headers.Count; i++)
             {
-                ws.Cells[2, i + 1].Value = lstHeader[i];
-                ws.Cells[2, i + 1].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                ws.Cells[2, i + 1].Style.WrapText = true;
+                worksheet.Cells[2, i + 1].Value = headers[i];
+                worksheet.Cells[2, i + 1].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[2, i + 1].Style.WrapText = true;
             }
 
-            for (int i = 0; i < lstItem.Count; i++)
+            for (var i = 0; i < items.Count; i++)
             {
-                ws.Cells[2, i + 5].Value = lstItem[i];
-                ws.Cells[3, i + 5].Value = lstUnit[i];
+                worksheet.Cells[2, i + 5].Value = items[i];
+                worksheet.Cells[3, i + 5].Value = units[i];
             }
 
-            for (int i = 1; i < 22; i++)
+            for (var i = 1; i < 22; i++)
             {
                 if (i % 2 != 0)
                 {
-                    ws.Cells[2, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[2, i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#375623"));
+                    worksheet.Cells[2, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[2, i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#375623"));
                 }
                 else if (i % 2 == 0)
                 {
-                    ws.Cells[2, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[2, i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#833C0C"));
+                    worksheet.Cells[2, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[2, i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#833C0C"));
                 }
-                ws.Column(1 + i).Width = 16;
+                worksheet.Column(1 + i).Width = 16;
             }
 
             for (int i = 1; i < 18; i++)
             {
                 if (i % 2 != 0)
                 {
-                    ws.Cells[3, 4 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[3, 4 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#548235"));
+                    worksheet.Cells[3, 4 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[3, 4 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#548235"));
                 }
                 else if (i % 2 == 0)
                 {
-                    ws.Cells[3, 4 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[3, 4 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#C65911"));
+                    worksheet.Cells[3, 4 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[3, 4 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#C65911"));
                 }
             }
 
-            ws.Cells["A2:U2"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            worksheet.Cells["A2:U2"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
 
             for (int i = 0; i < 14; i++)
             {
-                ws.Cells[i + 2, 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"A{2 + i}:U{2 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"A{2 + i}:U{2 + i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[i + 2, 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"A{2 + i}:U{2 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"A{2 + i}:U{2 + i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
 
-            byte[] fileText = pck.GetAsByteArray();
+            byte[] fileText = excelPackage.GetAsByteArray();
 
             SaveFileDialog dialog = new SaveFileDialog()
             {
@@ -177,7 +183,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 if (dialog.ShowDialog() == true)
                 {
                     File.WriteAllBytes(dialog.FileName, fileText);
-                    IsEnabled1 = true;
+                    IsEnabledLoadActualValues = true;
                 }
             }
             catch (Exception ex)
@@ -186,166 +192,126 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             }
         }
 
-        public class Freight
-        {
-            public string Name { get; set; }
-            public int Number { get; set; }
-            public DateTime Start { get; set; }
-            public DateTime End { get; set; }
-            public double WMT { get; set; }
-            public double DMT { get; set; }
-            public double Moisture { get; set; }
-            public double Cu { get; set; }
-            public double As { get; set; }
-            public double Fe { get; set; }
-            public double Au { get; set; }
-            public double Ag { get; set; }
-            public double S { get; set; }
-            public double Insoluble { get; set; }
-            public double Cd { get; set; }
-            public double Zn { get; set; }
-            public double Hg { get; set; }
-            public double SiO2 { get; set; }
-            public double Al2O3 { get; set; }
-            public double Sb { get; set; }
-            public double Mo { get; set; }
-        }
-
-        readonly List<Freight> lstFreights = new List<Freight>();
 
         private void LoadActualFreightTemplate()
         {
-            lstFreights.Clear();
-            OpenFileDialog op = new OpenFileDialog
+            _freights.Clear();
+            var openFileDialog = new OpenFileDialog
             {
                 Title = "Select File",
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
-            if (op.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == true)
             {
-                FileInfo FilePath = new FileInfo(op.FileName);
-                ExcelPackage pck = new ExcelPackage(FilePath);
-                
+                var openFilePath = new FileInfo(openFileDialog.FileName);
+                var excelPackage = new ExcelPackage(openFilePath);
+
                 try
                 {
-                    ExcelWorksheet ws = pck.Workbook.Worksheets["RealFreight"];
+                    var worksheet = excelPackage.Workbook.Worksheets[ConcentrateQualityConstants.RealFreightWorksheet];
+                    var fileStream = File.OpenWrite(openFileDialog.FileName);
+                    fileStream.Close();
 
-                    FileStream fs = File.OpenWrite(op.FileName);
-                    fs.Close();
+                    var rows = worksheet.Dimension.Rows;
 
-                    int rows = ws.Dimension.Rows;
-
-                    for (int i = 1; i < rows; i++)
+                    for (var i = 1; i < rows; i++)
                     {
-                        if (ws.Cells[i + 3, 1].Value != null)
+                        if (worksheet.Cells[i + 3, 1].Value != null)
                         {
 
                             for (int j = 0; j < 17; j++)
+                                if (worksheet.Cells[3 + i, 5 + j].Value == null)
+                                    worksheet.Cells[3 + i, 5 + j].Value = -99;
+                            _freights.Add(new ConcentrateQualityFreight()
                             {
-                                if (ws.Cells[3 + i, 5 + j].Value == null)
-                                {
-                                    ws.Cells[3 + i, 5 + j].Value = -99;
-                                }
 
-                            }                          
-
-                            lstFreights.Add(new Freight()
-                            {
-                               
-                                Name = ws.Cells[3 + i, 1].Value.ToString(),
-                                Number = Int32.Parse(ws.Cells[3 + i, 2].Value.ToString()),
-                                Start = Convert.ToDateTime(ws.Cells[3 + i, 3].Value.ToString()),
-                                End = Convert.ToDateTime(ws.Cells[3 + i, 4].Value.ToString()),
-                                WMT = double.Parse(ws.Cells[3 + i, 5].Value.ToString()),
-                                DMT = double.Parse(ws.Cells[3 + i, 6].Value.ToString()),
-                                Moisture = double.Parse(ws.Cells[3 + i, 7].Value.ToString()) / 100,
-                                Cu = double.Parse(ws.Cells[3 + i, 8].Value.ToString()) / 100,
-                                As = double.Parse(ws.Cells[3 + i, 9].Value.ToString()) * 10000,
-                                Fe = double.Parse(ws.Cells[3 + i, 10].Value.ToString()) / 100,
-                                Au = double.Parse(ws.Cells[3 + i, 11].Value.ToString()),
-                                Ag = double.Parse(ws.Cells[3 + i, 12].Value.ToString()),
-                                S = double.Parse(ws.Cells[3 + i, 13].Value.ToString()) / 100,
-                                Insoluble = double.Parse(ws.Cells[3 + i, 14].Value.ToString()) / 100,
-                                Cd = double.Parse(ws.Cells[3 + i, 15].Value.ToString()) * 10000,
-                                Zn = double.Parse(ws.Cells[3 + i, 16].Value.ToString()) * 10000,
-                                Hg = double.Parse(ws.Cells[3 + i, 17].Value.ToString()),
-                                SiO2 = double.Parse(ws.Cells[3 + i, 18].Value.ToString()) / 100,
-                                Al2O3 = double.Parse(ws.Cells[3 + i, 19].Value.ToString()) / 100,
-                                Sb = double.Parse(ws.Cells[3 + i, 20].Value.ToString()) * 10000,
-                                Mo = double.Parse(ws.Cells[3 + i, 21].Value.ToString())
+                                Name = worksheet.Cells[3 + i, 1].Value.ToString(),
+                                Number = Int32.Parse(worksheet.Cells[3 + i, 2].Value.ToString()),
+                                Start = Convert.ToDateTime(worksheet.Cells[3 + i, 3].Value.ToString()),
+                                End = Convert.ToDateTime(worksheet.Cells[3 + i, 4].Value.ToString()),
+                                WMT = double.Parse(worksheet.Cells[3 + i, 5].Value.ToString()),
+                                DMT = double.Parse(worksheet.Cells[3 + i, 6].Value.ToString()),
+                                Moisture = double.Parse(worksheet.Cells[3 + i, 7].Value.ToString()) / 100,
+                                Cu = double.Parse(worksheet.Cells[3 + i, 8].Value.ToString()) / 100,
+                                As = double.Parse(worksheet.Cells[3 + i, 9].Value.ToString()) * 10000,
+                                Fe = double.Parse(worksheet.Cells[3 + i, 10].Value.ToString()) / 100,
+                                Au = double.Parse(worksheet.Cells[3 + i, 11].Value.ToString()),
+                                Ag = double.Parse(worksheet.Cells[3 + i, 12].Value.ToString()),
+                                S = double.Parse(worksheet.Cells[3 + i, 13].Value.ToString()) / 100,
+                                Insoluble = double.Parse(worksheet.Cells[3 + i, 14].Value.ToString()) / 100,
+                                Cd = double.Parse(worksheet.Cells[3 + i, 15].Value.ToString()) * 10000,
+                                Zn = double.Parse(worksheet.Cells[3 + i, 16].Value.ToString()) * 10000,
+                                Hg = double.Parse(worksheet.Cells[3 + i, 17].Value.ToString()),
+                                SiO2 = double.Parse(worksheet.Cells[3 + i, 18].Value.ToString()) / 100,
+                                Al2O3 = double.Parse(worksheet.Cells[3 + i, 19].Value.ToString()) / 100,
+                                Sb = double.Parse(worksheet.Cells[3 + i, 20].Value.ToString()) * 10000,
+                                Mo = double.Parse(worksheet.Cells[3 + i, 21].Value.ToString())
                             });
-                           
                         }
-
                     }
-                   
-                    pck.Dispose();
+                    excelPackage.Dispose();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Upload Error");
                 }
+                // TODO: Implementar sistema de archivos default.
+                var loadFilePath = @"c:\users\nyamis\oneDrive - bmining\BHP\FreightData.xlsx";
+                var loadFileInfo = new FileInfo(loadFilePath);
 
-                string fileName = @"c:\users\nyamis\oneDrive - bmining\BHP\FreightData.xlsx";
-                FileInfo filePath = new FileInfo(fileName);
-
-                if (filePath.Exists)
+                if (loadFileInfo.Exists)
                 {
                     try
                     {
-                        ExcelPackage pck2 = new ExcelPackage(filePath);
-                        ExcelWorksheet ws2 = pck2.Workbook.Worksheets["RealMonth"];
+                        ExcelPackage package = new ExcelPackage(loadFileInfo);
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets["RealMonth"];
 
-                        FileStream fs = File.OpenWrite(fileName);
-                        fs.Close();
+                        // Check if the file is already open
+                        var openWriteCheck = File.OpenWrite(loadFilePath);
+                        openWriteCheck.Close();
 
-                        int lastRow = ws2.Dimension.End.Row + 1;
-                        DateTime newDate = new DateTime(Date.Year, Date.Month, 1, 00, 00, 00).AddMilliseconds(000);
+                        int lastRow = worksheet.Dimension.End.Row + 1;
+                        DateTime newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00).AddMilliseconds(000);
 
-                        for (int i = 0; i < lstFreights.Count; i++)
+                        for (int i = 0; i < _freights.Count; i++)
                         {
-                            ws2.Cells[i + lastRow, 1].Value = newDate;
-                            ws2.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            ws2.Cells[i + lastRow, 2].Value = lstFreights[i].Name;
-                            ws2.Cells[i + lastRow, 3].Value = lstFreights[i].Number;
-                            ws2.Cells[i + lastRow, 4].Value = lstFreights[i].Start;
-                            ws2.Cells[i + lastRow, 4].Style.Numberformat.Format = "yyyy-MM-dd";
-                            ws2.Cells[i + lastRow, 5].Value = lstFreights[i].End;
-                            ws2.Cells[i + lastRow, 5].Style.Numberformat.Format = "yyyy-MM-dd";
-                            ws2.Cells[i + lastRow, 6].Value = lstFreights[i].WMT;
-                            ws2.Cells[i + lastRow, 7].Value = lstFreights[i].DMT;
-                            ws2.Cells[i + lastRow, 8].Value = lstFreights[i].Moisture;
-                            ws2.Cells[i + lastRow, 9].Value = lstFreights[i].Cu;
-                            ws2.Cells[i + lastRow, 10].Value = lstFreights[i].As;
-                            ws2.Cells[i + lastRow, 11].Value = lstFreights[i].Fe;
-                            ws2.Cells[i + lastRow, 12].Value = lstFreights[i].Au;
-                            ws2.Cells[i + lastRow, 13].Value = lstFreights[i].Ag;
-                            ws2.Cells[i + lastRow, 14].Value = lstFreights[i].S;
-                            ws2.Cells[i + lastRow, 15].Value = lstFreights[i].Insoluble;
-                            ws2.Cells[i + lastRow, 16].Value = lstFreights[i].Cd;
-                            ws2.Cells[i + lastRow, 17].Value = lstFreights[i].Zn;
-                            ws2.Cells[i + lastRow, 18].Value = lstFreights[i].Hg;
-                            ws2.Cells[i + lastRow, 19].Value = lstFreights[i].SiO2;
-                            ws2.Cells[i + lastRow, 20].Value = lstFreights[i].Al2O3;
-                            ws2.Cells[i + lastRow, 21].Value = lstFreights[i].Sb;
-                            ws2.Cells[i + lastRow, 22].Value = lstFreights[i].Mo;
+                            worksheet.Cells[i + lastRow, 1].Value = newDate;
+                            worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                            worksheet.Cells[i + lastRow, 2].Value = _freights[i].Name;
+                            worksheet.Cells[i + lastRow, 3].Value = _freights[i].Number;
+                            worksheet.Cells[i + lastRow, 4].Value = _freights[i].Start;
+                            worksheet.Cells[i + lastRow, 4].Style.Numberformat.Format = "yyyy-MM-dd";
+                            worksheet.Cells[i + lastRow, 5].Value = _freights[i].End;
+                            worksheet.Cells[i + lastRow, 5].Style.Numberformat.Format = "yyyy-MM-dd";
+                            worksheet.Cells[i + lastRow, 6].Value = _freights[i].WMT;
+                            worksheet.Cells[i + lastRow, 7].Value = _freights[i].DMT;
+                            worksheet.Cells[i + lastRow, 8].Value = _freights[i].Moisture;
+                            worksheet.Cells[i + lastRow, 9].Value = _freights[i].Cu;
+                            worksheet.Cells[i + lastRow, 10].Value = _freights[i].As;
+                            worksheet.Cells[i + lastRow, 11].Value = _freights[i].Fe;
+                            worksheet.Cells[i + lastRow, 12].Value = _freights[i].Au;
+                            worksheet.Cells[i + lastRow, 13].Value = _freights[i].Ag;
+                            worksheet.Cells[i + lastRow, 14].Value = _freights[i].S;
+                            worksheet.Cells[i + lastRow, 15].Value = _freights[i].Insoluble;
+                            worksheet.Cells[i + lastRow, 16].Value = _freights[i].Cd;
+                            worksheet.Cells[i + lastRow, 17].Value = _freights[i].Zn;
+                            worksheet.Cells[i + lastRow, 18].Value = _freights[i].Hg;
+                            worksheet.Cells[i + lastRow, 19].Value = _freights[i].SiO2;
+                            worksheet.Cells[i + lastRow, 20].Value = _freights[i].Al2O3;
+                            worksheet.Cells[i + lastRow, 21].Value = _freights[i].Sb;
+                            worksheet.Cells[i + lastRow, 22].Value = _freights[i].Mo;
                         }
-
-                        byte[] fileText2 = pck2.GetAsByteArray();
-                        File.WriteAllBytes(fileName, fileText2);
-
-                        UpdateA = $"{StringResources.Updated}: {DateTime.Now}";
-
+                        byte[] fileText2 = package.GetAsByteArray();
+                        File.WriteAllBytes(loadFilePath, fileText2);
+                        MyLastDateRefreshActualValues = $"{StringResources.Updated}: {DateTime.Now}";
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Upload Error");
                     }
                 }
-
             }
-
         }
 
         private void GenerateBudgetFreightTemplate()
@@ -362,7 +328,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             var ws = pck.Workbook.Worksheets.Add("BudgetFreight");
 
             ws.Cells["B2:O2"].Merge = true;
-            ws.Cells["B2"].Value = $"FY{FiscalYear}";
+            ws.Cells["B2"].Value = $"FY{MyFiscalYear}";
 
             ws.Column(2).Style.Font.Bold = true;
             ws.Column(3).Style.Font.Bold = true;
@@ -415,7 +381,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 if (dialog.ShowDialog() == true)
                 {
                     File.WriteAllBytes(dialog.FileName, fileText);
-                    IsEnabled2 = true;
+                    IsEnabledLoadBudgetValues = true;
                 }
             }
             catch (Exception ex)
@@ -423,7 +389,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 MessageBox.Show(ex.Message, "Upload Error");
             }
         }
-        //TODO: Formatear esto con un nombre más comprensible y sacar de la clase
+        //TODO: Formatear esto con un nombre más comprensible y sacar de la clase y mover a la carpeta modelos
         public class Item
         {
             public DateTime Date { get; set; }
@@ -459,26 +425,30 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             {
                 try
                 {
+                    // TODO: Usar nomenclatura para variable filePath
                     FileInfo FilePath = new FileInfo(op.FileName);
                     ExcelPackage pck = new ExcelPackage(FilePath);
-                    ExcelWorksheet ws = pck.Workbook.Worksheets["BudgetFreight"];
+                    ExcelWorksheet ws = pck.Workbook.Worksheets["BudgetFreight"]; // TODO: Llevar a un archivo de constantes
 
                     FileStream fs = File.OpenWrite(op.FileName);
                     fs.Close();
 
+                    // TODO: Usar variable
                     DateTime Db = DateTime.Now;
 
                     for (int i = 0; i < 12; i++)
                     {
+                        // TODO: Evitar variables con letras, usar variable _month
                         int M = DateTime.ParseExact(ws.Cells[3, 4 + i].Value.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
 
+                        // TODO: utilizar una función en utility para esta conversion
                         if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4 || i == 5)
                         {
-                            Db = new DateTime(FiscalYear - 1, M, 1, 00, 00, 00).AddMilliseconds(000);
+                            Db = new DateTime(MyFiscalYear - 1, M, 1, 00, 00, 00).AddMilliseconds(000); // TODO: No es necesario el add milliseconds
                         }
                         else if (i == 6 || i == 7 || i == 8 || i == 9 || i == 10 || i == 11)
                         {
-                            Db = new DateTime(FiscalYear, M, 1, 00, 00, 00).AddMilliseconds(000);
+                            Db = new DateTime(MyFiscalYear, M, 1, 00, 00, 00).AddMilliseconds(000);
                         }
 
 
@@ -518,16 +488,16 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 {
                     MessageBox.Show(ex.Message, "Upload Error");
                 }
-
+                // TODO: esta esta hardcoded
                 string fileName = @"c:\users\nyamis\oneDrive - bmining\BHP\FreightData.xlsx";
                 FileInfo filePath = new FileInfo(fileName);
 
                 if (filePath.Exists)
-                {                  
+                {
                     try
                     {
                         ExcelPackage pck2 = new ExcelPackage(filePath);
-                        ExcelWorksheet ws2 = pck2.Workbook.Worksheets["BudgetFreight"];
+                        ExcelWorksheet ws2 = pck2.Workbook.Worksheets["BudgetFreight"]; // TODO: Constantes
 
                         FileStream fs = File.OpenWrite(fileName);
                         fs.Close();
@@ -558,12 +528,12 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         byte[] fileText2 = pck2.GetAsByteArray();
                         File.WriteAllBytes(fileName, fileText2);
 
-                        UpdateB = $"{StringResources.Updated}: {DateTime.Now}";
+                        MyLastRefreshBudgetValues = $"{StringResources.Updated}: {DateTime.Now}";
 
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Upload Error");
+                        MessageBox.Show(ex.Message, "Upload Error"); // TODO: Constantes
                     }
                 }
 

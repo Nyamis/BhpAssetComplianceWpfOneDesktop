@@ -196,6 +196,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mine Compliance Budget Template.
+        /// </summary>
+        public static string Mine_ComplianceBudgetTemplate {
+            get {
+                return ResourceManager.GetString("Mine ComplianceBudgetTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mine Compliance.
         /// </summary>
         public static string MineCompliance {

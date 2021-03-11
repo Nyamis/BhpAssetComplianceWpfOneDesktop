@@ -207,4 +207,7 @@
   <data name="Poster" xml:space="preserve">
     <value>Poster</value>
   </data>
+  <data name="Mine ComplianceBudgetTemplate" xml:space="preserve">
+    <value>Mine Compliance Budget Template</value>
+  </data>
 </root>
