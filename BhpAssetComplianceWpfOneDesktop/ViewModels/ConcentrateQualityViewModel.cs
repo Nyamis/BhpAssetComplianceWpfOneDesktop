@@ -16,7 +16,6 @@ using System.Windows;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
-    //TODO: BORRAME
     public class ConcentrateQualityViewModel : BasePosterViewModel
     {
         protected override string MyPosterName { get; set; } = StringResources.ConcentrateQuality;
