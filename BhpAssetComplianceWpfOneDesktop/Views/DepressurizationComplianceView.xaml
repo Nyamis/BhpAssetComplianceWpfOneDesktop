@@ -3,37 +3,119 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BhpAssetComplianceWpfOneDesktop.Views"
-              xmlns:prism="http://prismlibrary.com/"
+             xmlns:resources="clr-namespace:BhpAssetComplianceWpfOneDesktop.Resources"
+             xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="650">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Content="{Binding MyPosterHeader}" Margin="25,10,300,360" FontSize="16" Grid.Row="0"/>
+        <ContentControl Content="{Binding MyPosterHeader}" Grid.Row="0"/>
 
-        <Label x:Name="label1" Content="{Binding monthlyContent}" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <Image  Source="{Binding Source}" Name="I1" HorizontalAlignment="Left" Height="130" Margin="30,79,0,0" VerticalAlignment="Top" Width="130" Stretch="Fill"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-        <Label x:Name="label2" Content="{Binding dateContent}"  HorizontalAlignment="Left" Margin="191,134,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <DatePicker SelectedDate="{Binding Date}" HorizontalAlignment="Left" Margin="275,135,0,0" VerticalAlignment="Top" Width="112"/>
-        <Button x:Name="CargarI1_btn" Content="{Binding loadImageContent}" HorizontalAlignment="Left" Margin="185,89,0,0" VerticalAlignment="Top" Width="120" Command="{Binding CargarI1}"/>
+            <GroupBox Header="{x:Static resources:StringResources.MonthlyCompliancedepressurizationTemplate}" Grid.Column="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-        <Button x:Name="GenerarAFT_btn" Content="{Binding generateContent}" HorizontalAlignment="Left" Margin="185,187,0,0" VerticalAlignment="Top" Width="120" Command="{Binding GenerarDMT}"/>
-        <Button x:Name="CargarAFTr_btn" Content="{Binding loadContent}" HorizontalAlignment="Left" Margin="326,187,0,0" VerticalAlignment="Top" Width="120" Command="{Binding CargarDMT}"/>
-        <TextBlock Text="{Binding UpdateA}" HorizontalAlignment="Left" Margin="452,189,0,0" VerticalAlignment="Top" Height="33" Width="130"/>
+                    <GroupBox Header="{x:Static resources:StringResources.Image}" Grid.Column="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-        <Label x:Name="label3" Content="{Binding targetContent}" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,236,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <Label x:Name="label4" Content="{Binding fiscalYearContent}" HorizontalAlignment="Left" Margin="31,273,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <TextBox Text="{Binding FiscalYear , ValidatesOnExceptions=True}"  HorizontalAlignment="Left" Height="22" Margin="104,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="51"/>
-        <Button x:Name="GenerarBFT_btn" Content="{Binding generateContent}" HorizontalAlignment="Left" Margin="185,278,0,0" VerticalAlignment="Top" Width="120" Command="{Binding GenerarDTT}"/>
-        <Button x:Name="CargarBFTr_btn" Content="{Binding loadContent}" HorizontalAlignment="Left" Margin="326,278,0,0" VerticalAlignment="Top" Width="120" Command="{Binding CargarDTT}"/>
-        <TextBlock Text="{Binding UpdateB}" HorizontalAlignment="Left" Margin="452,280,0,0" VerticalAlignment="Top" Height="33" Width="130"/>
+                            <Grid Grid.Row="0">
+                                <Image  Source="{Binding MyImageSource}"  />
+                            </Grid>
 
+                            <Grid Grid.Row="1">
+                                <Button Content="{x:Static resources:StringResources.SelectImage}" Command="{Binding SelectImageCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
 
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition  Height="15"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0"/>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:StringResources.Date}"
+                                   Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                            <DatePicker  SelectedDate="{Binding MyDateActual}" Grid.Column="1"/>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Button Content="{x:Static resources:StringResources.LoadImage}" Command="{Binding  LoadImageCommand}"/>
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <TextBlock Text="{Binding MyLastDateRefreshMonthlyImage}" Style="{StaticResource TextBlockStyle}" />
+                        </Grid>
+                        <Grid Grid.Row="4">
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateMonthlyDepressurizationTemplateCommand}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="5">
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadMonthlyDepressurizationTemplateCommand}" />
+                        </Grid>
+
+                        <Grid Grid.Row="6">
+                            <TextBlock Text="{Binding MyLastDateRefreshMonthlyValues}" Style="{StaticResource TextBlockStyle}" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="{x:Static resources:StringResources.TargetDepressurizationTemplate}" Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static resources:StringResources.FiscalYear}"
+                                   Style="{StaticResource TextBlockStyle}"  Grid.Column="0"/>
+                        <TextBox Text="{Binding MyFiscalYear , ValidatesOnExceptions=True}" Grid.Column="1"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <WrapPanel>
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateTargetDepressurizationTemplateCommand}"/>
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadTargetDepressurizationTemplateCommand}"/>
+                            <TextBlock Text="{Binding MyLastDateRefreshTargetValues}" Style="{StaticResource TextBlockStyle}"/>
+                        </WrapPanel>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+        </Grid>
     </Grid>
 </UserControl>
+    

@@ -15,6 +15,21 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,11 +51,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Poster.ico</ApplicationIcon>
+    <ApplicationIcon>IconDesktopLightBlue.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -60,9 +77,53 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Constants\ConcentrateQualityConstants.cs" />
+    <Compile Include="Constants\DepressurizationComplianceConstants.cs" />
+    <Compile Include="Constants\GeotechnicalNotesConstants.cs" />
+    <Compile Include="Constants\HistoricalRecordConstants.cs" />
     <Compile Include="Constants\IconKeys.cs" />
+    <Compile Include="Constants\MineComplianceConstants.cs" />
+    <Compile Include="Constants\MineSequenceConstants.cs" />
+    <Compile Include="Constants\ProcessComplianceConstants.cs" />
+    <Compile Include="Constants\QuartersReconciliationFactorsConstants.cs" />
+    <Compile Include="Constants\TemplateColors\ConcentrateQualityTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColors\DepressurizationComplianceTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColors\GeotechnicalNotesTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColors\MineComplianceTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColors\MineSequenceTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColors\ProcessComplianceTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColors\QuartersReconciliationFactorsTemplateColors.cs" />
+    <Compile Include="Models\ConcentrateQualityModels\ConcentrateQualityBudgetFreight.cs" />
+    <Compile Include="Models\DepressurizationComplianceModels\DepressurizationComplianceMonthlyCompliance.cs" />
+    <Compile Include="Models\DepressurizationComplianceModels\DepressurizationComplianceTargetCompliance.cs" />
+    <Compile Include="Models\GeotechnicalNotesModels\GeotechnicalNotesNotes.cs" />
+    <Compile Include="Models\MineComplianceModels\MineComplianceBudgetMovementProduction.cs" />
+    <Compile Include="Models\MineComplianceModels\MineComplianceBudgetPitDisintegrated.cs" />
+    <Compile Include="Models\MineComplianceModels\MineComplianceBudgetPrincipal.cs" />
+    <Compile Include="Models\MineComplianceModels\MineComplianceRealHaulingFc.cs" />
+    <Compile Include="Models\MineComplianceModels\MineComplianceRealLoadingFc.cs" />
+    <Compile Include="Models\MineComplianceModels\MineComplianceRealMillFc.cs" />
+    <Compile Include="Models\MineComplianceModels\MineComplianceRealMovementProduction.cs" />
+    <Compile Include="Models\MineComplianceModels\MineComplianceRealPitDisintegrated.cs" />
+    <Compile Include="Models\MineSequenceModels\MineSequenceAdherenceToB01L1.cs" />
+    <Compile Include="Models\MineSequenceModels\MineSequenceComments.cs" />
+    <Compile Include="Models\MineSequenceModels\MineSequenceDelayRecover.cs" />
+    <Compile Include="Models\MineSequenceModels\MineSequenceL1Expit.cs" />
+    <Compile Include="Models\ProcessComplianceModels\ProcessComplianceOLAP.cs" />
+    <Compile Include="Models\ProcessComplianceModels\ProcessComplianceOreToMill.cs" />
+    <Compile Include="Models\ProcessComplianceModels\ProcessComplianceRecovery.cs" />
+    <Compile Include="Models\ProcessComplianceModels\ProcessComplianceSulphide.cs" />
+    <Compile Include="Models\QuartersReconciliationFactorsModels\QuartersReconciliationFactorsF0.cs" />
+    <Compile Include="Models\QuartersReconciliationFactorsModels\QuartersReconciliationFactorsF1.cs" />
+    <Compile Include="Models\QuartersReconciliationFactorsModels\QuartersReconciliationFactorsF2.cs" />
+    <Compile Include="Models\QuartersReconciliationFactorsModels\QuartersReconciliationFactorsF3.cs" />
+    <Compile Include="Resources\FilePaths.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>FilePaths.settings</DependentUpon>
+    </Compile>
     <Compile Include="Utility\ExportImageToCsv.cs" />
-    <Compile Include="Models\ConcentrateQualityModels\ConcentrateQualityFreight.cs" />
+    <Compile Include="Models\ConcentrateQualityModels\ConcentrateQualityActualFreight.cs" />
+    <Compile Include="Utility\TemplateDates.cs" />
     <Compile Include="ViewModels\ConcentrateQualityViewModel.cs" />
     <Compile Include="ViewModels\DepressurizationComplianceViewModel.cs" />
     <Compile Include="ViewModels\GeotechnicalViewModel.cs" />
@@ -70,6 +131,7 @@
     <Compile Include="ViewModels\MineSequenceViewModel.cs" />
     <Compile Include="ViewModels\ProcessComplianceViewModel.cs" />
     <Compile Include="ViewModels\QuartersReconciliationFactorsViewModel.cs" />
+    <Compile Include="ViewModels\RepositoryViewModel.cs" />
     <Compile Include="Views\ConcentrateQualityView.xaml.cs">
       <DependentUpon>ConcentrateQualityView.xaml</DependentUpon>
     </Compile>
@@ -93,6 +155,9 @@
     </Compile>
     <Compile Include="Views\QuartersReconciliationFactorsView.xaml.cs">
       <DependentUpon>QuartersReconciliationFactorsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RepositoryView.xaml.cs">
+      <DependentUpon>RepositoryView.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\BaseStyles.xaml">
       <SubType>Designer</SubType>
@@ -200,6 +265,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\RepositoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -229,15 +298,19 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Resources\FilePaths.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>FilePaths.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EPPlus">
-      <Version>5.5.0</Version>
+      <Version>5.6.4</Version>
     </PackageReference>
     <PackageReference Include="Infragistics.Themes.IG.Wpf">
       <Version>1.0.0</Version>
     </PackageReference>
-    <PackageReference Include="Prism.DryIoc" Version="8.0.0.1909" />
+    <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Engines\" />
@@ -247,6 +320,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Poster.ico" />
+    <Resource Include="IconDesktopBeige.ico" />
+    <Resource Include="IconDesktopLightBlue.ico" />
+    <Resource Include="IconDesktopWhite.ico" />
     <Content Include="Resources\Icons\Blue\Calidad concentrado.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -274,6 +350,9 @@
     <Content Include="Resources\Icons\Blue\Secuencia minera.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\DesktopIcons\IconDesktopBeige.png" />
+    <Resource Include="Resources\Icons\DesktopIcons\IconDesktopLightBlue.png" />
+    <Resource Include="Resources\Icons\DesktopIcons\IconDesktopWhite.png" />
     <Content Include="Resources\Icons\Gray\Calidad concentrado.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -329,6 +408,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Themes\Metro\HowToApplyTheme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

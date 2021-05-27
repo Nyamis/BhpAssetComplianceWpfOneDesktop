@@ -598,7 +598,7 @@
     <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
     <Setter Property="FlowDirection" Value="LeftToRight" />
     <Setter Property="Validation.ErrorTemplate" Value="{StaticResource TextBoxValidationToolTipTemplate}"/>
-	<Setter Property="SelectionBrush" Value="{StaticResource TextBoxFocusedBrush}" />
+    <Setter Property="SelectionBrush" Value="{StaticResource TextBoxFocusedBrush}" />
     <Setter Property="SelectionOpacity" Value="0.4" />
     <Setter Property="Template">
       <Setter.Value>

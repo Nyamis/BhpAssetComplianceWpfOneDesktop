@@ -2,10 +2,6 @@
 using BhpAssetComplianceWpfOneDesktop.Utility;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prism.Mvvm;
 using Prism.Commands;
 using System.Windows;
 using OfficeOpenXml;
@@ -16,6 +12,8 @@ using System.Drawing;
 using System.Windows.Media;
 using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Models.MineSequenceModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
@@ -24,203 +22,295 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         protected override string MyPosterName { get; set; } = StringResources.MineSequence;
         protected override string MyPosterIcon { get; set; } = IconKeys.MineSequence;
 
-        public string generateContent { get; set; } = StringResources.GenerateTemplate;
-
-        public string loadContent { get; set; } = StringResources.LoadTemplate;
-
-        public string loadImageContent { get; set; } = StringResources.LoadImage;
-
-        public string dateContent { get; set; } = StringResources.Date;
-
-        public string processContent { get; set; } = StringResources.Process;
-
-        private string _imageE;
-        public string imageE
+        private string _myEscondidaImage;
+        public string MyEscondidaImage
         {
-            get { return _imageE; }
-            set { SetProperty(ref _imageE, value); }
+            get { return _myEscondidaImage; }
+            set { SetProperty(ref _myEscondidaImage, value); }
         }
 
-        private string _imageEN;
-        public string imageEN
+        private string _myEscondidaNorteImage;
+        public string MyEscondidaNorteImage
         {
-            get { return _imageEN; }
-            set { SetProperty(ref _imageEN, value); }
+            get { return _myEscondidaNorteImage; }
+            set { SetProperty(ref _myEscondidaNorteImage, value); }
         }
 
-        ImageSource _Source;
-        public ImageSource Source
+        private ImageSource _myEscondidaImageSource;
+        public ImageSource MyEscondidaImageSource
         {
-            get { return _Source; }
-            set { SetProperty(ref _Source, value); }
+            get { return _myEscondidaImageSource; }
+            set { SetProperty(ref _myEscondidaImageSource, value); }
         }
 
-        private bool _isEnabled;
-        public bool IsEnabled
+        private ImageSource _myEscondidaNorteImageSource;
+        public ImageSource MyEscondidaNorteImageSource
         {
-            get { return _isEnabled; }
-            set { SetProperty(ref _isEnabled, value); }
+            get { return _myEscondidaNorteImageSource; }
+            set { SetProperty(ref _myEscondidaNorteImageSource, value); }
         }
 
-        ImageSource _Source2;
-        public ImageSource Source2
+        private bool _isEnabledLoadEscondidaImagePath;
+        public bool IsEnabledLoadEscondidaImagePath
         {
-            get { return _Source2; }
-            set { SetProperty(ref _Source2, value); }
+            get { return _isEnabledLoadEscondidaImagePath; }
+            set { SetProperty(ref _isEnabledLoadEscondidaImagePath, value); }
         }
 
-        private bool _isEnabled1;
-        public bool IsEnabled1
+        private bool _isEnabledLoadEscondidaNorteImagePath;
+        public bool IsEnabledLoadEscondidaNorteImagePath
         {
-            get { return _isEnabled1; }
-            set { SetProperty(ref _isEnabled1, value); }
+            get { return _isEnabledLoadEscondidaNorteImagePath; }
+            set { SetProperty(ref _isEnabledLoadEscondidaNorteImagePath, value); }
         }
 
-        private bool _isEnabled2;
-        public bool IsEnabled2
+        private bool _isEnabledGenerateTemplate;
+        public bool IsEnabledGenerateTemplate
         {
-            get { return _isEnabled2; }
-            set { SetProperty(ref _isEnabled2, value); }
+            get { return _isEnabledGenerateTemplate; }
+            set { SetProperty(ref _isEnabledGenerateTemplate, value); }
         }
 
-        private bool _isEnabled3;
-        public bool IsEnabled3
+        private bool _isEnabledLoadTemplateValues;
+        public bool IsEnabledLoadTemplateValues
         {
-            get { return _isEnabled3; }
-            set { SetProperty(ref _isEnabled3, value); }
+            get { return _isEnabledLoadTemplateValues; }
+            set { SetProperty(ref _isEnabledLoadTemplateValues, value); }
         }
 
-        private string _UpdateText;
-        public string UpdateText
+        private string _myLastRefreshValues;
+        public string MyLastRefreshValues
         {
-            get { return _UpdateText; }
-            set { SetProperty(ref _UpdateText, value); }
+            get { return _myLastRefreshValues; }
+            set { SetProperty(ref _myLastRefreshValues, value); }
         }
 
-        DateTime _Date;
-        public DateTime Date
+        private string _myLastDateRefreshImages;
+        public string MyLastDateRefreshImages
         {
-            get { return _Date; }
-            set { SetProperty(ref _Date, value); }
+            get { return _myLastDateRefreshImages; }
+            set { SetProperty(ref _myLastDateRefreshImages, value); }
         }
 
-        public DelegateCommand GenerarT { get; private set; }
-        public DelegateCommand CargarI1 { get; private set; }
-        public DelegateCommand CargarI2 { get; private set; }
-        public DelegateCommand Procesar { get; private set; }
-        public DelegateCommand CargarT { get; private set; }
+        private DateTime _myDateActual;
+        public DateTime MyDateActual
+        {
+            get { return _myDateActual; }
+            set { SetProperty(ref _myDateActual, value); }
+        }
+     
+        public DelegateCommand SelectEscondidaImageCommand { get; private set; }
+        public DelegateCommand SelectEscondidaNorteImageCommand { get; private set; }
+        public DelegateCommand LoadImagesCommand { get; private set; }
+        public DelegateCommand GenerateMineSequenceTemplateCommand { get; private set; } 
+        public DelegateCommand LoadMineSequenceTemplateCommand { get; private set; }
+        public DelegateCommand ProcessAllMineSequenceValuesCommand { get; private set; }
+
+        private readonly List<MineSequenceL1Expit> _l1Expit = new List<MineSequenceL1Expit>();
+
+        private readonly List<MineSequenceAdherenceToB01L1> _adherenceToB01L1 = new List<MineSequenceAdherenceToB01L1>();
+      
+        private readonly List<MineSequenceDelayRecover> _delayRecover = new List<MineSequenceDelayRecover>();
+        
+        private readonly List<MineSequenceComments> _comments = new List<MineSequenceComments>();
 
         public MineSequenceViewModel()
         {
-            Date = DateTime.Now;
-            GenerarT = new DelegateCommand(GenerateTemplate);
-            CargarI1 = new DelegateCommand(ImageEPath);
-            CargarI2 = new DelegateCommand(ImageENPath);
-            CargarT = new DelegateCommand(ReadTemplate).ObservesCanExecute(() => IsEnabled1);
-            Procesar = new DelegateCommand(Process, CanProcess).ObservesProperty(() => IsEnabled).ObservesProperty(() => IsEnabled2).ObservesProperty(() => IsEnabled3);
+            IsEnabledLoadEscondidaImagePath = false;
+            IsEnabledLoadEscondidaNorteImagePath = false;
+            IsEnabledGenerateTemplate = false;
+            MyDateActual = DateTime.Now;
+            SelectEscondidaImageCommand = new DelegateCommand(EscondidaImagePath);
+            SelectEscondidaNorteImageCommand = new DelegateCommand(EscondidaNorteImagePath);
+            LoadImagesCommand = new DelegateCommand(LoadImages, CanProcess).ObservesProperty(() => IsEnabledLoadEscondidaImagePath).ObservesProperty(() => IsEnabledLoadEscondidaNorteImagePath); ;
+            GenerateMineSequenceTemplateCommand = new DelegateCommand(GenerateMineSequenceTemplate);            
+            LoadMineSequenceTemplateCommand = new DelegateCommand(LoadMineSequenceTemplate).ObservesCanExecute(() => IsEnabledGenerateTemplate);
         }
 
-        private void GenerateTemplate()
+        private void EscondidaImagePath()
         {
-            ExcelPackage pck = new ExcelPackage();
-            pck.Workbook.Properties.Author = "BHP";
-            pck.Workbook.Properties.Title = "Mine Sequence Template";
-            pck.Workbook.Properties.Company = "BHP";
-
-            var ws = pck.Workbook.Worksheets.Add("L1Expit");
-
-            ws.Cells["A1"].Value = "Expit Budget (t)";
-            ws.Cells["B1"].Value = "Expit Actual (%)";
-            ws.Cells["C1"].Value = "Budget Baseline";
-            ws.Cells["A1:C1"].Style.Font.Bold = true;
-            ws.Cells["A1:C1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws.Cells["A1:B1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["A1:B1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FFC269"));
-            ws.Cells["C1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FAA762"));
-
-            for (int i = 1; i < 3; i++)
+            var openFileDialog = new OpenFileDialog
             {
-                ws.Cells[$"A{i}:C{i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"A{i}:C{i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                ws.Column(i).Width = 18;
+                Title = "Select a picture",
+                Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+              "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+              "Portable Network Graphic (*.png)|*.png"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                MyEscondidaImage = openFileDialog.FileName;
+                MyEscondidaImageSource = new BitmapImage(new Uri(MyEscondidaImage));
+            }
+            IsEnabledLoadEscondidaImagePath = true;
+        }
+
+        private void EscondidaNorteImagePath()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Title = "Select a picture",
+                Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+              "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+              "Portable Network Graphic (*.png)|*.png"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                MyEscondidaNorteImage = openFileDialog.FileName;
+                MyEscondidaNorteImageSource = new BitmapImage(new Uri(MyEscondidaNorteImage));
+            }
+            IsEnabledLoadEscondidaNorteImagePath = true;
+        }
+
+        private bool CanProcess()
+        {
+            if (IsEnabledLoadEscondidaImagePath & IsEnabledLoadEscondidaNorteImagePath)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void LoadImages()
+        {
+            var targetFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.MineSequenceCSVFilePath;
+            var loadFileInfo = new FileInfo(targetFilePath);
+            if (loadFileInfo.Exists)
+            {
+                if (targetFilePath.Substring(targetFilePath.Length - 27) == "MineSequencePictureData.csv")
+                {
+                    try
+                    {
+                        var openWriteCheck = File.OpenWrite(targetFilePath);
+                        openWriteCheck.Close();
+
+                        var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                        var findImageOnDate = ExportImageToCsv.SearchByDateMineSequence(newDate, targetFilePath);
+                        if (findImageOnDate == -1)
+                        {
+                            ExportImageToCsv.AppendImageMineSequenceToCSV(MyEscondidaImage, MyEscondidaNorteImage, newDate, targetFilePath);
+                        }
+                        else
+                        {
+                            ExportImageToCsv.RemoveItem(targetFilePath, findImageOnDate);
+                            ExportImageToCsv.AppendImageMineSequenceToCSV(MyEscondidaImage, MyEscondidaNorteImage, newDate, targetFilePath);
+                        }
+                        MyLastDateRefreshImages = $"{StringResources.Updated}: {DateTime.Now}";
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, StringResources.UploadError);
+                    }
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {targetFilePath} {StringResources.IsTheRightOne}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                }
+            }
+            else
+            {
+                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {targetFilePath} {StringResources.ExistsOrNotSelect}";
+                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+            }         
+        }
+
+        private void GenerateMineSequenceTemplate()
+        {
+            var excelPackage = new ExcelPackage();
+
+            excelPackage.Workbook.Properties.Author = "BHP";
+            excelPackage.Workbook.Properties.Title = MineSequenceConstants.MineSequenceExcelFileName;
+            excelPackage.Workbook.Properties.Company = "BHP";
+
+            var l1ExpitWorksheet = excelPackage.Workbook.Worksheets.Add(MineSequenceConstants.L1ExpitMineSequenceWorksheet);
+
+            l1ExpitWorksheet.Cells["A1"].Value = "Expit Budget (t)";
+            l1ExpitWorksheet.Cells["B1"].Value = "Expit Actual (%)";
+            l1ExpitWorksheet.Cells["C1"].Value = "Budget Baseline";
+            l1ExpitWorksheet.Cells["A1:C1"].Style.Font.Bold = true;
+            l1ExpitWorksheet.Cells["A1:C1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            l1ExpitWorksheet.Cells["A1:B1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            l1ExpitWorksheet.Cells["A1:B1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.HeaderBackgroundExpitL1ExpitMineSequence));
+            l1ExpitWorksheet.Cells["C1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            l1ExpitWorksheet.Cells["C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.HeaderBackgroundBudgetL1ExpitMineSequence));
+            l1ExpitWorksheet.Column(3).Width = 18;
+
+            for (var i = 1; i < 3; i++)
+            {
+                l1ExpitWorksheet.Cells[$"A{i}:C{i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                l1ExpitWorksheet.Cells[$"A{i}:C{i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                l1ExpitWorksheet.Column(i).Width = 18;
             }
 
-            ws.Column(3).Width = 18;
+            var commentWorksheet = excelPackage.Workbook.Worksheets.Add(MineSequenceConstants.CommentsMineSequenceWorksheet);
+            
+            commentWorksheet.Cells["A1"].Value = "Tag";
+            commentWorksheet.Cells["B1"].Value = "Comment";
+            commentWorksheet.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            commentWorksheet.Cells["A1:B1"].Style.Font.Bold = true;
+            commentWorksheet.Column(1).Width = 15;
+            commentWorksheet.Column(2).Width = 250;
+            commentWorksheet.Cells["A1:B1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            commentWorksheet.Cells["A1:B1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.HeaderBackgroundCommentsMineSequence));
 
-            var ws4 = pck.Workbook.Worksheets.Add("Comments");
-            ws4.Cells["A1"].Value = "Tag";
-            ws4.Cells["B1"].Value = "Comment";
-            ws4.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws4.Cells["A1:B1"].Style.Font.Bold = true;
-            ws4.Column(1).Width = 15;
-            ws4.Column(2).Width = 150;
-            ws4.Cells["A1:B1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws4.Cells["A1:B1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#5C9FCC"));
-
-            for (int i = 1; i < 21; i++)
+            for (var i = 1; i < 21; i++)
             {
-                ws4.Cells[$"A{i}:B{i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws4.Cells[$"A{i}:B{i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                //var l = ws4.Cells[i + 1, 1].DataValidation.AddListDataValidation() as ExcelDataValidationList;
-                //l.AllowBlank = false;
-                //l.Formula.Values.Add("Ira");
-                //l.Formula.Values.Add("FcDc");
-                //l.ShowErrorMessage = true;
-                //l.Error = "Select from List of Values ...";
+                commentWorksheet.Cells[$"A{i}:B{i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                commentWorksheet.Cells[$"A{i}:B{i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
 
-            var ws2 = pck.Workbook.Worksheets.Add("AdherenceToB01L1");
-            List<string> lstHeader2 = new List<string>() { "Unplanned Delay (t)", "Volume Ytd (%)", "Spatial Ytd (%)", "AdherenceL1 Ytd (%)" };
+            var adherenceWorksheet = excelPackage.Workbook.Worksheets.Add(MineSequenceConstants.AdherenceMineSequenceWorksheet);
+            
+            var adherenceHeader = new List<string>() { "Unplanned Delay (t)", "Volume Ytd (%)", "Spatial Ytd (%)", "AdherenceL1 Ytd (%)" };
 
-            for (int i = 0; i < lstHeader2.Count; i++)
+            for (var i = 0; i < adherenceHeader.Count; i++)
             {
-                ws2.Cells[1, i + 1].Value = lstHeader2[i];
-                ws2.Cells[1, i + 1].Style.Font.Bold = true;
-                ws2.Column(1 + i).Width = 21;
-                ws2.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws2.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws2.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#A9D08E"));
+                adherenceWorksheet.Cells[1, i + 1].Value = adherenceHeader[i];
+                adherenceWorksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                adherenceWorksheet.Column(1 + i).Width = 21;
+                adherenceWorksheet.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                adherenceWorksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;          
             }
-            ws2.Cells["B1:D1"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-            ws2.Cells["A1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D0CECE"));
-            ws2.Cells["B1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#B62212"));
-            ws2.Cells["C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#3C4F70"));
-            ws2.Cells["D1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#1A7842"));
+            adherenceWorksheet.Cells["B1:D1"].Style.Font.Color.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.FontAdherenceMineSequence));
+            adherenceWorksheet.Cells["A1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.HeaderBackgroundAdherenceMineSequence1));
+            adherenceWorksheet.Cells["B1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.HeaderBackgroundAdherenceMineSequence2));
+            adherenceWorksheet.Cells["C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.HeaderBackgroundAdherenceMineSequence3));
+            adherenceWorksheet.Cells["D1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.HeaderBackgroundAdherenceMineSequence4));
 
-            for (int i = 1; i < 3; i++)
+            for (var i = 1; i < 3; i++)
             {
-                ws2.Cells[$"A{i}:D{i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws2.Cells[$"A{i}:D{i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-            }
-
-            var ws3 = pck.Workbook.Worksheets.Add("DelayRecover");
-            List<string> lstHeader3 = new List<string>() { "Ytd PushBack (t)", "Phase Name", "DelayRecover Pushback (t)" };
-
-            for (int i = 0; i < lstHeader3.Count; i++)
-            {
-                ws3.Cells[1, i + 1].Value = lstHeader3[i];
-                ws3.Cells[1, i + 1].Style.Font.Bold = true;
-                ws3.Column(1 + i).Width = 27;
-                ws3.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws3.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws3.Cells[1, i + 1].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-                ws3.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#0C637C"));
+                adherenceWorksheet.Cells[$"A{i}:D{i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                adherenceWorksheet.Cells[$"A{i}:D{i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
 
-            ws3.Cells[$"A1"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            ws3.Cells[$"A2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            for (int i = 1; i < 11; i++)
+            var delayrecoverWorksheet = excelPackage.Workbook.Worksheets.Add(MineSequenceConstants.DelayRecoverMineSequenceWorksheet);
+           
+            var delayrecoverHeader = new List<string>() { "Ytd PushBack (t)", "Phase Name", "DelayRecover Pushback (t)" };
+
+            for (var i = 0; i < delayrecoverHeader.Count; i++)
             {
-                ws3.Cells[$"B{i}:C{i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws3.Cells[$"A{i}:C{i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                delayrecoverWorksheet.Cells[1, i + 1].Value = delayrecoverHeader[i];
+                delayrecoverWorksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                delayrecoverWorksheet.Column(1 + i).Width = 27;
+                delayrecoverWorksheet.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                delayrecoverWorksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                delayrecoverWorksheet.Cells[1, i + 1].Style.Font.Color.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.FontDelayrecoverMineSequence));
+                delayrecoverWorksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.HeaderBackgroundDelayrecoverMineSequence));
             }
 
-            byte[] fileText = pck.GetAsByteArray();
-
-            SaveFileDialog dialog = new SaveFileDialog()
+            delayrecoverWorksheet.Cells[$"A1"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            delayrecoverWorksheet.Cells[$"A2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            for (var i = 1; i < 11; i++)
             {
-                FileName = "MineSequenceTemplate.xlsx",
+                delayrecoverWorksheet.Cells[$"B{i}:C{i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                delayrecoverWorksheet.Cells[$"A{i}:C{i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+            }
+
+            byte[] fileText = excelPackage.GetAsByteArray();
+
+            var dialog = new SaveFileDialog()
+            {
+                FileName = MineSequenceConstants.MineSequenceExcelFileName,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
@@ -228,291 +318,201 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             {
                 File.WriteAllBytes(dialog.FileName, fileText);
             }
-            IsEnabled1 = true;
+            IsEnabledGenerateTemplate = true;
         }
 
-        private void ImageEPath()
+        private void LoadMineSequenceTemplate()
         {
-            OpenFileDialog op = new OpenFileDialog
+            _l1Expit.Clear();
+            _adherenceToB01L1.Clear();
+            _delayRecover.Clear();
+            _comments.Clear();
+
+            var openFileDialog = new OpenFileDialog
             {
-                Title = "Select a picture",
-                Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
-              "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
-              "Portable Network Graphic (*.png)|*.png"
-            };
-            if (op.ShowDialog() == true)
-            {
-                imageE = op.FileName;
-                Source = new BitmapImage(new Uri(imageE));
-            }
-            IsEnabled = true;
-        }
-        private void ImageENPath()
-        {
-            OpenFileDialog op = new OpenFileDialog
-            {
-                Title = "Select a picture",
-                Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
-              "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
-              "Portable Network Graphic (*.png)|*.png"
-            };
-            if (op.ShowDialog() == true)
-            {
-                imageEN = op.FileName;
-                Source2 = new BitmapImage(new Uri(imageEN));
-            }
-            IsEnabled2 = true;
-        }
-
-        public class L1Expit
-        {
-            public double? ExpitBudgetTonnes { get; set; }
-            public double? ExpitActualPercent { get; set; }
-            public string BudgetBaseline { get; set; }
-        }
-
-        readonly List<L1Expit> lstL1Expit = new List<L1Expit>();
-
-        public class AdherenceToB01L1
-        {
-            public double UnplannedDelayTonnes { get; set; }
-            public double VolumeYtdPercent { get; set; }
-            public double SpatialYtdPercent { get; set; }
-            public double AdherenceL1YtdPercent { get; set; }
-        }
-
-        readonly List<AdherenceToB01L1> lstAdherenceToB01L1 = new List<AdherenceToB01L1>();
-
-        public class DelayRecover
-        {
-            public double YtdPushBackTonnes { get; set; }
-            public string PhaseName { get; set; }
-            public double DelayRecoverPushbackTonnes { get; set; }
-        }
-
-        readonly List<DelayRecover> lstDelayRecover = new List<DelayRecover>();
-
-        public class Comments
-        {
-            public string Tag { get; set; }
-            public string Comment { get; set; }
-        }
-
-        readonly List<Comments> lstComments = new List<Comments>();
-
-        private void ReadTemplate()
-        {
-            lstL1Expit.Clear();
-            lstAdherenceToB01L1.Clear();
-            lstDelayRecover.Clear();
-            lstComments.Clear();
-
-            OpenFileDialog op = new OpenFileDialog
-            {
-                Title = "Select File",
+                Title = StringResources.SelectFile,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
-            if (op.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == true)
             {
-                FileInfo FilePath = new FileInfo(op.FileName);
-                ExcelPackage pck = new ExcelPackage(FilePath);
-                ExcelWorksheet ws1 = pck.Workbook.Worksheets["L1Expit"];
-                ExcelWorksheet ws2 = pck.Workbook.Worksheets["AdherenceToB01L1"];
-                ExcelWorksheet ws3 = pck.Workbook.Worksheets["DelayRecover"];
-                ExcelWorksheet ws4 = pck.Workbook.Worksheets["Comments"];
+                var openFilePath = new FileInfo(openFileDialog.FileName);
+                var excelPackage = new ExcelPackage(openFilePath);
+                var l1ExpitTemplateWorksheet = excelPackage.Workbook.Worksheets[MineSequenceConstants.L1ExpitMineSequenceWorksheet];
+                var adherenceTemplateWorksheet = excelPackage.Workbook.Worksheets[MineSequenceConstants.AdherenceMineSequenceWorksheet];
+                var delayrecoverTemplateWorksheet = excelPackage.Workbook.Worksheets[MineSequenceConstants.DelayRecoverMineSequenceWorksheet];
+                var commentTemplateWorksheet = excelPackage.Workbook.Worksheets[MineSequenceConstants.CommentsMineSequenceWorksheet];
 
-                try
+                if (openFilePath.FullName.Substring(openFilePath.FullName.Length - MineSequenceConstants.MineSequenceExcelFileName.Length) == MineSequenceConstants.MineSequenceExcelFileName)
                 {
-                    FileStream fs = File.OpenWrite(op.FileName);
-                    fs.Close();
+                    try
+                    {
+                        var fileStream = File.OpenWrite(openFileDialog.FileName);
+                        fileStream.Close();
 
-                    if (ws1.Cells[2, 1].Value == null)
-                    {
-                        ws1.Cells[2, 1].Value = -99;
-                    }
-                    if (ws1.Cells[2, 2].Value == null)
-                    {
-                        ws1.Cells[2, 2].Value = -99;
-                    }
-                    if (ws1.Cells[2, 3].Value == null)
-                    {
-                        ws1.Cells[2, 3].Value = " ";
-                    }
-                    lstL1Expit.Add(new L1Expit()
-                    {
-                        ExpitBudgetTonnes = double.Parse(ws1.Cells[2, 1].Value.ToString()),
-                        ExpitActualPercent = double.Parse(ws1.Cells[2, 2].Value.ToString()),
-                        BudgetBaseline = ws1.Cells[2, 3].Value.ToString()
-                    });
+                        if (l1ExpitTemplateWorksheet.Cells[2, 1].Value == null)
+                            l1ExpitTemplateWorksheet.Cells[2, 1].Value = -99;
+                        if (l1ExpitTemplateWorksheet.Cells[2, 2].Value == null)
+                            l1ExpitTemplateWorksheet.Cells[2, 2].Value = -99;
+                        if (l1ExpitTemplateWorksheet.Cells[2, 3].Value == null)
+                            l1ExpitTemplateWorksheet.Cells[2, 3].Value = " ";
 
-
-                    if (ws2.Cells[2, 1].Value == null)
-                    {
-                        ws2.Cells[2, 1].Value = -99;
-                    }
-                    if (ws2.Cells[2, 2].Value == null)
-                    {
-                        ws2.Cells[2, 2].Value = -99;
-                    }
-                    if (ws2.Cells[2, 3].Value == null)
-                    {
-                        ws2.Cells[2, 3].Value = -99;
-                    }
-                    if (ws2.Cells[2, 4].Value == null)
-                    {
-                        ws2.Cells[2, 4].Value = -99;
-                    }
-                    lstAdherenceToB01L1.Add(new AdherenceToB01L1()
-                    {
-                        UnplannedDelayTonnes = double.Parse(ws2.Cells[2, 1].Value.ToString()),
-                        VolumeYtdPercent = double.Parse(ws2.Cells[2, 2].Value.ToString()),
-                        SpatialYtdPercent = double.Parse(ws2.Cells[2, 3].Value.ToString()) ,
-                        AdherenceL1YtdPercent = double.Parse(ws2.Cells[2, 4].Value.ToString()) 
-
-                    });
-
-                    int rows = ws3.Dimension.Rows;
-                    for (int i = 1; i < rows; i++)
-                    {
-                        if (ws3.Cells[i + 1, 2].Value != null)
+                        _l1Expit.Add(new MineSequenceL1Expit()
                         {
-                            if (ws3.Cells[2, 1].Value == null)
-                            {
-                                ws3.Cells[2, 1].Value = -99;
-                            }
-                            if (ws3.Cells[i + 1, 3].Value == null)
-                            {
-                                ws3.Cells[i + 1, 3].Value = -99;
-                            }
-                            lstDelayRecover.Add(new DelayRecover()
-                            {
-                                YtdPushBackTonnes = double.Parse(ws3.Cells[2, 1].Value.ToString()),
-                                PhaseName = ws3.Cells[i + 1, 2].Value.ToString(),
-                                DelayRecoverPushbackTonnes = double.Parse(ws3.Cells[i + 1, 3].Value.ToString()),
-                            });
-                        }
-                    }
+                            ExpitBudgetTonnes = double.Parse(l1ExpitTemplateWorksheet.Cells[2, 1].Value.ToString()),
+                            ExpitActualPercent = double.Parse(l1ExpitTemplateWorksheet.Cells[2, 2].Value.ToString())/100,
+                            BudgetBaseline = l1ExpitTemplateWorksheet.Cells[2, 3].Value.ToString()
+                        });
 
-                    int rows2 = ws4.Dimension.Rows;
-                    for (int i = 1; i < rows2; i++)
-                    {
-                        if (ws4.Cells[i + 1, 2].Value != null)
+                        if (adherenceTemplateWorksheet.Cells[2, 1].Value == null)
+                            adherenceTemplateWorksheet.Cells[2, 1].Value = -99;
+                        if (adherenceTemplateWorksheet.Cells[2, 2].Value == null)
+                            adherenceTemplateWorksheet.Cells[2, 2].Value = -99;
+                        if (adherenceTemplateWorksheet.Cells[2, 3].Value == null)
+                            adherenceTemplateWorksheet.Cells[2, 3].Value = -99;
+                        if (adherenceTemplateWorksheet.Cells[2, 4].Value == null)
+                            adherenceTemplateWorksheet.Cells[2, 4].Value = -99;
+
+                        _adherenceToB01L1.Add(new MineSequenceAdherenceToB01L1()
                         {
-                            string tag;
+                            UnplannedDelayTonnes = double.Parse(adherenceTemplateWorksheet.Cells[2, 1].Value.ToString()),
+                            VolumeYtdPercent = double.Parse(adherenceTemplateWorksheet.Cells[2, 2].Value.ToString())/100,
+                            SpatialYtdPercent = double.Parse(adherenceTemplateWorksheet.Cells[2, 3].Value.ToString())/100,
+                            AdherenceL1YtdPercent = double.Parse(adherenceTemplateWorksheet.Cells[2, 4].Value.ToString())/100
+                        });
 
-                            if (ws4.Cells[i + 1, 1].Value.ToNullSafeString() == "")
+                        var rows = delayrecoverTemplateWorksheet.Dimension.Rows;
+                        for (var i = 1; i < rows; i++)
+                        {
+                            if (delayrecoverTemplateWorksheet.Cells[i + 1, 2].Value != null)
                             {
-                                tag = "All";
+                                if (delayrecoverTemplateWorksheet.Cells[2, 1].Value == null)
+                                    delayrecoverTemplateWorksheet.Cells[2, 1].Value = -99;
+                                if (delayrecoverTemplateWorksheet.Cells[i + 1, 3].Value == null)
+                                    delayrecoverTemplateWorksheet.Cells[i + 1, 3].Value = -99;
+
+                                _delayRecover.Add(new MineSequenceDelayRecover()
+                                {
+                                    YtdPushBackTonnes = double.Parse(delayrecoverTemplateWorksheet.Cells[2, 1].Value.ToString()),
+                                    PhaseName = delayrecoverTemplateWorksheet.Cells[i + 1, 2].Value.ToString(),
+                                    DelayRecoverPushbackTonnes = double.Parse(delayrecoverTemplateWorksheet.Cells[i + 1, 3].Value.ToString()),
+                                });
                             }
-                            else
-                            {
-                                tag = ws4.Cells[i + 1, 1].Value.ToString();
-                            }
-                            
-                            lstComments.Add(new Comments()
-                            {
-                                Tag = tag,
-                                Comment = ws4.Cells[i + 1, 2].Value.ToString()
-                            });
                         }
+
+                        var rows2 = commentTemplateWorksheet.Dimension.Rows;
+                        for (var i = 1; i < rows2; i++)
+                        {
+                            if (commentTemplateWorksheet.Cells[i + 1, 2].Value != null)
+                            {
+                                string tag;
+
+                                if (commentTemplateWorksheet.Cells[i + 1, 1].Value.ToNullSafeString() == "")
+                                {
+                                    tag = "All";
+                                }
+                                else
+                                {
+                                    tag = commentTemplateWorksheet.Cells[i + 1, 1].Value.ToString();
+                                }
+
+                                _comments.Add(new MineSequenceComments()
+                                {
+                                    Tag = tag,
+                                    Comment = commentTemplateWorksheet.Cells[i + 1, 2].Value.ToString()
+                                });
+                            }
+                        }
+                        excelPackage.Dispose();
                     }
-                    IsEnabled3 = true;
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, StringResources.UploadError);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.Message, "Upload Error");
+                    var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
-            }
-        }
 
-        private void Process()
-        {
-            string fileName = @"c:\users\nyamis\oneDrive - bmining\BHP\MineSequenceData.xlsx";
-            FileInfo filePath = new FileInfo(fileName);
+                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.MineSequenceExcelFilePath;
+                var loadFileInfo = new FileInfo(loadFilePath);
 
-            if (filePath.Exists)
-            {
-                try
+                if (loadFileInfo.Exists)
                 {
-                    ExcelPackage pck = new ExcelPackage(filePath);
-                    ExcelWorksheet ws1 = pck.Workbook.Worksheets["L1Expit"];
-                    ExcelWorksheet ws2 = pck.Workbook.Worksheets["AdherenceToB01L1"];
-                    ExcelWorksheet ws3 = pck.Workbook.Worksheets["DelayRecover"];
-                    ExcelWorksheet ws4 = pck.Workbook.Worksheets["Comments"];
+                    var package = new ExcelPackage(loadFileInfo);
+                    var l1ExpitWorksheet = package.Workbook.Worksheets[MineSequenceConstants.L1ExpitMineSequenceWorksheet];
+                    var adherenceWorksheet = package.Workbook.Worksheets[MineSequenceConstants.AdherenceMineSequenceWorksheet];
+                    var delayrecoverWorksheet = package.Workbook.Worksheets[MineSequenceConstants.DelayRecoverMineSequenceWorksheet];
+                    var commentWorksheet = package.Workbook.Worksheets[MineSequenceConstants.CommentsMineSequenceWorksheet];
 
-                    FileStream fs = File.OpenWrite(fileName);
-                    fs.Close();
-
-                    DateTime newDate = new DateTime(Date.Year, Date.Month, 1, 00, 00, 00);
-                    int lastRow1 = ws1.Dimension.End.Row + 1;
-
-                    ws1.Cells[lastRow1, 1].Value = newDate;
-                    ws1.Cells[lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                    ws1.Cells[lastRow1, 2].Value = lstL1Expit[0].ExpitBudgetTonnes;
-                    ws1.Cells[lastRow1, 3].Value = lstL1Expit[0].ExpitActualPercent;
-                    ws1.Cells[lastRow1, 4].Value = lstL1Expit[0].BudgetBaseline;
-
-                    int lastRow2 = ws2.Dimension.End.Row + 1;
-
-                    ws2.Cells[lastRow2, 1].Value = newDate;
-                    ws2.Cells[lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                    ws2.Cells[lastRow2, 2].Value = lstAdherenceToB01L1[0].UnplannedDelayTonnes;
-                    ws2.Cells[lastRow2, 3].Value = lstAdherenceToB01L1[0].VolumeYtdPercent;
-                    ws2.Cells[lastRow2, 4].Value = lstAdherenceToB01L1[0].SpatialYtdPercent;
-                    ws2.Cells[lastRow2, 5].Value = lstAdherenceToB01L1[0].AdherenceL1YtdPercent;
-
-                    int lastRow3 = ws3.Dimension.End.Row + 1;
-
-                    for (int i = 0; i < lstDelayRecover.Count; i++)
+                    if (l1ExpitWorksheet != null & adherenceWorksheet != null & delayrecoverWorksheet != null & commentWorksheet != null)
                     {
-                        ws3.Cells[i + lastRow3, 1].Value = newDate;
-                        ws3.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                        ws3.Cells[i + lastRow3, 2].Value = lstDelayRecover[i].YtdPushBackTonnes;
-                        ws3.Cells[i + lastRow3, 3].Value = lstDelayRecover[i].PhaseName;
-                        ws3.Cells[i + lastRow3, 4].Value = lstDelayRecover[i].DelayRecoverPushbackTonnes;
-                    }
+                        try
+                        {
+                            var openWriteCheck = File.OpenWrite(loadFilePath);
+                            openWriteCheck.Close();
 
-                    int lastRow4 = ws4.Dimension.End.Row + 1;
+                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                            var lastRow1 = l1ExpitWorksheet.Dimension.End.Row + 1;
 
-                    for (int i = 0; i < lstComments.Count; i++)
-                    {
-                        ws4.Cells[i + lastRow4, 1].Value = newDate;
-                        ws4.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                        ws4.Cells[i + lastRow4, 2].Value = lstComments[i].Tag;
-                        ws4.Cells[i + lastRow4, 3].Value = lstComments[i].Comment;
-                    }
+                            l1ExpitWorksheet.Cells[lastRow1, 1].Value = newDate;
+                            l1ExpitWorksheet.Cells[lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                            l1ExpitWorksheet.Cells[lastRow1, 2].Value = _l1Expit[0].ExpitBudgetTonnes;
+                            l1ExpitWorksheet.Cells[lastRow1, 3].Value = _l1Expit[0].ExpitActualPercent;
+                            l1ExpitWorksheet.Cells[lastRow1, 4].Value = _l1Expit[0].BudgetBaseline;
 
-                    string target = @"c:\users\nyamis\oneDrive - bmining\BHP\MineSequencePictureData.csv";
+                            var lastRow2 = adherenceWorksheet.Dimension.End.Row + 1;
 
-                    int findE = ExportImageToCsv.SearchByDateMineSequence(newDate, target);
-                    if (findE == -1)
-                    {
-                        ExportImageToCsv.AppendImageMineSequenceToCSV(imageE, imageEN, newDate, target);
+                            adherenceWorksheet.Cells[lastRow2, 1].Value = newDate;
+                            adherenceWorksheet.Cells[lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                            adherenceWorksheet.Cells[lastRow2, 2].Value = _adherenceToB01L1[0].UnplannedDelayTonnes;
+                            adherenceWorksheet.Cells[lastRow2, 3].Value = _adherenceToB01L1[0].VolumeYtdPercent;
+                            adherenceWorksheet.Cells[lastRow2, 4].Value = _adherenceToB01L1[0].SpatialYtdPercent;
+                            adherenceWorksheet.Cells[lastRow2, 5].Value = _adherenceToB01L1[0].AdherenceL1YtdPercent;
+
+                            var lastRow3 = delayrecoverWorksheet.Dimension.End.Row + 1;
+
+                            for (var i = 0; i < _delayRecover.Count; i++)
+                            {
+                                delayrecoverWorksheet.Cells[i + lastRow3, 1].Value = newDate;
+                                delayrecoverWorksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                delayrecoverWorksheet.Cells[i + lastRow3, 2].Value = _delayRecover[i].YtdPushBackTonnes;
+                                delayrecoverWorksheet.Cells[i + lastRow3, 3].Value = _delayRecover[i].PhaseName;
+                                delayrecoverWorksheet.Cells[i + lastRow3, 4].Value = _delayRecover[i].DelayRecoverPushbackTonnes;
+                            }
+
+                            var lastRow4 = commentWorksheet.Dimension.End.Row + 1;
+
+                            for (var i = 0; i < _comments.Count; i++)
+                            {
+                                commentWorksheet.Cells[i + lastRow4, 1].Value = newDate;
+                                commentWorksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                commentWorksheet.Cells[i + lastRow4, 2].Value = _comments[i].Tag;
+                                commentWorksheet.Cells[i + lastRow4, 3].Value = _comments[i].Comment;
+                            }
+                            byte[] fileText = package.GetAsByteArray();
+                            File.WriteAllBytes(loadFilePath, fileText);
+                            MyLastRefreshValues = $"{StringResources.Updated}: {DateTime.Now}";
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, StringResources.UploadError);
+                        }
                     }
                     else
                     {
-                        ExportImageToCsv.RemoveItem(target, findE);
-                        ExportImageToCsv.AppendImageMineSequenceToCSV(imageE, imageEN, newDate, target);
-                    }
-
-                    byte[] fileText = pck.GetAsByteArray();
-                    File.WriteAllBytes(fileName, fileText);
-
-                    UpdateText = $"{StringResources.Updated}: {DateTime.Now}";
+                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                    }                    
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.Message, "Upload Error");
+                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
-
             }
-
-        }
-
-        private bool CanProcess()
-        {
-            return IsEnabled & IsEnabled2 & IsEnabled3;
-        }
+        }      
     }
 }

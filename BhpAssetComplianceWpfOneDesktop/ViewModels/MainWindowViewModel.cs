@@ -31,7 +31,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 new RibbonButtonDataTemplateViewModel(StringResources.ProcessCompliance,assetComplianceView.ProcessComplianceView,IconKeys.ProcessCompliance),
                 new RibbonButtonDataTemplateViewModel(StringResources.ConcentrateQuality,assetComplianceView.ConcentrateQualityView,IconKeys.ConcentrateQuality),
                 new RibbonButtonDataTemplateViewModel(StringResources.HistoricalRecord,assetComplianceView.HistoricalRecordView,IconKeys.KvdSummary),
-
+                new RibbonButtonDataTemplateViewModel(StringResources.Repository,assetComplianceView.RepositoryView,IconKeys.Repository),
             };
         }
     }

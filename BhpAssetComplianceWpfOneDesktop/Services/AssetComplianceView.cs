@@ -52,6 +52,11 @@ namespace BhpAssetComplianceWpfOneDesktop.Services
             _regionManager.RequestNavigate(RegionNames.MainRegion, ViewNames.HistoricalRecordView);
         }
 
+        public void RepositoryView()
+        {
+            _regionManager.RequestNavigate(RegionNames.MainRegion, ViewNames.RepositoryView);
+        }
+
 
     }
 }

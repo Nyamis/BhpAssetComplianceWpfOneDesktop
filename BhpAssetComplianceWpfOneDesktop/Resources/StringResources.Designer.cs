@@ -79,6 +79,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Archive.
+        /// </summary>
+        public static string Archive {
+            get {
+                return ResourceManager.GetString("Archive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Area.
         /// </summary>
         public static string Area {
@@ -115,6 +124,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CSV Archive.
+        /// </summary>
+        public static string CSVArchive {
+            get {
+                return ResourceManager.GetString("CSVArchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date.
         /// </summary>
         public static string Date {
@@ -129,6 +147,42 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         public static string DepressurizationCompliance {
             get {
                 return ResourceManager.GetString("DepressurizationCompliance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Escondida.
+        /// </summary>
+        public static string Escondida {
+            get {
+                return ResourceManager.GetString("Escondida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Escondida Norte.
+        /// </summary>
+        public static string EscondidaNorte {
+            get {
+                return ResourceManager.GetString("EscondidaNorte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Excel Archive.
+        /// </summary>
+        public static string ExcelArchive {
+            get {
+                return ResourceManager.GetString("ExcelArchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to exist or has been selected in the Repository..
+        /// </summary>
+        public static string ExistsOrNotSelect {
+            get {
+                return ResourceManager.GetString("ExistsOrNotSelect", resourceCulture);
             }
         }
         
@@ -169,11 +223,38 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Image.
+        /// </summary>
+        public static string Image {
+            get {
+                return ResourceManager.GetString("Image", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to is the right one..
+        /// </summary>
+        public static string IsTheRightOne {
+            get {
+                return ResourceManager.GetString("IsTheRightOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Load Image.
         /// </summary>
         public static string LoadImage {
             get {
                 return ResourceManager.GetString("LoadImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load Images.
+        /// </summary>
+        public static string LoadImages {
+            get {
+                return ResourceManager.GetString("LoadImages", resourceCulture);
             }
         }
         
@@ -192,6 +273,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         public static string LoadTemplate {
             get {
                 return ResourceManager.GetString("LoadTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SSS.
+        /// </summary>
+        public static string MA {
+            get {
+                return ResourceManager.GetString("MA", resourceCulture);
             }
         }
         
@@ -259,6 +349,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Record.
+        /// </summary>
+        public static string NewRecord {
+            get {
+                return ResourceManager.GetString("NewRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Other.
         /// </summary>
         public static string Other {
@@ -304,11 +403,56 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Repositories.
+        /// </summary>
+        public static string Repositories {
+            get {
+                return ResourceManager.GetString("Repositories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repository.
+        /// </summary>
+        public static string Repository {
+            get {
+                return ResourceManager.GetString("Repository", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rolling Twelve Months Template.
         /// </summary>
         public static string RollingTwelveMonthsTemplate {
             get {
                 return ResourceManager.GetString("RollingTwelveMonthsTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must select an area and input a comment..
+        /// </summary>
+        public static string SelectAreaInputComment {
+            get {
+                return ResourceManager.GetString("SelectAreaInputComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select File.
+        /// </summary>
+        public static string SelectFile {
+            get {
+                return ResourceManager.GetString("SelectFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Image.
+        /// </summary>
+        public static string SelectImage {
+            get {
+                return ResourceManager.GetString("SelectImage", resourceCulture);
             }
         }
         
@@ -322,11 +466,56 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Template.
+        /// </summary>
+        public static string Template {
+            get {
+                return ResourceManager.GetString("Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Template.
+        /// </summary>
+        public static string Template1 {
+            get {
+                return ResourceManager.GetString("Template1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Updated.
         /// </summary>
         public static string Updated {
             get {
                 return ResourceManager.GetString("Updated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload Error.
+        /// </summary>
+        public static string UploadError {
+            get {
+                return ResourceManager.GetString("UploadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong destination file. Check if the file .
+        /// </summary>
+        public static string WorksheetNotExist {
+            get {
+                return ResourceManager.GetString("WorksheetNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong uploaded file. Check if the file.
+        /// </summary>
+        public static string WrongUploadedFile {
+            get {
+                return ResourceManager.GetString("WrongUploadedFile", resourceCulture);
             }
         }
         

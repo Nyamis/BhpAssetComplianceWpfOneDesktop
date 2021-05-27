@@ -1,0 +1,256 @@
+﻿<UserControl x:Class="BhpAssetComplianceWpfOneDesktop.Views.RepositoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:resources="clr-namespace:BhpAssetComplianceWpfOneDesktop.Resources"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ContentControl Content="{Binding MyPosterHeader}" Grid.Row="0"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Style="{StaticResource ScrollViewerStyle}" Grid.Row="1" >
+            <GroupBox Header="{x:Static resources:StringResources.Repository}" >
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Header="{x:Static resources:StringResources.MineSequence}" Grid.Row="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Static resources:StringResources.ExcelArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                                <Grid Grid.Column="1">
+                                    <TextBox Text="{Binding MyMineSequenceExcelFilePath}" IsReadOnly="True" />
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Button Content="..."  Command="{Binding SelectMineSequenceDataExcelFileCommand}"/>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Static resources:StringResources.CSVArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                                <Grid Grid.Column="1">
+                                    <TextBox Text="{Binding MyMineSequenceCSVFilePath}" IsReadOnly="True" />
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Button Content="..."  Command="{Binding SelectMineSequenceDataCSVFileCommand}"/>
+                                </Grid>
+                            </Grid>
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="{x:Static resources:StringResources.MineCompliance}" Grid.Row="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:StringResources.ExcelArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                            <Grid Grid.Column="1">
+                                <TextBox Text="{Binding MyMineComplianceExcelFilePath}" IsReadOnly="True" />
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <Button Content="..."  Command="{Binding SelectMineComplianceDataExcelFileCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="{x:Static resources:StringResources.DepressurizationCompliance}"  Grid.Row="2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Static resources:StringResources.ExcelArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                                <Grid Grid.Column="1">
+                                    <TextBox Text="{Binding MyDepressurizationComplianceExcelFilePath}" IsReadOnly="True"  />
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Button Content="..."  Command="{Binding SelectDepressurizationComplianceDataExcelFileCommand}"/>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Static resources:StringResources.CSVArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                                <Grid Grid.Column="1">
+                                    <TextBox Text="{Binding MyDepressurizationComplianceCSVFilePath}" IsReadOnly="True"  />
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Button Content="..."  Command="{Binding SelectDepressurizationComplianceDataCSVFileCommand}"/>
+                                </Grid>
+                            </Grid>
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="{x:Static resources:StringResources.Geotechnical}" Grid.Row="3">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Static resources:StringResources.ExcelArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                                <Grid Grid.Column="1">
+                                    <TextBox Text="{Binding MyGeotechnicalNotesExcelFilePath}" IsReadOnly="True" />
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Button Content="..."  Command="{Binding SelectGeotechnicalNotesDataExcelFileCommand}"/>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Static resources:StringResources.CSVArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                                <Grid Grid.Column="1">
+                                    <TextBox Text="{Binding MyGeotechnicalNotesCSVFilePath}" IsReadOnly="True" />
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Button Content="..."  Command="{Binding SelectGeotechnicalNotesDataCSVFileCommand}"/>
+                                </Grid>
+                            </Grid>
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="{x:Static resources:StringResources.QuartersReconciliationFactors}"  Grid.Row="4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:StringResources.ExcelArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                            <Grid Grid.Column="1">
+                                <TextBox Text="{Binding MyQuartersReconciliationFactorsExcelFilePath}" IsReadOnly="True"  />
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <Button Content="..."  Command="{Binding SelectQuartersReconciliationFactorsDataExcelFileCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="{x:Static resources:StringResources.ProcessCompliance}" Grid.Row="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:StringResources.ExcelArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                            <Grid Grid.Column="1">
+                                <TextBox Text="{Binding MyProcessComplianceExcelFilePath}" IsReadOnly="True" />
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <Button Content="..."  Command="{Binding SelectProcessComplianceDataExcelFileCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="{x:Static resources:StringResources.ConcentrateQuality}" Grid.Row="6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:StringResources.ExcelArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                            <Grid Grid.Column="1">
+                                <TextBox Text="{Binding MyConcentrateQualityExcelFilePath}" IsReadOnly="True" />
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <Button Content="..."  Command="{Binding SelectConcentrateQualityDataExcelFileCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="{x:Static resources:StringResources.HistoricalRecord}" Grid.Row="7">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:StringResources.ExcelArchive}"
+                                       Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                            <Grid Grid.Column="1">
+                                <TextBox Text="{Binding MyHistoricalRecordExcelFilePath}" IsReadOnly="True" />
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <Button Content="..."  Command="{Binding SelectHistoricalRecordDataExcelFileCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+
+                </Grid>
+            </GroupBox>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

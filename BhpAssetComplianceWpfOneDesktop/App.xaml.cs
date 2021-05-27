@@ -29,13 +29,14 @@ namespace BhpAssetComplianceWpfOneDesktop
             containerRegistry.RegisterForNavigation<ConcentrateQualityView>(ViewNames.ConcentrateQualityView);
             containerRegistry.RegisterForNavigation<QuartersReconciliationFactorsView>(ViewNames.QuartersReconciliationFactorsView);
             containerRegistry.RegisterForNavigation<HistoricalRecordView>(ViewNames.HistoricalRecordView);
+            containerRegistry.RegisterForNavigation<RepositoryView>(ViewNames.RepositoryView);
 
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            Container.Resolve<IAssetComplianceView>().ConcentrateQualityView();
+            Container.Resolve<IAssetComplianceView>().MineSequenceView();
         }
     }
 }

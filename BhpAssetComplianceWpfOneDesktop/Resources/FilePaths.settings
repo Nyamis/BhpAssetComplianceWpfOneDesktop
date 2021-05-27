@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BhpAssetComplianceWpfOneDesktop.Resources" GeneratedClassName="FilePaths">
+  <Profiles />
+  <Settings>
+    <Setting Name="MineSequenceExcelFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select Excel file path</Value>
+    </Setting>
+    <Setting Name="MineSequenceCSVFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select CSV file path</Value>
+    </Setting>
+    <Setting Name="MineComplianceExcelFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select Excel file path</Value>
+    </Setting>
+    <Setting Name="DepressurizationComplianceExcelFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select Excel file path</Value>
+    </Setting>
+    <Setting Name="DepressurizationComplianceCSVFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select CSV file path</Value>
+    </Setting>
+    <Setting Name="GeotechnicalNotesExcelFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select Excel file path</Value>
+    </Setting>
+    <Setting Name="GeotechnicalNotesCSVFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select CSV file path</Value>
+    </Setting>
+    <Setting Name="QuartersReconciliationFactorsExcelFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select Excel file path</Value>
+    </Setting>
+    <Setting Name="ProcessComplianceExcelFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select Excel file path</Value>
+    </Setting>
+    <Setting Name="ConcentrateQualityExcelFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select Excel file path</Value>
+    </Setting>
+    <Setting Name="HistoricalRecordExcelFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select Excel file path</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

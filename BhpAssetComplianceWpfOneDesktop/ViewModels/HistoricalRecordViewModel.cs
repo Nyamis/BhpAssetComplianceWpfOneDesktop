@@ -14,100 +14,118 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         protected override string MyPosterName { get; set; } = StringResources.HistoricalRecord;
         protected override string MyPosterIcon { get; set; } = IconKeys.KvdSummary;
 
-        public string dateContent { get; set; } = StringResources.Date;
-        public string areaContent { get; set; } = StringResources.Area;
-        public string commentContent { get; set; } = StringResources.Comment;
-        public string loadContent { get; set; } = StringResources.LoadRecord;
-
-        private string _update;
-        public string update
+        private string _myLastRefreshValues;
+        public string MyLastRefreshValues
         {
-            get { return _update; }
-            set { SetProperty(ref _update, value); }
+            get { return _myLastRefreshValues; }
+            set { SetProperty(ref _myLastRefreshValues, value); }
         }
 
-        DateTime _date;
-        public DateTime date
+        private DateTime _myDateActual;
+        public DateTime MyDateActual
         {
-            get { return _date; }
-            set { SetProperty(ref _date, value); }
+            get { return _myDateActual; }
+            set { SetProperty(ref _myDateActual, value); }
         }
 
-        private string _comment;
-        public string comment
+        private string _myComment;
+        public string MyComment
         {
-            get { return _comment; }
-            set { SetProperty(ref _comment, value); }
+            get { return _myComment; }
+            set { SetProperty(ref _myComment, value); }
         }
 
-        private List<String> _lstArea;
-        public List<String> lstArea
+        private List<String> _Areas;
+        public List<String> Areas
         {
             get
             {
-                return new List<string>() { StringResources.MineSequence, StringResources.MineCompliance, StringResources.DepressurizationCompliance, StringResources.Geotechnical, StringResources.QuartersReconciliationFactors, StringResources.ProcessCompliance, StringResources.Other };
+                return new List<string>() { StringResources.MineSequence, 
+                    StringResources.MineCompliance, 
+                    StringResources.DepressurizationCompliance, 
+                    StringResources.Geotechnical, 
+                    StringResources.QuartersReconciliationFactors, 
+                    StringResources.ProcessCompliance, 
+                    StringResources.ConcentrateQuality,
+                    StringResources.Other };
             }
             set
             {
-                _lstArea = value;
+                _Areas = value;
             }
         }
 
-        private string _area;
-        public string area
+        private string _myArea;
+        public string MyArea
         {
-            get { return _area; }
-            set { SetProperty(ref _area, value); }
+            get { return _myArea; }
+            set { SetProperty(ref _myArea, value); }
         }
 
-
-        public DelegateCommand LoadRecord { get; private set; }
+        public DelegateCommand LoadRecordCommand { get; private set; }
 
         public HistoricalRecordViewModel()
         {
-            date = DateTime.Now;
-            LoadRecord = new DelegateCommand(LoadNewRecord);
+            MyDateActual = DateTime.Now;
+            LoadRecordCommand = new DelegateCommand(LoadNewRecord);
         }
 
         private void LoadNewRecord()
         {
-            if (comment != null)
+            if (MyComment != null & MyArea != null)
             {
-                string fileName = @"c:\users\nyamis\oneDrive - bmining\BHP\AssetComplianceHistoricalRecord.xlsx";
-                FileInfo filePath = new FileInfo(fileName);
+                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.HistoricalRecordExcelFilePath;
+                var loadFileInfo = new FileInfo(loadFilePath);
 
-                if (filePath.Exists)
+                if (loadFileInfo.Exists)
                 {
-                    try
+                    var package = new ExcelPackage(loadFileInfo);
+                    var worksheet = package.Workbook.Worksheets[HistoricalRecordConstants.HistoricalRecordWorksheet];
+
+                    if (worksheet != null)
                     {
-                        ExcelPackage pck = new ExcelPackage(filePath);
-                        ExcelWorksheet ws = pck.Workbook.Worksheets["Record"];
+                        try
+                        {
+                            var openWriteCheck = File.OpenWrite(loadFilePath);
+                            openWriteCheck.Close();
 
-                        FileStream fs = File.OpenWrite(fileName);
-                        fs.Close();
+                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                            var lastRow = worksheet.Dimension.End.Row + 1;
 
-                        DateTime newDate = new DateTime(date.Year, date.Month, 1, 00, 00, 00);
-                        int lastRow1 = ws.Dimension.End.Row + 1;
+                            worksheet.Cells[lastRow, 1].Value = newDate;
+                            worksheet.Cells[lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                            worksheet.Cells[lastRow, 2].Value = MyArea;
+                            worksheet.Cells[lastRow, 3].Value = MyComment;
 
-                        ws.Cells[lastRow1, 1].Value = newDate;
-                        ws.Cells[lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                        ws.Cells[lastRow1, 2].Value = area;
-                        ws.Cells[lastRow1, 3].Value = comment;
+                            byte[] fileText = package.GetAsByteArray();
+                            File.WriteAllBytes(loadFilePath, fileText);
+                            MyLastRefreshValues = $"{StringResources.Updated}: {DateTime.Now}";
 
-                        byte[] fileText = pck.GetAsByteArray();
-                        File.WriteAllBytes(fileName, fileText);
-
-                        update = $"{StringResources.Updated}: {DateTime.Now}";
+                            MyComment = null;
+                            MyArea = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, StringResources.UploadError);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show(ex.Message, "Upload Error");
-                    }
+                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                    }                   
                 }
-
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                }
+            }
+            else
+            {
+                MessageBox.Show(StringResources.SelectAreaInputComment, StringResources.UploadError);
             }
 
         }
-
     }
 }

@@ -210,4 +210,67 @@
   <data name="Mine ComplianceBudgetTemplate" xml:space="preserve">
     <value>Mine Compliance Budget Template</value>
   </data>
+  <data name="UploadError" xml:space="preserve">
+    <value>Upload Error</value>
+  </data>
+  <data name="NewRecord" xml:space="preserve">
+    <value>New Record</value>
+  </data>
+  <data name="Escondida" xml:space="preserve">
+    <value>Escondida</value>
+  </data>
+  <data name="EscondidaNorte" xml:space="preserve">
+    <value>Escondida Norte</value>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value>Template</value>
+  </data>
+  <data name="Template1" xml:space="preserve">
+    <value>Template</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Repository" xml:space="preserve">
+    <value>Repository</value>
+  </data>
+  <data name="Repositories" xml:space="preserve">
+    <value>Repositories</value>
+  </data>
+  <data name="Archive" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="CSVArchive" xml:space="preserve">
+    <value>CSV Archive</value>
+  </data>
+  <data name="ExcelArchive" xml:space="preserve">
+    <value>Excel Archive</value>
+  </data>
+  <data name="MA" xml:space="preserve">
+    <value>SSS</value>
+  </data>
+  <data name="ExistsOrNotSelect" xml:space="preserve">
+    <value>exist or has been selected in the Repository.</value>
+  </data>
+  <data name="IsTheRightOne" xml:space="preserve">
+    <value>is the right one.</value>
+  </data>
+  <data name="SelectFile" xml:space="preserve">
+    <value>Select File</value>
+  </data>
+  <data name="WorksheetNotExist" xml:space="preserve">
+    <value>Wrong destination file. Check if the file </value>
+  </data>
+  <data name="SelectImage" xml:space="preserve">
+    <value>Select Image</value>
+  </data>
+  <data name="WrongUploadedFile" xml:space="preserve">
+    <value>Wrong uploaded file. Check if the file</value>
+  </data>
+  <data name="LoadImages" xml:space="preserve">
+    <value>Load Images</value>
+  </data>
+  <data name="SelectAreaInputComment" xml:space="preserve">
+    <value>You must select an area and input a comment.</value>
+  </data>
 </root>

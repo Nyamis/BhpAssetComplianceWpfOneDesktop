@@ -2,9 +2,7 @@
 {
     public static class IconKeys
     {
-        private static string Folder = @"\Resources\Icons\Blue\";
-
-        
+        private static string Folder = @"\Resources\Icons\Blue\";        
 
         public static string Poster = $"{Folder}Poster.png";
 
@@ -16,5 +14,6 @@
         public static string KvdSummary = $"{Folder}Resumen kvd.png";
         public static string MineSequence = $"{Folder}Secuencia minera.png";
         public static string ConcentrateQuality = $"{Folder}Calidad concentrado.png";
+        public static string Repository = $"{Folder}Poster.png";
     }
 }

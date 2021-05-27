@@ -1,10 +1,6 @@
 ﻿using BhpAssetComplianceWpfOneDesktop.Resources;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prism.Mvvm;
 using Prism.Commands;
 using System.Windows;
 using OfficeOpenXml;
@@ -13,6 +9,9 @@ using Microsoft.Win32;
 using System.Drawing;
 using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Utility;
+using BhpAssetComplianceWpfOneDesktop.Models.QuartersReconciliationFactorsModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
@@ -21,555 +20,479 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         protected override string MyPosterName { get; set; } = StringResources.QuartersReconciliationFactors;
         protected override string MyPosterIcon { get; set; } = IconKeys.ReconciliationFactors;
 
-        public string generateContent { get; set; } = StringResources.GenerateTemplate;
-        public string loadContent { get; set; } = StringResources.LoadTemplate;
-        public string dateContent { get; set; } = StringResources.Date;
-        public string titleContent { get; set; } = StringResources.RollingTwelveMonthsTemplate;
-
-        private string _UpdateA;
-        public string UpdateA
+        private string _myLastDateRefreshMonthlyValues;
+        public string MyLastDateRefreshMonthlyValues
         {
-            get { return _UpdateA; }
-            set { SetProperty(ref _UpdateA, value); }
+            get { return _myLastDateRefreshMonthlyValues; }
+            set { SetProperty(ref _myLastDateRefreshMonthlyValues, value); }
         }
 
-        DateTime _Date;
-        public DateTime Date
+        private DateTime _myMonthlyDate;
+        public DateTime MyMonthlyDate
         {
-            get { return _Date; }
-            set { SetProperty(ref _Date, value); }
+            get { return _myMonthlyDate; }
+            set { SetProperty(ref _myMonthlyDate, value); }
         }
 
-        private bool _isEnabled1;
-        public bool IsEnabled1
+        private bool _isEnabledLoadMonthlyValues;
+        public bool IsEnabledLoadMonthlyValues
         {
-            get { return _isEnabled1; }
-            set { SetProperty(ref _isEnabled1, value); }
+            get { return _isEnabledLoadMonthlyValues; }
+            set { SetProperty(ref _isEnabledLoadMonthlyValues, value); }
         }
 
-        public DelegateCommand GenerarT { get; private set; }
-        public DelegateCommand CargarT { get; private set; }
+        public DelegateCommand GenerateQuartersReconciliationFactorsTemplateCommand { get; private set; }
+        public DelegateCommand LoadQuartersReconciliationFactorsTemplateCommand { get; private set; }
+
+        private readonly List<QuartersReconciliationFactorsF0> _F0 = new List<QuartersReconciliationFactorsF0>();
+        private readonly List<QuartersReconciliationFactorsF1> _F1 = new List<QuartersReconciliationFactorsF1>();
+        private readonly List<QuartersReconciliationFactorsF2> _F2 = new List<QuartersReconciliationFactorsF2>();
+        private readonly List<QuartersReconciliationFactorsF3> _F3 = new List<QuartersReconciliationFactorsF3>();
 
         public QuartersReconciliationFactorsViewModel()
         {
-            Date = DateTime.Now;
-            IsEnabled1 = false;
-            GenerarT = new DelegateCommand(GenerateTemplate);
-            CargarT = new DelegateCommand(LoadTemplate).ObservesCanExecute(() => IsEnabled1);
+            MyMonthlyDate = DateTime.Now;
+            IsEnabledLoadMonthlyValues = false;
+            GenerateQuartersReconciliationFactorsTemplateCommand = new DelegateCommand(GenerateQuartersReconciliationFactorsTemplate);
+            LoadQuartersReconciliationFactorsTemplateCommand = new DelegateCommand(LoadQuartersReconciliationFactorsTemplate).ObservesCanExecute(() => IsEnabledLoadMonthlyValues);
         }
 
-        private void GenerateTemplate()
+        private void GenerateQuartersReconciliationFactorsTemplate()
         {
-            ExcelPackage pck = new ExcelPackage();
-            pck.Workbook.Properties.Author = "BHP";
-            pck.Workbook.Properties.Title = "Reconciliation Factors Template";
-            pck.Workbook.Properties.Company = "BHP";
+            var headers = new List<string> { "F0", "F1", "F2", "F3" };
+            var elements = new List<string> { "Ore", "%CuT", "Cu Fines", "Ore", "%CuT", "Cu Fines", "Ore", "%CuT", "Cu Fines", "Cu Fines" };
+            var quarters = new List<string> { "Mill", "Q1", "Q2", "Q3", "Q4", "OL", "Q1", "Q2", "Q3", "Q4", "SL", "Q1", "Q2", "Q3", "Q4" };
 
-            var ws = pck.Workbook.Worksheets.Add("Rolling Twelve Months");
+            var excelPackage = new ExcelPackage();
+            excelPackage.Workbook.Properties.Author = "BHP";
+            excelPackage.Workbook.Properties.Title = QuartersReconciliationFactorsConstants.QuartersReconciliationFactorsWorksheetTitle;
+            excelPackage.Workbook.Properties.Company = "BHP";
 
-            List<string> lstHeader = new List<string>() { "F0", "F1", "F2", "F3" };
-            List<string> lstSecond = new List<string>() { "Ore", "%CuT", "Cu Fines", "Ore", "%CuT", "Cu Fines", "Ore", "%CuT", "Cu Fines", "Cu Fines" };
-            List<string> lstColumn = new List<string>() { "Mill", "Q1", "Q2", "Q3", "Q4", "OL", "Q1", "Q2", "Q3", "Q4", "SL", "Q1", "Q2", "Q3", "Q4" };
+            var worksheet = excelPackage.Workbook.Worksheets.Add(QuartersReconciliationFactorsConstants.QuartersReconciliationFactorsWorksheet);
+            worksheet.Column(2).Width = 11;
+            int[] rows1 = { 7, 18, 29 };
+            int[] rows2 = { 10, 21, 32 };
 
-            ws.Column(2).Width = 11;
-            int[] c2 = { 7, 18, 29 };
-            int[] c22 = { 10, 21, 32 };
-            string FY = $"{Date.Year}";
-            int Year = Int32.Parse(FY.Substring((FY.Length - 2), 2));
-            if (Date.Month == 7 || Date.Month == 8 || Date.Month == 9 || Date.Month == 10 || Date.Month == 11 || Date.Month == 12)
+            var _date = TemplateDates.ConvertDateToFiscalYearString(MyMonthlyDate);
+
+            for (var i = rows1.GetLowerBound(0); i <= rows1.GetUpperBound(0); i++)
             {
-                Year = Year + 1;
-            }
-            string date = $"FY{Year}";
-
-            for (int i = c2.GetLowerBound(0); i <= c2.GetUpperBound(0); i++)
-            {
-                ws.Cells[$"B{c2[i]}:B{c22[i]}"].Merge = true;
-                ws.Cells[c2[i], 2].Style.Font.Bold = true;
-                ws.Cells[c2[i], 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[c2[i], 2].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#AEAAAA"));
-                ws.Cells[c2[i], 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Cells[c2[i], 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                ws.Cells[$"B{c2[i]}"].Value = date;
-                ws.Cells[$"B{c2[i]}:B{c2[i] + 3}"].Style.Border.Left.Style = ExcelBorderStyle.Thick;
-                ws.Cells[$"B{c2[i]}"].Style.Border.Top.Style = ExcelBorderStyle.Thick;
+                worksheet.Cells[$"B{rows1[i]}:B{rows2[i]}"].Merge = true;
+                worksheet.Cells[rows1[i], 2].Style.Font.Bold = true;
+                worksheet.Cells[rows1[i], 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[rows1[i], 2].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.DarkGrayBackgroundMineCompliance));
+                worksheet.Cells[rows1[i], 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[rows1[i], 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"B{rows1[i]}"].Value = _date;
+                worksheet.Cells[$"B{rows1[i]}:B{rows1[i] + 3}"].Style.Border.Left.Style = ExcelBorderStyle.Thick;
+                worksheet.Cells[$"B{rows1[i]}"].Style.Border.Top.Style = ExcelBorderStyle.Thick;
             }
 
-            ws.Column(3).Width = 13;
-            ws.Column(3).Style.Font.Bold = true;
-            ws.Column(3).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws.Column(3).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            ws.Cells["B10:M10"].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
-            ws.Cells["B21:L21"].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
-            ws.Cells["B32:I32"].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
-            ws.Cells["C3:M3"].Style.Border.Top.Style = ExcelBorderStyle.Thick;
-            ws.Cells["C14:L14"].Style.Border.Top.Style = ExcelBorderStyle.Thick;
-            ws.Cells["C25:I25"].Style.Border.Top.Style = ExcelBorderStyle.Thick;
+            worksheet.Column(3).Width = 13;
+            worksheet.Column(3).Style.Font.Bold = true;
+            worksheet.Column(3).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Column(3).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+            worksheet.Cells["B10:M10"].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            worksheet.Cells["B21:L21"].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            worksheet.Cells["B32:I32"].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            worksheet.Cells["C3:M3"].Style.Border.Top.Style = ExcelBorderStyle.Thick;
+            worksheet.Cells["C14:L14"].Style.Border.Top.Style = ExcelBorderStyle.Thick;
+            worksheet.Cells["C25:I25"].Style.Border.Top.Style = ExcelBorderStyle.Thick;
 
-
-            int[] c3 = { 3, 14, 25 };
-            int[] c33 = { 6, 17, 28 };
-            for (int i = c3.GetLowerBound(0); i <= c3.GetUpperBound(0); i++)
+            int[] rows3 = { 3, 14, 25 };
+            int[] rows4 = { 6, 17, 28 };
+            for (var i = rows3.GetLowerBound(0); i <= rows3.GetUpperBound(0); i++)
             {
-                ws.Cells[$"C{c3[i]}:C{c33[i]}"].Merge = true;
-                ws.Cells[c3[i], 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[c3[i], 3].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#AEAAAA"));
-                ws.Cells[$"D{7 + i}:M{7 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"D{18 + i}:L{18 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"D{29 + i}:I{29 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"C{rows3[i]}:C{rows4[i]}"].Merge = true;
+                worksheet.Cells[rows3[i], 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[rows3[i], 3].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.DarkGrayBackgroundMineCompliance));
+                worksheet.Cells[$"D{7 + i}:M{7 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"D{18 + i}:L{18 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"D{29 + i}:I{29 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             }
 
-            ws.Cells["C3"].Value = lstColumn[0];
-            ws.Cells["C14"].Value = lstColumn[5];
-            ws.Cells["C25"].Value = lstColumn[10];
-            string[] D = { "D", "E", "F", "G", "H" };
-            for (int i = 0; i < 5; i++)
+            worksheet.Cells["C3"].Value = quarters[0];
+            worksheet.Cells["C14"].Value = quarters[5];
+            worksheet.Cells["C25"].Value = quarters[10];
+            string[] columns1 = { "D", "E", "F", "G", "H" };
+            for (var i = 0; i < 5; i++)
             {
-                ws.Cells[6 + i, 3].Value = lstColumn[i];
-                ws.Cells[17 + i, 3].Value = lstColumn[i + 5];
-                ws.Cells[28 + i, 3].Value = lstColumn[i + 10];
-                ws.Cells[$"{D[i]}25:{D[i]}32"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[6 + i, 3].Value = quarters[i];
+                worksheet.Cells[17 + i, 3].Value = quarters[i + 5];
+                worksheet.Cells[28 + i, 3].Value = quarters[i + 10];
+                worksheet.Cells[$"{columns1[i]}25:{columns1[i]}32"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
 
-            string[] F = { "D", "E", "F", "G", "H", "I", "J", "K" };
-            for (int i = F.GetLowerBound(0); i <= F.GetUpperBound(0); i++)
+            string[] columns2 = { "D", "E", "F", "G", "H", "I", "J", "K" };
+            for (var i = columns2.GetLowerBound(0); i <= columns2.GetUpperBound(0); i++)            
+                worksheet.Cells[$"{columns2[i]}14:{columns2[i]}21"].Style.Border.Right.Style = ExcelBorderStyle.Thin;            
+
+            string[] columns3 = { "B", "C" };
+
+            for (var i = columns3.GetLowerBound(0); i <= columns3.GetUpperBound(0); i++)
             {
-                ws.Cells[$"{F[i]}14:{F[i]}21"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-            }
+                worksheet.Cells[$"{columns3[i]}3:{columns3[i]}10"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
+                worksheet.Cells[$"{columns3[i]}14:{columns3[i]}21"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
+                worksheet.Cells[$"{columns3[i]}25:{columns3[i]}32"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
+                worksheet.Cells[$"D{25 + i}:F{25 + i}"].Merge = true;
+                worksheet.Cells[$"G{25 + i}:I{25 + i}"].Merge = true;
 
-            string[] r = { "B", "C" };
-
-            for (int i = r.GetLowerBound(0); i <= r.GetUpperBound(0); i++)
-            {
-                ws.Cells[$"{r[i]}3:{r[i]}10"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
-                ws.Cells[$"{r[i]}14:{r[i]}21"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
-                ws.Cells[$"{r[i]}25:{r[i]}32"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
-                ws.Cells[$"D{25 + i}:F{25 + i}"].Merge = true;
-                ws.Cells[$"G{25 + i}:I{25 + i}"].Merge = true;
-
-                ws.Cells[5 + i, 13].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[5 + i, 13].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#F4B084"));
-                ws.Cells[$"J{5 + i}:L{5 + i}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[$"J{5 + i}:L{5 + i}"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#A9D08E"));
-                ws.Cells[$"J{16 + i}:L{16 + i}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[$"J{16 + i}:L{16 + i}"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#A9D08E"));
+                worksheet.Cells[5 + i, 13].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[5 + i, 13].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.LightOrangeBackgroundMineCompliance));
+                worksheet.Cells[$"J{5 + i}:L{5 + i}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"J{5 + i}:L{5 + i}"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.LightGreenBackgroundMineCompliance));
+                worksheet.Cells[$"J{16 + i}:L{16 + i}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"J{16 + i}:L{16 + i}"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.LightGreenBackgroundMineCompliance));
 
             }
-            ws.Cells["M3:M10"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
-            ws.Cells["L14:L21"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
-            ws.Cells["I25:I32"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
+            worksheet.Cells["M3:M10"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
+            worksheet.Cells["L14:L21"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
+            worksheet.Cells["I25:I32"].Style.Border.Right.Style = ExcelBorderStyle.Thick;
 
 
-            ws.Cells["C7:C10"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["C7:C10"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D0CECE"));
-            ws.Cells["C18:C21"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["C18:C21"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D0CECE"));
-            ws.Cells["C29:C32"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["C29:C32"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D0CECE"));
+            worksheet.Cells["C7:C10"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells["C7:C10"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.GrayBackgroundMineCompliance));
+            worksheet.Cells["C18:C21"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells["C18:C21"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.GrayBackgroundMineCompliance));
+            worksheet.Cells["C29:C32"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells["C29:C32"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.GrayBackgroundMineCompliance));
 
-            ws.Cells["C6:C9"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            ws.Cells["C17:C20"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            ws.Cells["C28:C31"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            worksheet.Cells["C6:C9"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            worksheet.Cells["C17:C20"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            worksheet.Cells["C28:C31"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
 
-
-
-            int[] cH = { 3, 4, 14, 15 };
-
-            for (int i = cH.GetLowerBound(0); i <= cH.GetUpperBound(0); i++)
+            int[] rows5 = { 3, 4, 14, 15 };
+            for (var i = rows5.GetLowerBound(0); i <= rows5.GetUpperBound(0); i++)
             {
-                ws.Cells[$"D{cH[i]}:F{cH[i]}"].Merge = true;
-                ws.Cells[$"G{cH[i]}:I{cH[i]}"].Merge = true;
-                ws.Cells[$"J{cH[i]}:L{cH[i]}"].Merge = true;
-                ws.Cells[$"D{3 + i}:M{3 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"D{14 + i}:L{14 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"D{25 + i}:I{25 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"D{rows5[i]}:F{rows5[i]}"].Merge = true;
+                worksheet.Cells[$"G{rows5[i]}:I{rows5[i]}"].Merge = true;
+                worksheet.Cells[$"J{rows5[i]}:L{rows5[i]}"].Merge = true;
+                worksheet.Cells[$"D{3 + i}:M{3 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"D{14 + i}:L{14 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"D{25 + i}:I{25 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             }
 
-            int[] cHH = { 5, 6, 16, 17, 27, 28 };
-
-            for (int i = cHH.GetLowerBound(0); i <= cHH.GetUpperBound(0); i++)
+            int[] rows6 = { 5, 6, 16, 17, 27, 28 };
+            for (var i = rows6.GetLowerBound(0); i <= rows6.GetUpperBound(0); i++)
             {
-                ws.Cells[$"D{cHH[i]}:F{cHH[i]}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[$"D{cHH[i]}:F{cHH[i]}"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#A9D08E"));
-                ws.Cells[$"G{cHH[i]}:I{cHH[i]}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[$"G{cHH[i]}:I{cHH[i]}"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#F4B084"));
+                worksheet.Cells[$"D{rows6[i]}:F{rows6[i]}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"D{rows6[i]}:F{rows6[i]}"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.LightGreenBackgroundMineCompliance));
+                worksheet.Cells[$"G{rows6[i]}:I{rows6[i]}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"G{rows6[i]}:I{rows6[i]}"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.LightOrangeBackgroundMineCompliance));
 
-                ws.Cells[27, 4 + i].Value = lstSecond[i];
-                ws.Cells[27, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Cells[28, 4 + i].Value = "%";
-                ws.Cells[28, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
+                worksheet.Cells[27, 4 + i].Value = elements[i];
+                worksheet.Cells[27, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[28, 4 + i].Value = "%";
+                worksheet.Cells[28, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             }
 
-            string[] H = { "D3", "G3", "J3", "M3", "D14", "G14", "J14", "G25", "D25" };
-            string[] SH = { "D4", "G4", "J4", "M4", "D15", "G15", "J15", "G26", "D26" };
-            string[] C = { "D", "E", "F", "G", "H", "I", "J", "K", "L" };
-            for (int i = C.GetLowerBound(0); i <= C.GetUpperBound(0); i++)
+            string[] cells = { "D3", "G3", "J3", "M3", "D14", "G14", "J14", "G25", "D25" };
+            string[] cells2 = { "D4", "G4", "J4", "M4", "D15", "G15", "J15", "G26", "D26" };
+            string[] columns4 = { "D", "E", "F", "G", "H", "I", "J", "K", "L" };
+
+            for (var i = columns4.GetLowerBound(0); i <= columns4.GetUpperBound(0); i++)
+                worksheet.Cells[$"{columns4[i]}3:{columns4[i]}10"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+            
+            for (var i = cells.GetLowerBound(0); i <= cells.GetUpperBound(0); i++)
             {
-                ws.Cells[$"{C[i]}3:{C[i]}10"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-            }
-            for (int i = H.GetLowerBound(0); i <= H.GetUpperBound(0); i++)
-            {
-                ws.Cells[16, 4 + i].Value = lstSecond[i];
-                ws.Cells[17, 4 + i].Value = "%";
-                ws.Cells[16, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Cells[17, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[16, 4 + i].Value = elements[i];
+                worksheet.Cells[17, 4 + i].Value = "%";
+                worksheet.Cells[16, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[17, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 if (i % 2 != 0)
                 {
-                    ws.Cells[H[i]].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[H[i]].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#833C0C"));
-                    ws.Cells[SH[i]].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[SH[i]].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#C65911"));
-
+                    worksheet.Cells[cells[i]].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[cells[i]].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.DarkOrangeBackgroundMineCompliance));
+                    worksheet.Cells[cells2[i]].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[cells2[i]].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.OrangeBackgroundMineCompliance));
                 }
                 else if (i % 2 == 0)
                 {
-                    ws.Cells[H[i]].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[H[i]].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#375623"));
-                    ws.Cells[SH[i]].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[SH[i]].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#548235"));
-
+                    worksheet.Cells[cells[i]].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[cells[i]].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.DarkGreenBackgroundMineCompliance));
+                    worksheet.Cells[cells2[i]].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[cells2[i]].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.GreenBackgroundMineCompliance));
                 }
             }
 
-            string[] Co1 = { "D3", "G3", "J3", "M3" };
-            string[] Co2 = { "D4", "G4", "J4", "M4" };
+            string[] cells3 = { "D3", "G3", "J3", "M3" };
+            string[] cells4 = { "D4", "G4", "J4", "M4" };
 
-            for (int i = Co1.GetLowerBound(0); i <= Co1.GetUpperBound(0); i++)
+            for (var i = cells3.GetLowerBound(0); i <= cells3.GetUpperBound(0); i++)
             {
-                ws.Cells[$"{Co1[i]}"].Value = lstHeader[i];
-                ws.Cells[$"{Co1[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-                ws.Cells[$"{Co1[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Cells[$"{Co2[i]}"].Value = "Quarter";
-                ws.Cells[$"{Co2[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-                ws.Cells[$"{Co2[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"{cells3[i]}"].Value = headers[i];
+                worksheet.Cells[$"{cells3[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.WhiteFontMineCompliance));
+                worksheet.Cells[$"{cells3[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"{cells4[i]}"].Value = "Quarter";
+                worksheet.Cells[$"{cells4[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.WhiteFontMineCompliance));
+                worksheet.Cells[$"{cells4[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             }
 
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
-                ws.Cells[5, 4 + i].Value = lstSecond[i];
-                ws.Cells[5, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Cells[6, 4 + i].Value = "%";
-                ws.Cells[6, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Column(4 + i).Width = 11;
-
+                worksheet.Cells[5, 4 + i].Value = elements[i];
+                worksheet.Cells[5, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[6, 4 + i].Value = "%";
+                worksheet.Cells[6, 4 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Column(4 + i).Width = 11;
             }
 
-
-            string[] Co3 = { "D14", "G14", "J14" };
-            string[] Co4 = { "D15", "G15", "J15" };
-            for (int i = Co3.GetLowerBound(0); i <= Co3.GetUpperBound(0); i++)
+            string[] cells5 = { "D14", "G14", "J14" };
+            string[] cells6 = { "D15", "G15", "J15" };
+            for (var i = cells5.GetLowerBound(0); i <= cells5.GetUpperBound(0); i++)
             {
-                ws.Cells[$"{Co3[i]}"].Value = lstHeader[i];
-                ws.Cells[$"{Co3[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-                ws.Cells[$"{Co3[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Cells[$"{Co4[i]}"].Value = "Month/Year";
-                ws.Cells[$"{Co4[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-                ws.Cells[$"{Co4[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"{cells5[i]}"].Value = headers[i];
+                worksheet.Cells[$"{cells5[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.WhiteFontMineCompliance));
+                worksheet.Cells[$"{cells5[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"{cells6[i]}"].Value = "Month/Year";
+                worksheet.Cells[$"{cells6[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.WhiteFontMineCompliance));
+                worksheet.Cells[$"{cells6[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             }
 
-            string[] Co5 = { "D25", "G25" };
-            string[] Co6 = { "D26", "G26" };
-            for (int i = Co5.GetLowerBound(0); i <= Co5.GetUpperBound(0); i++)
+            string[] cells7 = { "D25", "G25" };
+            string[] cells8 = { "D26", "G26" };
+            for (var i = cells7.GetLowerBound(0); i <= cells7.GetUpperBound(0); i++)
             {
-                ws.Cells[$"{Co5[i]}"].Value = lstHeader[i];
-                ws.Cells[$"{Co5[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-                ws.Cells[$"{Co5[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Cells[$"{Co6[i]}"].Value = "Month/Year";
-                ws.Cells[$"{Co6[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml("#FFFFFF"));
-                ws.Cells[$"{Co6[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"{cells7[i]}"].Value = headers[i];
+                worksheet.Cells[$"{cells7[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.WhiteFontMineCompliance));
+                worksheet.Cells[$"{cells7[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"{cells8[i]}"].Value = "Month/Year";
+                worksheet.Cells[$"{cells8[i]}"].Style.Font.Color.SetColor(ColorTranslator.FromHtml(QuartersReconciliationFactorsTemplateColors.WhiteFontMineCompliance));
+                worksheet.Cells[$"{cells8[i]}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             }
 
-            byte[] fileText = pck.GetAsByteArray();
+            byte[] fileText = excelPackage.GetAsByteArray();
 
-            SaveFileDialog dialog = new SaveFileDialog()
+            var dialog = new SaveFileDialog()
             {
-                FileName = "ReconciliationFactorsTemplate.xlsx",
+                FileName = QuartersReconciliationFactorsConstants.QuartersReconciliationFactorExcelFileName,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
             try
             {
-                FileStream fs = File.OpenWrite(dialog.FileName);
-                fs.Close();
+                var fileStream = File.OpenWrite(dialog.FileName);
+                fileStream.Close();
                 if (dialog.ShowDialog() == true)
                 {
                     File.WriteAllBytes(dialog.FileName, fileText);
-                }
-                IsEnabled1 = true;
+                    IsEnabledLoadMonthlyValues = true;
+                }               
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Upload Error");
+                MessageBox.Show(ex.Message, StringResources.UploadError);
             }
+        }  
 
-        }
-
-        public class F0
+        private void LoadQuartersReconciliationFactorsTemplate()
         {
-            public string Quarter { get; set; }
-            public double MillOre { get; set; }
-            public double OLOre { get; set; }
-            public double SLOre { get; set; }
-            public double MillCuT { get; set; }
-            public double OLCuT { get; set; }
-            public double SLCuT { get; set; }
-            public double MillCuFines { get; set; }
-            public double OLCuFines { get; set; }
-            public double SLCuFines { get; set; }
-        }
-
-        readonly List<F0> lstF0 = new List<F0>();
-
-        public class F1
-        {
-            public string Quarter { get; set; }
-            public double MillOre { get; set; }
-            public double OLOre { get; set; }
-            public double SLOre { get; set; }
-            public double MillCuT { get; set; }
-            public double OLCuT { get; set; }
-            public double SLCuT { get; set; }
-            public double MillCuFines { get; set; }
-            public double OLCuFines { get; set; }
-            public double SLCuFines { get; set; }
-        }
-
-        readonly List<F1> lstF1 = new List<F1>();
-
-        public class F2
-        {
-            public string Quarter { get; set; }
-            public double MillOre { get; set; }
-            public double OLOre { get; set; }
-            public double MillCuT { get; set; }
-            public double OLCuT { get; set; }
-            public double MillCuFines { get; set; }
-            public double OLCuFines { get; set; }
-        }
-
-        readonly List<F2> lstF2 = new List<F2>();
-
-        public class F3
-        {
-            public string Quarter { get; set; }
-            public double MillCuFines { get; set; }
-        }
-
-        readonly List<F3> lstF3 = new List<F3>();
-
-        private void LoadTemplate()
-        {
-            lstF0.Clear();
-            lstF1.Clear();
-            lstF2.Clear();
-            lstF3.Clear();
-
-            OpenFileDialog op = new OpenFileDialog
+            _F0.Clear();
+            _F1.Clear();
+            _F2.Clear();
+            _F3.Clear();
+            var openFileDialog = new OpenFileDialog
             {
-                Title = "Select File",
+                Title = StringResources.SelectFile,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
-            if (op.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == true)
             {
-               
-                try
+                var openFilePath = new FileInfo(openFileDialog.FileName);
+                var excelPackage = new ExcelPackage(openFilePath);
+                var worksheet = excelPackage.Workbook.Worksheets[QuartersReconciliationFactorsConstants.QuartersReconciliationFactorsWorksheet];
+
+                if (openFilePath.FullName.Substring(openFilePath.FullName.Length - QuartersReconciliationFactorsConstants.QuartersReconciliationFactorExcelFileName.Length) == QuartersReconciliationFactorsConstants.QuartersReconciliationFactorExcelFileName)
                 {
-                    FileInfo FilePath = new FileInfo(op.FileName);
-                    ExcelPackage pck = new ExcelPackage(FilePath);
-
-                    FileStream fs = File.OpenWrite(op.FileName);
-                    fs.Close();
-
-                    ExcelWorksheet ws = pck.Workbook.Worksheets["Rolling Twelve Months"];
-
-                    for(int i = 0; i < 4; i++)
-                    {
-                        for(int j = 0; j < 10; j++)
-                        {
-                            if(ws.Cells[7 + i, 4 + j].Value == null)
-                            {
-                                ws.Cells[7 + i, 4 + j].Value = -99;
-                            }
-                        }
-                        for (int j = 0; j < 9; j++)
-                        {
-                            if (ws.Cells[18 + i, 4 + j].Value == null)
-                            {
-                                ws.Cells[18 + i, 4 + j].Value = -99;
-                            }
-                        }
-                        for (int j = 0; j < 6; j++)
-                        {
-                            if (ws.Cells[29 + i, 4 + j].Value == null)
-                            {
-                                ws.Cells[29 + i, 4 + j].Value = -99;
-                            }
-                        }
-                    }
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        
-                        lstF0.Add(new F0()
-                        {
-                            Quarter = ws.Cells[7 + i, 3].Value.ToString(),
-                            MillOre = double.Parse(ws.Cells[7 + i, 4].Value.ToString()),
-                            OLOre = double.Parse(ws.Cells[18 + i, 4].Value.ToString()),
-                            SLOre = double.Parse(ws.Cells[29 + i, 4].Value.ToString()),
-                            MillCuT = double.Parse(ws.Cells[7 + i, 5].Value.ToString()),
-                            OLCuT = double.Parse(ws.Cells[18 + i, 5].Value.ToString()),
-                            SLCuT = double.Parse(ws.Cells[29 + i, 5].Value.ToString()),
-                            MillCuFines = double.Parse(ws.Cells[7 + i, 6].Value.ToString()),
-                            OLCuFines = double.Parse(ws.Cells[18 + i, 6].Value.ToString()),
-                            SLCuFines = double.Parse(ws.Cells[29 + i, 6].Value.ToString())
-                        });
-                    }
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        lstF1.Add(new F1()
-                        {
-                            Quarter = ws.Cells[7 + i, 3].Value.ToString(),
-                            MillOre = double.Parse(ws.Cells[7 + i, 7].Value.ToString()),
-                            OLOre = double.Parse(ws.Cells[18 + i, 7].Value.ToString()),
-                            SLOre = double.Parse(ws.Cells[29 + i, 7].Value.ToString()),
-                            MillCuT = double.Parse(ws.Cells[7 + i, 8].Value.ToString()),
-                            OLCuT = double.Parse(ws.Cells[18 + i, 8].Value.ToString()),
-                            SLCuT = double.Parse(ws.Cells[29 + i, 8].Value.ToString()),
-                            MillCuFines = double.Parse(ws.Cells[7 + i, 9].Value.ToString()),
-                            OLCuFines = double.Parse(ws.Cells[18 + i, 9].Value.ToString()),
-                            SLCuFines = double.Parse(ws.Cells[29 + i, 9].Value.ToString())
-                        });
-                    }
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        lstF2.Add(new F2()
-                        {
-                            Quarter = ws.Cells[7 + i, 3].Value.ToString(),
-                            MillOre = double.Parse(ws.Cells[7 + i, 10].Value.ToString()),
-                            OLOre = double.Parse(ws.Cells[18 + i, 10].Value.ToString()),
-                            MillCuT = double.Parse(ws.Cells[7 + i, 11].Value.ToString()),
-                            OLCuT = double.Parse(ws.Cells[18 + i, 11].Value.ToString()),
-                            MillCuFines = double.Parse(ws.Cells[7 + i, 12].Value.ToString()),
-                            OLCuFines = double.Parse(ws.Cells[18 + i, 12].Value.ToString())
-                        });
-                    }
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        lstF3.Add(new F3()
-                        {
-                            Quarter = ws.Cells[7 + i, 3].Value.ToString(),
-                            MillCuFines = double.Parse(ws.Cells[7 + i, 13].Value.ToString())
-                        });
-                    }
-
-                    pck.Dispose();
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Upload Error");
-                }
-
-                string fileName = @"c:\users\nyamis\oneDrive - bmining\BHP\RollingTwelveMonthData.xlsx";
-                FileInfo filePath = new FileInfo(fileName);
-
-                if (filePath.Exists)
-                {                   
-
                     try
                     {
-                        ExcelPackage pck2 = new ExcelPackage(filePath);
+                        // Check if the file is already open
+                        var fileStream = File.OpenWrite(openFileDialog.FileName);
+                        fileStream.Close();
 
-                        FileStream fs = File.OpenWrite(fileName);
-                        fs.Close();
-
-                        ExcelWorksheet ws2 = pck2.Workbook.Worksheets["F0"];
-                        DateTime newDate = new DateTime(Date.Year, Date.Month, 1, 00, 00, 00).AddMilliseconds(000);
-                        int lastRow1 = ws2.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstF0.Count; i++)
+                        for (var i = 0; i < 4; i++)
                         {
-                            ws2.Cells[i + lastRow1, 1].Value = newDate;
-                            ws2.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            ws2.Cells[i + lastRow1, 2].Value = lstF0[i].Quarter;
-                            ws2.Cells[i + lastRow1, 3].Value = lstF0[i].MillOre;
-                            ws2.Cells[i + lastRow1, 4].Value = lstF0[i].OLOre;
-                            ws2.Cells[i + lastRow1, 5].Value = lstF0[i].SLOre;
-                            ws2.Cells[i + lastRow1, 6].Value = lstF0[i].MillCuT;
-                            ws2.Cells[i + lastRow1, 7].Value = lstF0[i].OLCuT;
-                            ws2.Cells[i + lastRow1, 8].Value = lstF0[i].SLCuT;
-                            ws2.Cells[i + lastRow1, 9].Value = lstF0[i].MillCuFines;
-                            ws2.Cells[i + lastRow1, 10].Value = lstF0[i].OLCuFines;
-                            ws2.Cells[i + lastRow1, 11].Value = lstF0[i].SLCuFines;
+                            for (var j = 0; j < 10; j++)
+                                if (worksheet.Cells[7 + i, 4 + j].Value == null)
+                                    worksheet.Cells[7 + i, 4 + j].Value = -99;
+
+                            for (var j = 0; j < 9; j++)
+                                if (worksheet.Cells[18 + i, 4 + j].Value == null)
+                                    worksheet.Cells[18 + i, 4 + j].Value = -99;
+
+                            for (var j = 0; j < 6; j++)
+                                if (worksheet.Cells[29 + i, 4 + j].Value == null)
+                                    worksheet.Cells[29 + i, 4 + j].Value = -99;
                         }
 
-                        ExcelWorksheet ws3 = pck2.Workbook.Worksheets["F1"];
-                        int lastRow2 = ws3.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstF1.Count; i++)
+                        for (var i = 0; i < 4; i++)
                         {
-                            ws3.Cells[i + lastRow2, 1].Value = newDate;
-                            ws3.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            ws3.Cells[i + lastRow2, 2].Value = lstF1[i].Quarter;
-                            ws3.Cells[i + lastRow2, 3].Value = lstF1[i].MillOre;
-                            ws3.Cells[i + lastRow2, 4].Value = lstF1[i].OLOre;
-                            ws3.Cells[i + lastRow2, 5].Value = lstF1[i].SLOre;
-                            ws3.Cells[i + lastRow2, 6].Value = lstF1[i].MillCuT;
-                            ws3.Cells[i + lastRow2, 7].Value = lstF1[i].OLCuT;
-                            ws3.Cells[i + lastRow2, 8].Value = lstF1[i].SLCuT;
-                            ws3.Cells[i + lastRow2, 9].Value = lstF1[i].MillCuFines;
-                            ws3.Cells[i + lastRow2, 10].Value = lstF1[i].OLCuFines;
-                            ws3.Cells[i + lastRow2, 11].Value = lstF1[i].SLCuFines;
+                            _F0.Add(new QuartersReconciliationFactorsF0()
+                            {
+                                Quarter = worksheet.Cells[7 + i, 3].Value.ToString(),
+                                MillOre = double.Parse(worksheet.Cells[7 + i, 4].Value.ToString())/100,
+                                OLOre = double.Parse(worksheet.Cells[18 + i, 4].Value.ToString())/100,
+                                SLOre = double.Parse(worksheet.Cells[29 + i, 4].Value.ToString())/100,
+                                MillCuT = double.Parse(worksheet.Cells[7 + i, 5].Value.ToString())/100,
+                                OLCuT = double.Parse(worksheet.Cells[18 + i, 5].Value.ToString())/100,
+                                SLCuT = double.Parse(worksheet.Cells[29 + i, 5].Value.ToString())/100,
+                                MillCuFines = double.Parse(worksheet.Cells[7 + i, 6].Value.ToString())/100,
+                                OLCuFines = double.Parse(worksheet.Cells[18 + i, 6].Value.ToString())/100,
+                                SLCuFines = double.Parse(worksheet.Cells[29 + i, 6].Value.ToString())/100
+                            });
                         }
 
-                        ExcelWorksheet ws4 = pck2.Workbook.Worksheets["F2"];
-                        int lastRow3 = ws4.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstF2.Count; i++)
+                        for (var i = 0; i < 4; i++)
                         {
-                            ws4.Cells[i + lastRow3, 1].Value = newDate;
-                            ws4.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            ws4.Cells[i + lastRow3, 2].Value = lstF2[i].Quarter;
-                            ws4.Cells[i + lastRow3, 3].Value = lstF2[i].MillOre;
-                            ws4.Cells[i + lastRow3, 4].Value = lstF2[i].OLOre;
-                            ws4.Cells[i + lastRow3, 5].Value = lstF2[i].MillCuT;
-                            ws4.Cells[i + lastRow3, 6].Value = lstF2[i].OLCuT;
-                            ws4.Cells[i + lastRow3, 7].Value = lstF2[i].MillCuFines;
-                            ws4.Cells[i + lastRow3, 8].Value = lstF2[i].OLCuFines;
+                            _F1.Add(new QuartersReconciliationFactorsF1()
+                            {
+                                Quarter = worksheet.Cells[7 + i, 3].Value.ToString(),
+                                MillOre = double.Parse(worksheet.Cells[7 + i, 7].Value.ToString())/100,
+                                OLOre = double.Parse(worksheet.Cells[18 + i, 7].Value.ToString())/100,
+                                SLOre = double.Parse(worksheet.Cells[29 + i, 7].Value.ToString())/100,
+                                MillCuT = double.Parse(worksheet.Cells[7 + i, 8].Value.ToString())/100,
+                                OLCuT = double.Parse(worksheet.Cells[18 + i, 8].Value.ToString())/100,
+                                SLCuT = double.Parse(worksheet.Cells[29 + i, 8].Value.ToString())/100,
+                                MillCuFines = double.Parse(worksheet.Cells[7 + i, 9].Value.ToString())/100,
+                                OLCuFines = double.Parse(worksheet.Cells[18 + i, 9].Value.ToString())/100,
+                                SLCuFines = double.Parse(worksheet.Cells[29 + i, 9].Value.ToString())/100
+                            });
                         }
 
-                        ExcelWorksheet ws5 = pck2.Workbook.Worksheets["F3"];
-                        int lastRow4 = ws5.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstF3.Count; i++)
+                        for (var i = 0; i < 4; i++)
                         {
-                            ws5.Cells[i + lastRow4, 1].Value = newDate;
-                            ws5.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            ws5.Cells[i + lastRow4, 2].Value = lstF3[i].Quarter;
-                            ws5.Cells[i + lastRow4, 3].Value = lstF3[i].MillCuFines;
+                            _F2.Add(new QuartersReconciliationFactorsF2()
+                            {
+                                Quarter = worksheet.Cells[7 + i, 3].Value.ToString(),
+                                MillOre = double.Parse(worksheet.Cells[7 + i, 10].Value.ToString())/100,
+                                OLOre = double.Parse(worksheet.Cells[18 + i, 10].Value.ToString())/100,
+                                MillCuT = double.Parse(worksheet.Cells[7 + i, 11].Value.ToString())/100,
+                                OLCuT = double.Parse(worksheet.Cells[18 + i, 11].Value.ToString())/100,
+                                MillCuFines = double.Parse(worksheet.Cells[7 + i, 12].Value.ToString())/100,
+                                OLCuFines = double.Parse(worksheet.Cells[18 + i, 12].Value.ToString())/100
+                            });
                         }
 
-                        byte[] fileText2 = pck2.GetAsByteArray();
-                        File.WriteAllBytes(fileName, fileText2);
-
-                        UpdateA = $"{StringResources.Updated}: {DateTime.Now}";
-
+                        for (var i = 0; i < 4; i++)
+                        {
+                            _F3.Add(new QuartersReconciliationFactorsF3()
+                            {
+                                Quarter = worksheet.Cells[7 + i, 3].Value.ToString(),
+                                MillCuFines = double.Parse(worksheet.Cells[7 + i, 13].Value.ToString())/100
+                            });
+                        }
+                        excelPackage.Dispose();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Upload Error");
+                        MessageBox.Show(ex.Message, StringResources.UploadError);
                     }
-
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
 
+                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.QuartersReconciliationFactorsExcelFilePath;
+                var loadFileInfo = new FileInfo(loadFilePath);
 
+                if (loadFileInfo.Exists)
+                {
+                    var package = new ExcelPackage(loadFileInfo);
+                    var F0Worksheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F0QuartersReconciliationFactorsSpotfireWorksheet];
+                    var F1Worsheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F1QuartersReconciliationFactorsSpotfireWorksheet];
+                    var F2Worksheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F2QuartersReconciliationFactorsSpotfireWorksheet];
+                    var F3Woksheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F3QuartersReconciliationFactorsSpotfireWorksheet];
+
+                    if (F0Worksheet != null & F1Worsheet != null & F2Worksheet != null & F3Woksheet != null)
+                    {
+                        try
+                        {
+                            var openWriteCheck = File.OpenWrite(loadFilePath);
+                            openWriteCheck.Close();
+
+                            var newDate = new DateTime(MyMonthlyDate.Year, MyMonthlyDate.Month, 1, 00, 00, 00);
+                            var lastRow1 = F0Worksheet.Dimension.End.Row + 1;
+                            for (var i = 0; i < _F0.Count; i++)
+                            {
+                                F0Worksheet.Cells[i + lastRow1, 1].Value = newDate;
+                                F0Worksheet.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                F0Worksheet.Cells[i + lastRow1, 2].Value = _F0[i].Quarter;
+                                F0Worksheet.Cells[i + lastRow1, 3].Value = _F0[i].MillOre;
+                                F0Worksheet.Cells[i + lastRow1, 4].Value = _F0[i].OLOre;
+                                F0Worksheet.Cells[i + lastRow1, 5].Value = _F0[i].SLOre;
+                                F0Worksheet.Cells[i + lastRow1, 6].Value = _F0[i].MillCuT;
+                                F0Worksheet.Cells[i + lastRow1, 7].Value = _F0[i].OLCuT;
+                                F0Worksheet.Cells[i + lastRow1, 8].Value = _F0[i].SLCuT;
+                                F0Worksheet.Cells[i + lastRow1, 9].Value = _F0[i].MillCuFines;
+                                F0Worksheet.Cells[i + lastRow1, 10].Value = _F0[i].OLCuFines;
+                                F0Worksheet.Cells[i + lastRow1, 11].Value = _F0[i].SLCuFines;
+                            }
+
+                            var lastRow2 = F1Worsheet.Dimension.End.Row + 1;
+                            for (var i = 0; i < _F1.Count; i++)
+                            {
+                                F1Worsheet.Cells[i + lastRow2, 1].Value = newDate;
+                                F1Worsheet.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                F1Worsheet.Cells[i + lastRow2, 2].Value = _F1[i].Quarter;
+                                F1Worsheet.Cells[i + lastRow2, 3].Value = _F1[i].MillOre;
+                                F1Worsheet.Cells[i + lastRow2, 4].Value = _F1[i].OLOre;
+                                F1Worsheet.Cells[i + lastRow2, 5].Value = _F1[i].SLOre;
+                                F1Worsheet.Cells[i + lastRow2, 6].Value = _F1[i].MillCuT;
+                                F1Worsheet.Cells[i + lastRow2, 7].Value = _F1[i].OLCuT;
+                                F1Worsheet.Cells[i + lastRow2, 8].Value = _F1[i].SLCuT;
+                                F1Worsheet.Cells[i + lastRow2, 9].Value = _F1[i].MillCuFines;
+                                F1Worsheet.Cells[i + lastRow2, 10].Value = _F1[i].OLCuFines;
+                                F1Worsheet.Cells[i + lastRow2, 11].Value = _F1[i].SLCuFines;
+                            }
+
+                            var lastRow3 = F2Worksheet.Dimension.End.Row + 1;
+                            for (var i = 0; i < _F2.Count; i++)
+                            {
+                                F2Worksheet.Cells[i + lastRow3, 1].Value = newDate;
+                                F2Worksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                F2Worksheet.Cells[i + lastRow3, 2].Value = _F2[i].Quarter;
+                                F2Worksheet.Cells[i + lastRow3, 3].Value = _F2[i].MillOre;
+                                F2Worksheet.Cells[i + lastRow3, 4].Value = _F2[i].OLOre;
+                                F2Worksheet.Cells[i + lastRow3, 5].Value = _F2[i].MillCuT;
+                                F2Worksheet.Cells[i + lastRow3, 6].Value = _F2[i].OLCuT;
+                                F2Worksheet.Cells[i + lastRow3, 7].Value = _F2[i].MillCuFines;
+                                F2Worksheet.Cells[i + lastRow3, 8].Value = _F2[i].OLCuFines;
+                            }
+
+                            var lastRow4 = F3Woksheet.Dimension.End.Row + 1;
+                            for (var i = 0; i < _F3.Count; i++)
+                            {
+                                F3Woksheet.Cells[i + lastRow4, 1].Value = newDate;
+                                F3Woksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                F3Woksheet.Cells[i + lastRow4, 2].Value = _F3[i].Quarter;
+                                F3Woksheet.Cells[i + lastRow4, 3].Value = _F3[i].MillCuFines;
+                            }
+                            byte[] fileText2 = package.GetAsByteArray();
+                            File.WriteAllBytes(loadFilePath, fileText2);
+                            MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, StringResources.UploadError);
+                        }
+                    }
+                    else
+                    {
+                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                    }                   
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                }
             }
         }
-
     }
 }
+
+

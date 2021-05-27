@@ -3,36 +3,79 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BhpAssetComplianceWpfOneDesktop.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:resources="clr-namespace:BhpAssetComplianceWpfOneDesktop.Resources"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="650">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Content="{Binding MyPosterHeader}" Margin="25,10,391.2,360" FontSize="16" Grid.Row="0"/>
+        <ContentControl Content="{Binding MyPosterHeader}" Grid.Row="0"/>
 
-        <Label x:Name="label1" Content="{Binding realContent}" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <Label x:Name="label2" Content="{Binding dateContent}"  HorizontalAlignment="Left" Margin="30,90,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <DatePicker SelectedDate="{Binding Date}" HorizontalAlignment="Left" Margin="119,91,0,0" VerticalAlignment="Top" Width="112"/>
-        <Button x:Name="GenerarAFT_btn" Content="{Binding generateContent}" HorizontalAlignment="Left" Margin="30,137,0,0" VerticalAlignment="Top" Width="109"
-                Command="{Binding GenerarMCRT}"/>
-        <Button x:Name="CargarAFTr_btn" Content="{Binding loadContent}" HorizontalAlignment="Left" Margin="166,137,0,0" VerticalAlignment="Top" Width="109"
-                Command="{Binding CargarMCRT}"/>
-        <TextBlock Text="{Binding UpdateA}" HorizontalAlignment="Left" Margin="295,139,0,0" VerticalAlignment="Top" Height="33" Width="130"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-        <Label x:Name="label3" Content="{Binding budgetContent}" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,192,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <Label x:Name="label4" Content="{Binding fiscalYearContent}" HorizontalAlignment="Left" Margin="30,229,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <TextBox Text="{Binding FiscalYear , ValidatesOnExceptions=True}"  HorizontalAlignment="Left" Height="22" Margin="120,233,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="51"/>
-        <Button x:Name="GenerarBFT_btn" Content="{Binding generateContent}" HorizontalAlignment="Left" Margin="30,278,0,0" VerticalAlignment="Top" Width="109"
-                Command="{Binding GenerarMCBT}"/>
-        <Button x:Name="CargarBFTr_btn" Content="{Binding loadContent}" HorizontalAlignment="Left" Margin="166,278,0,0" VerticalAlignment="Top" Width="109"
-                Command="{Binding CargarMCBT}"/>
-        <TextBlock Text="{Binding UpdateB}" HorizontalAlignment="Left" Margin="295,280,0,0" VerticalAlignment="Top" Height="33" Width="130"/>
+            <GroupBox Header="{x:Static resources:StringResources.MineComplianceRealTemplate}" Grid.Column="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static resources:StringResources.Date}"
+                                   Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                        <DatePicker SelectedDate="{Binding MyDateActual}" Grid.Column="1"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <WrapPanel>
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateMineComplianceRealTemplateCommand}"/>
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadMineComplianceRealTemplateCommand}"/>
+                            <TextBlock Text="{Binding MyLastDateRefreshRealValues}" Style="{StaticResource TextBlockStyle}"/>
+                        </WrapPanel>
+                    </Grid>
+
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="{x:Static resources:StringResources.MineComplianceBudgetTemplate}" Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static resources:StringResources.FiscalYear}"
+                                   Style="{StaticResource TextBlockStyle}"  Grid.Column="0"/>
+                        <TextBox Text="{Binding MyFiscalYear , ValidatesOnExceptions=True}" Grid.Column="1"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <WrapPanel>
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateMineComplianceBudgetTemplateCommand}"/>
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadMineComplianceBudgetTemplateCommand}"/>
+                            <TextBlock Text="{Binding MyLastDateRefreshBudgetValues}" Style="{StaticResource TextBlockStyle}"/>
+                        </WrapPanel>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+        </Grid>
     </Grid>
 </UserControl>

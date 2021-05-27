@@ -3,30 +3,69 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BhpAssetComplianceWpfOneDesktop.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:resources="clr-namespace:BhpAssetComplianceWpfOneDesktop.Resources"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="650">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Content="{Binding MyPosterHeader}" Margin="25,10,391.2,360" FontSize="16" Grid.Row="0"/>
+        <ContentControl Content="{Binding MyPosterHeader}" Grid.Row="0"/>
 
-        <Label Content="{Binding dateContent}" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,47,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <DatePicker SelectedDate="{Binding date}" HorizontalAlignment="Left" Margin="119,49,0,0" VerticalAlignment="Top" Width="112"/>
+        <GroupBox Header="{x:Static resources:StringResources.NewRecord}" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <Label x:Name="label2" Content="{Binding areaContent}" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,92,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <ComboBox x:Name="comboBox" Text="Select Option" ItemsSource="{Binding lstArea}" SelectedItem="{Binding area}" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Left" VerticalAlignment="Top" Width="208" Margin="120,94,0,0" Height="22"/>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Static resources:StringResources.Date}"
+                                   Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                    <DatePicker  SelectedDate="{Binding MyDateActual}" Grid.Column="1"/>
+                </Grid>
 
-        <Label x:Name="label3" Content="{Binding commentContent}" FontWeight="Bold" HorizontalAlignment="Left" Margin="25,132,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.589,0.015"/>
-        <TextBox x:Name="textBox" Text="{Binding comment,Mode = TwoWay}" HorizontalAlignment="Left" Height="115" TextWrapping="Wrap" VerticalAlignment="Top" Width="389" Margin="30,166,0,0"/>
-        <Button x:Name="LoadNewRecord_btn" Content="{Binding loadContent}" HorizontalAlignment="Left" Margin="308,298,0,0" VerticalAlignment="Top" Width="109"
-                Command="{Binding LoadRecord}"/>
-        <TextBlock Text="{Binding update}" HorizontalAlignment="Left" Margin="437,300,0,0" VerticalAlignment="Top" Height="33" Width="130"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Static resources:StringResources.Area}"
+                                   Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                    <ComboBox ItemsSource="{Binding Areas}"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  SelectedItem="{Binding MyArea}" Grid.Column="1"/>
+                </Grid>
 
+                <GroupBox Grid.Row="2" Header="{x:Static resources:StringResources.Comment}" Grid.Column="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <TextBox Text="{Binding MyComment,Mode = TwoWay}"
+                                 Style="{StaticResource TextBoxStyle}"  />
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <WrapPanel>
+                                <Button Content="{x:Static resources:StringResources.LoadRecord}"  Command="{Binding  LoadRecordCommand}"/>
+                                <TextBlock Text="{Binding MyLastRefreshValues}" Style="{StaticResource TextBlockStyle}" />
+                            </WrapPanel>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>

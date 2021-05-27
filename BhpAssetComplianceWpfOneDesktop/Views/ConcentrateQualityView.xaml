@@ -28,7 +28,6 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
               
-
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -43,7 +42,7 @@
                         <WrapPanel>
                             <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateActualFreightTemplateCommand}"/>
                             <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadActualFreightTemplateCommand}"/>
-                            <TextBlock Text="{Binding MyLastDateRefreshActualValues}"/>
+                            <TextBlock Text="{Binding MyLastDateRefreshActualValues}" Style="{StaticResource TextBlockStyle}"/>
                         </WrapPanel>
                     </Grid>
                 </Grid>
@@ -68,9 +67,9 @@
 
                     <Grid Grid.Row="1">
                         <WrapPanel>
-                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateBudgetFreightCommand}"/>
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateBudgetFreightTemplateCommand}"/>
                             <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadBudgetFreightTemplateCommand}"/>
-                            <TextBlock Text="{Binding MyLastRefreshBudgetValues}" Style="{StaticResource TextBlockStyle}"/>
+                            <TextBlock Text="{Binding MyLastDateRefreshBudgetValues}" Style="{StaticResource TextBlockStyle}"/>
                         </WrapPanel>
                     </Grid>
                 </Grid>

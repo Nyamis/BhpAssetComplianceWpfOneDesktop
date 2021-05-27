@@ -210,4 +210,64 @@
   <data name="MineComplianceBudgetTemplate" xml:space="preserve">
     <value>Mine Compliance Budget Template</value>
   </data>
+  <data name="UploadError" xml:space="preserve">
+    <value>Error de Carga</value>
+  </data>
+  <data name="NewRecord" xml:space="preserve">
+    <value>Nuevo Registro</value>
+  </data>
+  <data name="Escondida" xml:space="preserve">
+    <value>Escondida</value>
+  </data>
+  <data name="EscondidaNorte" xml:space="preserve">
+    <value>Escondida Norte</value>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value>Plantilla</value>
+  </data>
+  <data name="Template1" xml:space="preserve">
+    <value>Plantilla</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Imagen</value>
+  </data>
+  <data name="Repository" xml:space="preserve">
+    <value>Repositorio</value>
+  </data>
+  <data name="Repositories" xml:space="preserve">
+    <value>Repositorios</value>
+  </data>
+  <data name="Archive" xml:space="preserve">
+    <value>Archivo</value>
+  </data>
+  <data name="CSVArchive" xml:space="preserve">
+    <value>Archivo CSV</value>
+  </data>
+  <data name="ExcelArchive" xml:space="preserve">
+    <value>Archivo Excel</value>
+  </data>
+  <data name="ExistsOrNotSelect" xml:space="preserve">
+    <value>existe o ha sido seleccionado en el repositorio.</value>
+  </data>
+  <data name="IsTheRightOne" xml:space="preserve">
+    <value>es el correcto.</value>
+  </data>
+  <data name="SelectFile" xml:space="preserve">
+    <value>Seleccionar Archivo</value>
+  </data>
+  <data name="WorksheetNotExist" xml:space="preserve">
+    <value>Archivo de destino erróneo. Compruebe si el archivo </value>
+  </data>
+  <data name="SelectImage" xml:space="preserve">
+    <value>Seleccionar Imagen</value>
+  </data>
+  <data name="WrongUploadedFile" xml:space="preserve">
+    <value>Archivo cargado erróneo. Compruebe si el </value>
+  </data>
+  <data name="LoadImages" xml:space="preserve">
+    <value>Cargar Imágenes</value>
+  </data>
+  <data name="SelectAreaInputComment" xml:space="preserve">
+    <value>Debe seleccionar un área e ingresar un comentario.</value>
+  </data>
 </root>

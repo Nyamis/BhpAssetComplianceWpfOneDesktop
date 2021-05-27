@@ -4,7 +4,6 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
 {
     public static class ViewNames
     {
-
         public const string MineComplianceView = "MineComplianceView";
         public const string GeotechnicalView = "GeotechnicalView";
         public const string MineSequenceView = "MineSequenceView";
@@ -13,5 +12,6 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
         public const string ConcentrateQualityView = "ConcentrateQualityView";
         public const string QuartersReconciliationFactorsView = "QuartersReconciliationFactorsView";
         public const string HistoricalRecordView = "HistoricalRecordView";
+        public const string RepositoryView = "RepositoryView";
     }
 }

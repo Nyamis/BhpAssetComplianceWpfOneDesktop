@@ -1,19 +1,16 @@
 ﻿using BhpAssetComplianceWpfOneDesktop.Resources;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prism.Mvvm;
 using Prism.Commands;
 using System.Windows;
 using OfficeOpenXml;
 using System.IO;
 using Microsoft.Win32;
 using System.Drawing;
-using System.Globalization;
 using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Models.ProcessComplianceModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
@@ -22,539 +19,488 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         protected override string MyPosterName { get; set; } = StringResources.ProcessCompliance;
         protected override string MyPosterIcon { get; set; } = IconKeys.ProcessCompliance;
 
-        private string _UpdateA;
-        public string UpdateA
+        private string _myLastDateRefreshMonthlyValues;
+        public string MyLastDateRefreshMonthlyValues
         {
-            get { return _UpdateA; }
-            set { SetProperty(ref _UpdateA, value); }
+            get { return _myLastDateRefreshMonthlyValues; }
+            set { SetProperty(ref _myLastDateRefreshMonthlyValues, value); }
         }
 
-        DateTime _Date;
-        public DateTime Date
+        private DateTime _myMonthlyDate;
+        public DateTime MyMonthlyDate
         {
-            get { return _Date; }
-            set { SetProperty(ref _Date, value); }
+            get { return _myMonthlyDate; }
+            set { SetProperty(ref _myMonthlyDate, value); }
         }
 
-        private bool _isEnabled1;
-        public bool IsEnabled1
+        private bool _isEnabledLoadMonthlyValues;
+        public bool IsEnabledLoadMonthlyValues
         {
-            get { return _isEnabled1; }
-            set { SetProperty(ref _isEnabled1, value); }
+            get { return _isEnabledLoadMonthlyValues; }
+            set { SetProperty(ref _isEnabledLoadMonthlyValues, value); }
         }
 
-        public DelegateCommand GenerarT { get; private set; }
-        public DelegateCommand CargarT { get; private set; }
+        public DelegateCommand GenerateProcessComplianceTemplateCommand { get; private set; }
+        public DelegateCommand LoadProcessComplianceTemplateCommand { get; private set; }
+
+        private readonly List<ProcessComplianceOreToMill> _oreToMill = new List<ProcessComplianceOreToMill>();
+        private readonly List<ProcessComplianceRecovery> _recovery = new List<ProcessComplianceRecovery>();
+        private readonly List<ProcessComplianceOLAP> _OLAP = new List<ProcessComplianceOLAP>();
+        private readonly List<ProcessComplianceSulphide> _sulphide = new List<ProcessComplianceSulphide>();
 
         public ProcessComplianceViewModel()
         {
-            Date = DateTime.Now;
-            IsEnabled1 = false;
-            GenerarT = new DelegateCommand(GenerateTemplate);
-            CargarT = new DelegateCommand(LoadTemplate).ObservesCanExecute(() => IsEnabled1);
+            MyMonthlyDate = DateTime.Now;
+            IsEnabledLoadMonthlyValues = false;
+            GenerateProcessComplianceTemplateCommand = new DelegateCommand(GenerateProcessComplianceTemplate);
+            LoadProcessComplianceTemplateCommand = new DelegateCommand(LoadProcessComplianceTemplate).ObservesCanExecute(() => IsEnabledLoadMonthlyValues);
         }
 
-        private void GenerateTemplate()
+        private void GenerateProcessComplianceTemplate()
         {
-            List<string> lstPhase = new List<string>() { "Phase", "Ore to Mill Budget (Mt)", "Ore to Mill Actual (Mt)", "Hardness Budget (min)", "Hardness Actual (min)" };
-            List<string> lstPhase2 = new List<string>() { "Phase", "Recovery Budget (%)", "Recovery Actual (%)", "Feed Cu Budget (%)", "Feed Cu Actual (%)" };
-            List<string> lstFeed = new List<string>() { "Feed Grade", "Stacked Ore (kt)", "CuT (%)", "Cathodes (t)", "Distribution", "Expit", "Average CuT", "Stocks" };
-            List<string> lstDist = new List<string>() { "Budget", "Actual", "Compliance %", "Budget %", "Actual %" };
+            var phases1 = new List<string> { "Phase", "Ore to Mill Budget (Mt)", "Ore to Mill Actual (Mt)", "Hardness Budget (min)", "Hardness Actual (min)" };
+            var phases2 = new List<string> { "Phase", "Recovery Budget (%)", "Recovery Actual (%)", "Feed Cu Budget (%)", "Feed Cu Actual (%)" };
+            var feeds = new List<string> { "Feed Grade", "Stacked Ore (kt)", "CuT (%)", "Cathodes (t)", "Distribution", "Expit", "Average CuT", "Stocks" };
+            var distributions = new List<string> { "Budget", "Actual", "Compliance %", "Budget %", "Actual %" };
 
-            ExcelPackage pck = new ExcelPackage();
-            pck.Workbook.Properties.Author = "BHP";
-            pck.Workbook.Properties.Title = "Process Compliance Template";
-            pck.Workbook.Properties.Company = "BHP";
+            var excelPackage = new ExcelPackage();
+            excelPackage.Workbook.Properties.Author = "BHP";
+            excelPackage.Workbook.Properties.Title = ProcessComplianceConstants.ProcessComplianceWorksheetTitle;
+            excelPackage.Workbook.Properties.Company = "BHP";
 
-            var ws = pck.Workbook.Worksheets.Add("Ore to Mill");
-            ws.Cells["B1:C1"].Style.Font.Bold = true;
-            ws.Cells["B1:C1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["B1:C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#9BB3C1"));
-            ws.Cells["B1:C1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws.Cells["B1"].Value = "Budget (min)";
-            ws.Cells["C1"].Value = "Actual (min)";
+            var OreToMillWorksheet = excelPackage.Workbook.Worksheets.Add(ProcessComplianceConstants.OreToMillProcessComplianceWorksheet);
+            OreToMillWorksheet.Cells["B1:C1"].Style.Font.Bold = true;
+            OreToMillWorksheet.Cells["B1:C1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            OreToMillWorksheet.Cells["B1:C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
+            OreToMillWorksheet.Cells["B1:C1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            OreToMillWorksheet.Cells["B1"].Value = "Budget (min)";
+            OreToMillWorksheet.Cells["C1"].Value = "Actual (min)";
 
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
-                ws.Cells[1, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                ws.Cells[2, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                ws.Cells[1, 1 + i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                OreToMillWorksheet.Cells[1, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                OreToMillWorksheet.Cells[2, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                OreToMillWorksheet.Cells[1, 1 + i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             }
 
-            ws.Cells["A2"].Style.Font.Bold = true;
-            ws.Cells["A2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["A2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FFA153"));
-            ws.Cells["A2:C2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            ws.Cells["A2"].Value = "SPI Global";
+            OreToMillWorksheet.Cells["A2"].Style.Font.Bold = true;
+            OreToMillWorksheet.Cells["A2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            OreToMillWorksheet.Cells["A2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+            OreToMillWorksheet.Cells["A2:C2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            OreToMillWorksheet.Cells["A2"].Value = "SPI Global";
 
-            ws.Cells["A5:E5"].Style.Font.Bold = true;
-            ws.Cells["A5:E5"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["A5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FFA153"));
-            ws.Cells["B5:E5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#9BB3C1"));
-            ws.Cells["B5:E5"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            OreToMillWorksheet.Cells["A5:E5"].Style.Font.Bold = true;
+            OreToMillWorksheet.Cells["A5:E5"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            OreToMillWorksheet.Cells["A5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+            OreToMillWorksheet.Cells["B5:E5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
+            OreToMillWorksheet.Cells["B5:E5"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-            for (int i = 0; i < 17; i++)
+            for (var i = 0; i < 17; i++)            
+                OreToMillWorksheet.Cells[$"A{4 + i}:E{4 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;   
+
+            string[] columns1 = { "A", "B", "C", "D", "E" };
+            for (var i = columns1.GetLowerBound(0); i <= columns1.GetUpperBound(0); i++)
             {
-                ws.Cells[$"A{4 + i}:E{4 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                OreToMillWorksheet.Cells[5, 1 + i].Value = phases1[i];
+                OreToMillWorksheet.Cells[$"{columns1[i]}5:{columns1[i]}20"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                OreToMillWorksheet.Column(1 + i).Width = 19;
+            }
+            OreToMillWorksheet.Column(1).Width = 11;
+
+            var RecoveryWorksheet = excelPackage.Workbook.Worksheets.Add(ProcessComplianceConstants.RecoveryProcessComplianceWorksheet);
+            RecoveryWorksheet.Cells["B1:C1"].Style.Font.Bold = true;
+            RecoveryWorksheet.Cells["B1:C1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            RecoveryWorksheet.Cells["B1:C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+            RecoveryWorksheet.Cells["B1:C1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            RecoveryWorksheet.Cells["B1"].Value = "Budget (%)";
+            RecoveryWorksheet.Cells["C1"].Value = "Actual (%)";
+
+            for (var i = 0; i < 3; i++)
+            {
+                RecoveryWorksheet.Cells[1, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                RecoveryWorksheet.Cells[2, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                RecoveryWorksheet.Cells[1, 1 + i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             }
 
-            string[] D = { "A", "B", "C", "D", "E" };
-            for (int i = D.GetLowerBound(0); i <= D.GetUpperBound(0); i++)
-            {
-                ws.Cells[5, 1 + i].Value = lstPhase[i];
-                ws.Cells[$"{D[i]}5:{D[i]}20"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                ws.Column(1 + i).Width = 19;
-            }
-            ws.Column(1).Width = 11;
+            RecoveryWorksheet.Cells["A2"].Style.Font.Bold = true;
+            RecoveryWorksheet.Cells["A2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            RecoveryWorksheet.Cells["A2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
+            RecoveryWorksheet.Cells["A2:C2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            RecoveryWorksheet.Cells["A2"].Value = "Rec Global";
 
-            var ws4 = pck.Workbook.Worksheets.Add("Recovery");
-            ws4.Cells["B1:C1"].Style.Font.Bold = true;
-            ws4.Cells["B1:C1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws4.Cells["B1:C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FFA153"));
-            ws4.Cells["B1:C1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws4.Cells["B1"].Value = "Budget (%)";
-            ws4.Cells["C1"].Value = "Actual (%)";
+            RecoveryWorksheet.Cells["A5:E5"].Style.Font.Bold = true;
+            RecoveryWorksheet.Cells["A5:E5"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            RecoveryWorksheet.Cells["A5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
+            RecoveryWorksheet.Cells["B5:E5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+            RecoveryWorksheet.Cells["B5:E5"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 17; i++)
             {
-                ws4.Cells[1, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                ws4.Cells[2, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                ws4.Cells[1, 1 + i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                RecoveryWorksheet.Cells[$"A{4 + i}:E{4 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             }
 
-            ws4.Cells["A2"].Style.Font.Bold = true;
-            ws4.Cells["A2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws4.Cells["A2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#9BB3C1"));
-            ws4.Cells["A2:C2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            ws4.Cells["A2"].Value = "Rec Global";
-
-            ws4.Cells["A5:E5"].Style.Font.Bold = true;
-            ws4.Cells["A5:E5"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws4.Cells["A5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#9BB3C1"));
-            ws4.Cells["B5:E5"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FFA153"));
-            ws4.Cells["B5:E5"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-            for (int i = 0; i < 17; i++)
+            string[] columns2 = { "A", "B", "C", "D", "E" };
+            for (var i = columns2.GetLowerBound(0); i <= columns2.GetUpperBound(0); i++)
             {
-                ws4.Cells[$"A{4 + i}:E{4 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                RecoveryWorksheet.Cells[5, 1 + i].Value = phases2[i];
+                RecoveryWorksheet.Cells[$"{columns2[i]}5:{columns2[i]}20"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                RecoveryWorksheet.Column(1 + i).Width = 19;
+            }
+            RecoveryWorksheet.Column(1).Width = 11;
+
+            var OLAPWorksheet = excelPackage.Workbook.Worksheets.Add(ProcessComplianceConstants.OLAPProcessComplianceWorksheet);
+            OLAPWorksheet.Cells["A1:H1"].Style.Font.Bold = true;
+            OLAPWorksheet.Cells["A1:D1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            OLAPWorksheet.Cells["F1:H1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            OLAPWorksheet.Cells["A2:A4"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            OLAPWorksheet.Cells["F2:F4"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            OLAPWorksheet.Column(1).Width = 14;
+            OLAPWorksheet.Column(6).Width = 14;
+
+            string[] columns3 = { "A", "B", "C", "D", "F", "G", "H" };
+            for (var i = 0; i < 4; i++)
+            {
+                OLAPWorksheet.Cells[1 + i, 1].Value = feeds[i];
+                OLAPWorksheet.Cells[1 + i, 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
+                OLAPWorksheet.Cells[1 + i, 6].Value = feeds[4 + i];
+                OLAPWorksheet.Cells[1 + i, 6].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
+                OLAPWorksheet.Column(2 + i).Width = 12;
+                OLAPWorksheet.Column(7 + i).Width = 12;
+                OLAPWorksheet.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                OLAPWorksheet.Cells[$"F{1 + i}:H{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                OLAPWorksheet.Cells[$"{columns3[i]}1:{columns3[i]}4"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
 
-            string[] G = { "A", "B", "C", "D", "E" };
-            for (int i = G.GetLowerBound(0); i <= G.GetUpperBound(0); i++)
+            OLAPWorksheet.Cells["G1:H1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+
+            for (var i = 0; i < 3; i++)
             {
-                ws4.Cells[5, 1 + i].Value = lstPhase2[i];
-                ws4.Cells[$"{G[i]}5:{G[i]}20"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                ws4.Column(1 + i).Width = 19;
+                OLAPWorksheet.Cells[1, 2 + i].Value = distributions[i];
+                OLAPWorksheet.Cells[1, 2 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+                OLAPWorksheet.Cells[1, 2 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                OLAPWorksheet.Cells[$"{columns3[4 + i]}1:{columns3[4 + i]}4"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
-            ws4.Column(1).Width = 11;
+            OLAPWorksheet.Cells[1, 7].Value = distributions[3];
+            OLAPWorksheet.Cells[1, 8].Value = distributions[4];
+            OLAPWorksheet.Cells["G1:H1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-            var ws2 = pck.Workbook.Worksheets.Add("OLAP");
-            ws2.Cells["A1:H1"].Style.Font.Bold = true;
-            ws2.Cells["A1:D1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws2.Cells["F1:H1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws2.Cells["A2:A4"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws2.Cells["F2:F4"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws2.Column(1).Width = 14;
-            ws2.Column(6).Width = 14;
-            string[] E = { "A", "B", "C", "D", "F", "G", "H" };
+            var SulphideWorksheet = excelPackage.Workbook.Worksheets.Add(ProcessComplianceConstants.SulphideProcessComplianceWorksheet);
+            SulphideWorksheet.Cells["A1:H1"].Style.Font.Bold = true;
+            SulphideWorksheet.Cells["A1:D1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            SulphideWorksheet.Cells["F1:H1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            SulphideWorksheet.Cells["A2:A4"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            SulphideWorksheet.Cells["F2:F4"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            SulphideWorksheet.Column(1).Width = 14;
+            SulphideWorksheet.Column(6).Width = 14;
 
-            for (int i = 0; i < 4; i++)
+            string[] columns4 = { "A", "B", "C", "D", "F", "G", "H" };
+            for (var i = 0; i < 4; i++)
             {
-                ws2.Cells[1 + i, 1].Value = lstFeed[i];
-                ws2.Cells[1 + i, 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#9BB3C1"));
-                ws2.Cells[1 + i, 6].Value = lstFeed[4 + i];
-                ws2.Cells[1 + i, 6].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#9BB3C1"));
-                ws2.Column(2 + i).Width = 12;
-                ws2.Column(7 + i).Width = 12;
-                ws2.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws2.Cells[$"F{1 + i}:H{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws2.Cells[$"{E[i]}1:{E[i]}4"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-            }
-
-            ws2.Cells["G1:H1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FFA153"));
-
-            for (int i = 0; i < 3; i++)
-            {
-                ws2.Cells[1, 2 + i].Value = lstDist[i];
-                ws2.Cells[1, 2 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FFA153"));
-                ws2.Cells[1, 2 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws2.Cells[$"{E[4 + i]}1:{E[4 + i]}4"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-            }
-            ws2.Cells[1, 7].Value = lstDist[3];
-            ws2.Cells[1, 8].Value = lstDist[4];
-            ws2.Cells["G1:H1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-            var ws3 = pck.Workbook.Worksheets.Add("Sulphide");
-            ws3.Cells["A1:H1"].Style.Font.Bold = true;
-            ws3.Cells["A1:D1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws3.Cells["F1:H1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws3.Cells["A2:A4"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws3.Cells["F2:F4"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws3.Column(1).Width = 14;
-            ws3.Column(6).Width = 14;
-            string[] F = { "A", "B", "C", "D", "F", "G", "H" };
-
-            for (int i = 0; i < 4; i++)
-            {
-                ws3.Cells[1 + i, 1].Value = lstFeed[i];
-                ws3.Cells[1 + i, 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FFA153"));
-                ws3.Cells[1 + i, 6].Value = lstFeed[4 + i];
-                ws3.Cells[1 + i, 6].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FFA153"));
-                ws3.Column(2 + i).Width = 12;
-                ws3.Column(7 + i).Width = 12;
-                ws3.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws3.Cells[$"F{1 + i}:H{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws3.Cells[$"{F[i]}1:{F[i]}4"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                SulphideWorksheet.Cells[1 + i, 1].Value = feeds[i];
+                SulphideWorksheet.Cells[1 + i, 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+                SulphideWorksheet.Cells[1 + i, 6].Value = feeds[4 + i];
+                SulphideWorksheet.Cells[1 + i, 6].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+                SulphideWorksheet.Column(2 + i).Width = 12;
+                SulphideWorksheet.Column(7 + i).Width = 12;
+                SulphideWorksheet.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                SulphideWorksheet.Cells[$"F{1 + i}:H{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                SulphideWorksheet.Cells[$"{columns4[i]}1:{columns4[i]}4"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
 
-            ws3.Cells["G1:H1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#9BB3C1"));
+            SulphideWorksheet.Cells["G1:H1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
 
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
-                ws3.Cells[1, 2 + i].Value = lstDist[i];
-                ws3.Cells[1, 2 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#9BB3C1"));
-                ws3.Cells[1, 2 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws3.Cells[$"{F[4 + i]}1:{F[4 + i]}4"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                SulphideWorksheet.Cells[1, 2 + i].Value = distributions[i];
+                SulphideWorksheet.Cells[1, 2 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
+                SulphideWorksheet.Cells[1, 2 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                SulphideWorksheet.Cells[$"{columns4[4 + i]}1:{columns4[4 + i]}4"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
-            ws3.Cells[1, 7].Value = lstDist[3];
-            ws3.Cells[1, 8].Value = lstDist[4];
-            ws3.Cells["G1:H1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            SulphideWorksheet.Cells[1, 7].Value = distributions[3];
+            SulphideWorksheet.Cells[1, 8].Value = distributions[4];
+            SulphideWorksheet.Cells["G1:H1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-            byte[] fileText = pck.GetAsByteArray();
+            byte[] fileText = excelPackage.GetAsByteArray();
 
-            SaveFileDialog dialog = new SaveFileDialog()
+            var dialog = new SaveFileDialog()
             {
-                FileName = "ProcessComplianceTemplate.xlsx",
+                FileName = ProcessComplianceConstants.ProcessComplianceExcelFileName,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
             try
             {
-                FileStream fs = File.OpenWrite(dialog.FileName);
-                fs.Close();
+                var fileStream = File.OpenWrite(dialog.FileName);
+                fileStream.Close();
                 if (dialog.ShowDialog() == true)
                 {
                     File.WriteAllBytes(dialog.FileName, fileText);
-                    IsEnabled1 = true;
+                    IsEnabledLoadMonthlyValues = true;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Upload Error");
+                MessageBox.Show(ex.Message, StringResources.UploadError);
             }
         }
-
-        public class OretoMill
+        
+        private void LoadProcessComplianceTemplate()
         {
-            public double SpiGlobalBudget { get; set; }
-            public double SpiGlobalActual { get; set; }
-            public string Phase { get; set; }
-            public double OretoMillBudget { get; set; }
-            public double OretoMillActual { get; set; }
-            public double HardnessBudget { get; set; }
-            public double HardnessActual { get; set; }
-        }
-
-        readonly List<OretoMill> lstOretoMill = new List<OretoMill>();
-
-        public class Recovery
-        {
-            public double RecGlobalBudget { get; set; }
-            public double RecGlobalActual { get; set; }
-            public string Phase { get; set; }
-            public double RecoveryBudget { get; set; }
-            public double RecoveryActual { get; set; }
-            public double FeedCuBudget { get; set; }
-            public double FeedCuActual { get; set; }
-        }
-
-        readonly List<Recovery> lstRecovery = new List<Recovery>();
-
-        public class OLAP
-        {
-            public string FeedGrade { get; set; }
-            public double Budget { get; set; }
-            public double Actual { get; set; }
-            public double Compliance { get; set; }
-            public string Distribution { get; set; }
-            public double DistributionBudget { get; set; }
-            public double DistributionActual { get; set; }
-        }
-
-        readonly List<OLAP> lstOLAP = new List<OLAP>();
-
-        public class Sulphide
-        {
-            public string FeedGrade { get; set; }
-            public double Budget { get; set; }
-            public double Actual { get; set; }
-            public double Compliance { get; set; }
-            public string Distribution { get; set; }
-            public double DistributionBudget { get; set; }
-            public double DistributionActual { get; set; }
-        }
-
-        readonly List<Sulphide> lstSulphide = new List<Sulphide>();
-
-        private void LoadTemplate()
-        {
-            lstOretoMill.Clear();
-            lstRecovery.Clear();
-            lstOLAP.Clear();
-            lstSulphide.Clear();
-
-            OpenFileDialog op = new OpenFileDialog
+            _oreToMill.Clear();
+            _recovery.Clear();
+            _OLAP.Clear();
+            _sulphide.Clear();
+            var openFileDialog = new OpenFileDialog
             {
-                Title = "Select File",
+                Title = StringResources.SelectFile,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
-            if (op.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == true)
             {
-                try
-                {
-                    FileInfo FilePath = new FileInfo(op.FileName);
-                    ExcelPackage pck = new ExcelPackage(FilePath);
+                var openFilePath = new FileInfo(openFileDialog.FileName);
+                var excelPackage = new ExcelPackage(openFilePath);
+                var oreToMillTemplateWorksheet = excelPackage.Workbook.Worksheets[ProcessComplianceConstants.OreToMillProcessComplianceWorksheet];
+                var recoveryTemplateWorksheet = excelPackage.Workbook.Worksheets[ProcessComplianceConstants.RecoveryProcessComplianceWorksheet];
+                var OLAPTemplateWorksheet = excelPackage.Workbook.Worksheets[ProcessComplianceConstants.OLAPProcessComplianceWorksheet];
+                var sulphideTemplateWorksheet = excelPackage.Workbook.Worksheets[ProcessComplianceConstants.SulphideProcessComplianceWorksheet];
 
-                    FileStream fs = File.OpenWrite(op.FileName);
-                    fs.Close();
-
-                    ExcelWorksheet ws = pck.Workbook.Worksheets["Ore to Mill"];
-                    int rows = ws.Dimension.Rows;
-
-                    for (int i = 0; i < rows; i++)
-                    {
-                        if (ws.Cells[i + 6, 1].Value != null)
-                        {
-                            if (ws.Cells[2, 2].Value == null)
-                            {
-                                ws.Cells[2, 2].Value = -99;
-                            }
-                            if (ws.Cells[2, 3].Value == null)
-                            {
-                                ws.Cells[2, 3].Value = -99;
-                            }
-
-                            for (int j = 0; j < 4; j++)
-                            {
-                                if (ws.Cells[6 + i, 2 + j].Value == null)
-                                {
-                                    ws.Cells[6 + i, 2 + j].Value = -99;
-                                }
-                            }
-
-                            lstOretoMill.Add(new OretoMill()
-                            {
-                                SpiGlobalBudget = double.Parse(ws.Cells[2, 2].Value.ToString()),
-                                SpiGlobalActual = double.Parse(ws.Cells[2, 3].Value.ToString()),
-                                Phase = ws.Cells[6 + i, 1].Value.ToString(),
-                                OretoMillBudget = double.Parse(ws.Cells[6 + i, 2].Value.ToString()),
-                                OretoMillActual = double.Parse(ws.Cells[6 + i, 3].Value.ToString()),
-                                HardnessBudget = double.Parse(ws.Cells[6 + i, 4].Value.ToString()),
-                                HardnessActual = double.Parse(ws.Cells[6 + i, 5].Value.ToString())
-                            });
-                        }
-                    }
-
-                    ExcelWorksheet ws4 = pck.Workbook.Worksheets["Recovery"];
-                    int rows2 = ws4.Dimension.Rows;
-
-                    for (int i = 0; i < rows2; i++)
-                    {
-                        if (ws4.Cells[i + 6, 1].Value != null)
-                        {
-                            if (ws4.Cells[2, 2].Value == null)
-                            {
-                                ws4.Cells[2, 2].Value = -99;
-                            }
-
-                            if (ws4.Cells[2, 3].Value == null)
-                            {
-                                ws4.Cells[2, 3].Value = -99;
-                            }
-
-                            for (int j = 0; j < 4; j++)
-                            {
-                                if (ws4.Cells[6 + i, 2 + j].Value == null)
-                                {
-                                    ws4.Cells[6 + i, 2 + j].Value = -99;
-                                }
-                            }
-
-                            lstRecovery.Add(new Recovery()
-                            {
-                                RecGlobalBudget = double.Parse(ws4.Cells[2, 2].Value.ToString()),
-                                RecGlobalActual = double.Parse(ws4.Cells[2, 3].Value.ToString()),
-                                Phase = ws4.Cells[6 + i, 1].Value.ToString(),
-                                RecoveryBudget = double.Parse(ws4.Cells[6 + i, 2].Value.ToString()) / 100,
-                                RecoveryActual = double.Parse(ws4.Cells[6 + i, 3].Value.ToString()) / 100,
-                                FeedCuBudget = double.Parse(ws4.Cells[6 + i, 4].Value.ToString()) / 100,
-                                FeedCuActual = double.Parse(ws4.Cells[6 + i, 5].Value.ToString()) / 100
-                            });
-                        }
-                    }
-
-                    ExcelWorksheet ws2 = pck.Workbook.Worksheets["OLAP"];
-                    for (int i = 0; i < 3; i++)
-                    {
-
-                        for (int j = 0; j < 3; j++)
-                        {
-                            if (ws2.Cells[2 + i, 2 + j].Value == null)
-                            {
-                                ws2.Cells[2 + i, 2 + j].Value = -99;
-                            }
-                        }
-
-                        for (int j = 0; j < 2; j++)
-                        {
-                            if (ws2.Cells[2 + i, 7 + j].Value == null)
-                            {
-                                ws2.Cells[2 + i, 7 + j].Value = -99;
-                            }
-                        }
-
-                        lstOLAP.Add(new OLAP()
-                        {
-                            FeedGrade = ws2.Cells[2 + i, 1].Value.ToString(),
-                            Budget = double.Parse(ws2.Cells[2 + i, 2].Value.ToString()),
-                            Actual = double.Parse(ws2.Cells[2 + i, 3].Value.ToString()),
-                            Compliance = double.Parse(ws2.Cells[2 + i, 4].Value.ToString()),
-                            Distribution = ws2.Cells[2 + i, 6].Value.ToString(),
-                            DistributionBudget = double.Parse(ws2.Cells[2 + i, 7].Value.ToString()) / 100,
-                            DistributionActual = double.Parse(ws2.Cells[2 + i, 8].Value.ToString()) / 100
-                        });
-                    }
-
-                    ExcelWorksheet ws3 = pck.Workbook.Worksheets["Sulphide"];
-                    for (int i = 0; i < 3; i++)
-                    {
-                        for (int j = 0; j < 3; j++)
-                        {
-                            if (ws3.Cells[2 + i, 2 + j].Value == null)
-                            {
-                                ws3.Cells[2 + i, 2 + j].Value = -99;
-                            }
-                        }
-
-                        for (int j = 0; j < 2; j++)
-                        {
-                            if (ws3.Cells[2 + i, 7 + j].Value == null)
-                            {
-                                ws3.Cells[2 + i, 7 + j].Value = -99;
-                            }
-                        }
-
-                        lstSulphide.Add(new Sulphide()
-                        {
-                            FeedGrade = ws3.Cells[2 + i, 1].Value.ToString(),
-                            Budget = double.Parse(ws3.Cells[2 + i, 2].Value.ToString()),
-                            Actual = double.Parse(ws3.Cells[2 + i, 3].Value.ToString()),
-                            Compliance = double.Parse(ws3.Cells[2 + i, 4].Value.ToString()),
-                            Distribution = ws3.Cells[2 + i, 6].Value.ToString(),
-                            DistributionBudget = double.Parse(ws3.Cells[2 + i, 7].Value.ToString()) / 100,
-                            DistributionActual = double.Parse(ws3.Cells[2 + i, 8].Value.ToString()) / 100
-                        });
-                    }
-
-                    pck.Dispose();
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Upload Error");
-                }
-
-                string fileName = @"c:\users\nyamis\oneDrive - bmining\BHP\ProcessComplianceData.xlsx";
-                FileInfo filePath = new FileInfo(fileName);
-
-                if (filePath.Exists)
+                if (openFilePath.FullName.Substring(openFilePath.FullName.Length - ProcessComplianceConstants.ProcessComplianceExcelFileName.Length) == ProcessComplianceConstants.ProcessComplianceExcelFileName)
                 {
                     try
                     {
-                        ExcelPackage pck2 = new ExcelPackage(filePath);
-                        FileStream fs = File.OpenWrite(fileName);
-                        fs.Close();
+                        // Check if the file is already open
+                        var fileStream = File.OpenWrite(openFileDialog.FileName);
+                        fileStream.Close();
 
-                        ExcelWorksheet w2s = pck2.Workbook.Worksheets["Ore to Mill"];
-                        DateTime newDate = new DateTime(Date.Year, Date.Month, 1, 00, 00, 00).AddMilliseconds(000);
-                        int lastRow1 = w2s.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstOretoMill.Count; i++)
+                        var rows = oreToMillTemplateWorksheet.Dimension.Rows;
+                        for (var i = 0; i < rows; i++)
                         {
-                            w2s.Cells[i + lastRow1, 1].Value = newDate;
-                            w2s.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            w2s.Cells[i + lastRow1, 2].Value = lstOretoMill[i].SpiGlobalBudget;
-                            w2s.Cells[i + lastRow1, 3].Value = lstOretoMill[i].SpiGlobalActual;
-                            w2s.Cells[i + lastRow1, 4].Value = lstOretoMill[i].Phase;
-                            w2s.Cells[i + lastRow1, 5].Value = lstOretoMill[i].OretoMillBudget;
-                            w2s.Cells[i + lastRow1, 6].Value = lstOretoMill[i].OretoMillActual;
-                            w2s.Cells[i + lastRow1, 7].Value = lstOretoMill[i].HardnessBudget;
-                            w2s.Cells[i + lastRow1, 8].Value = lstOretoMill[i].HardnessActual;
+                            if (oreToMillTemplateWorksheet.Cells[i + 6, 1].Value != null)
+                            {
+                                if (oreToMillTemplateWorksheet.Cells[2, 2].Value == null)
+                                    oreToMillTemplateWorksheet.Cells[2, 2].Value = -99;
+                                if (oreToMillTemplateWorksheet.Cells[2, 3].Value == null)
+                                    oreToMillTemplateWorksheet.Cells[2, 3].Value = -99;
+
+                                for (var j = 0; j < 4; j++)
+                                    if (oreToMillTemplateWorksheet.Cells[6 + i, 2 + j].Value == null)
+                                        oreToMillTemplateWorksheet.Cells[6 + i, 2 + j].Value = -99;
+
+                                _oreToMill.Add(new ProcessComplianceOreToMill()
+                                {
+                                    SpiGlobalBudget = double.Parse(oreToMillTemplateWorksheet.Cells[2, 2].Value.ToString()),
+                                    SpiGlobalActual = double.Parse(oreToMillTemplateWorksheet.Cells[2, 3].Value.ToString()),
+                                    Phase = oreToMillTemplateWorksheet.Cells[6 + i, 1].Value.ToString(),
+                                    OretoMillBudget = double.Parse(oreToMillTemplateWorksheet.Cells[6 + i, 2].Value.ToString()),
+                                    OretoMillActual = double.Parse(oreToMillTemplateWorksheet.Cells[6 + i, 3].Value.ToString()),
+                                    HardnessBudget = double.Parse(oreToMillTemplateWorksheet.Cells[6 + i, 4].Value.ToString()),
+                                    HardnessActual = double.Parse(oreToMillTemplateWorksheet.Cells[6 + i, 5].Value.ToString())
+                                });
+                            }
                         }
 
-                        ExcelWorksheet w2s4 = pck2.Workbook.Worksheets["Recovery"];
-                        int lastRow2 = w2s4.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstRecovery.Count; i++)
+                        var rows2 = recoveryTemplateWorksheet.Dimension.Rows;
+                        for (var i = 0; i < rows2; i++)
                         {
-                            w2s4.Cells[i + lastRow2, 1].Value = newDate;
-                            w2s4.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            w2s4.Cells[i + lastRow2, 2].Value = lstRecovery[i].RecGlobalBudget;
-                            w2s4.Cells[i + lastRow2, 3].Value = lstRecovery[i].RecGlobalActual;
-                            w2s4.Cells[i + lastRow2, 4].Value = lstRecovery[i].Phase;
-                            w2s4.Cells[i + lastRow2, 5].Value = lstRecovery[i].RecoveryBudget;
-                            w2s4.Cells[i + lastRow2, 6].Value = lstRecovery[i].RecoveryActual;
-                            w2s4.Cells[i + lastRow2, 7].Value = lstRecovery[i].FeedCuBudget;
-                            w2s4.Cells[i + lastRow2, 8].Value = lstRecovery[i].FeedCuActual;
+                            if (recoveryTemplateWorksheet.Cells[i + 6, 1].Value != null)
+                            {
+                                if (recoveryTemplateWorksheet.Cells[2, 2].Value == null)
+                                    recoveryTemplateWorksheet.Cells[2, 2].Value = -99;
+
+                                if (recoveryTemplateWorksheet.Cells[2, 3].Value == null)
+                                    recoveryTemplateWorksheet.Cells[2, 3].Value = -99;
+
+                                for (var j = 0; j < 4; j++)
+                                    if (recoveryTemplateWorksheet.Cells[6 + i, 2 + j].Value == null)
+                                        recoveryTemplateWorksheet.Cells[6 + i, 2 + j].Value = -99;
+
+                                _recovery.Add(new ProcessComplianceRecovery()
+                                {
+                                    RecGlobalBudget = double.Parse(recoveryTemplateWorksheet.Cells[2, 2].Value.ToString()),
+                                    RecGlobalActual = double.Parse(recoveryTemplateWorksheet.Cells[2, 3].Value.ToString()),
+                                    Phase = recoveryTemplateWorksheet.Cells[6 + i, 1].Value.ToString(),
+                                    RecoveryBudget = double.Parse(recoveryTemplateWorksheet.Cells[6 + i, 2].Value.ToString())/100,
+                                    RecoveryActual = double.Parse(recoveryTemplateWorksheet.Cells[6 + i, 3].Value.ToString())/100,
+                                    FeedCuBudget = double.Parse(recoveryTemplateWorksheet.Cells[6 + i, 4].Value.ToString())/100,
+                                    FeedCuActual = double.Parse(recoveryTemplateWorksheet.Cells[6 + i, 5].Value.ToString())/100
+                                });
+                            }
                         }
 
-                        ExcelWorksheet w2s2 = pck2.Workbook.Worksheets["OLAP"];
-                        int lastRow3 = w2s2.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstOLAP.Count; i++)
+                        for (var i = 0; i < 3; i++)
                         {
-                            w2s2.Cells[i + lastRow3, 1].Value = newDate;
-                            w2s2.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            w2s2.Cells[i + lastRow3, 2].Value = lstOLAP[i].FeedGrade;
-                            w2s2.Cells[i + lastRow3, 3].Value = lstOLAP[i].Budget;
-                            w2s2.Cells[i + lastRow3, 4].Value = lstOLAP[i].Actual;
-                            w2s2.Cells[i + lastRow3, 5].Value = lstOLAP[i].Compliance;
-                            w2s2.Cells[i + lastRow3, 6].Value = lstOLAP[i].Distribution;
-                            w2s2.Cells[i + lastRow3, 7].Value = lstOLAP[i].DistributionBudget;
-                            w2s2.Cells[i + lastRow3, 8].Value = lstOLAP[i].DistributionActual;
+                            for (var j = 0; j < 3; j++)
+                                if (OLAPTemplateWorksheet.Cells[2 + i, 2 + j].Value == null)
+                                    OLAPTemplateWorksheet.Cells[2 + i, 2 + j].Value = -99;
+
+                            for (var j = 0; j < 2; j++)
+                                if (OLAPTemplateWorksheet.Cells[2 + i, 7 + j].Value == null)
+                                    OLAPTemplateWorksheet.Cells[2 + i, 7 + j].Value = -99;
+
+                            _OLAP.Add(new ProcessComplianceOLAP()
+                            {
+                                FeedGrade = OLAPTemplateWorksheet.Cells[2 + i, 1].Value.ToString(),
+                                Budget = double.Parse(OLAPTemplateWorksheet.Cells[2 + i, 2].Value.ToString()),
+                                Actual = double.Parse(OLAPTemplateWorksheet.Cells[2 + i, 3].Value.ToString()),
+                                Compliance = double.Parse(OLAPTemplateWorksheet.Cells[2 + i, 4].Value.ToString())/100,
+                                Distribution = OLAPTemplateWorksheet.Cells[2 + i, 6].Value.ToString(),
+                                DistributionBudget = double.Parse(OLAPTemplateWorksheet.Cells[2 + i, 7].Value.ToString())/100,
+                                DistributionActual = double.Parse(OLAPTemplateWorksheet.Cells[2 + i, 8].Value.ToString())/100
+                            });
                         }
 
-                        ExcelWorksheet w2s3 = pck2.Workbook.Worksheets["Sulphide"];
-                        int lastRow4 = w2s3.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstSulphide.Count; i++)
+                        for (var i = 0; i < 3; i++)
                         {
-                            w2s3.Cells[i + lastRow4, 1].Value = newDate;
-                            w2s3.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            w2s3.Cells[i + lastRow4, 2].Value = lstSulphide[i].FeedGrade;
-                            w2s3.Cells[i + lastRow4, 3].Value = lstSulphide[i].Budget;
-                            w2s3.Cells[i + lastRow4, 4].Value = lstSulphide[i].Actual;
-                            w2s3.Cells[i + lastRow4, 5].Value = lstSulphide[i].Compliance;
-                            w2s3.Cells[i + lastRow4, 6].Value = lstSulphide[i].Distribution;
-                            w2s3.Cells[i + lastRow4, 7].Value = lstSulphide[i].DistributionBudget;
-                            w2s3.Cells[i + lastRow4, 8].Value = lstSulphide[i].DistributionActual;
+                            for (var j = 0; j < 3; j++)
+                                if (sulphideTemplateWorksheet.Cells[2 + i, 2 + j].Value == null)
+                                    sulphideTemplateWorksheet.Cells[2 + i, 2 + j].Value = -99;
+
+                            for (var j = 0; j < 2; j++)
+                                if (sulphideTemplateWorksheet.Cells[2 + i, 7 + j].Value == null)
+                                    sulphideTemplateWorksheet.Cells[2 + i, 7 + j].Value = -99;
+
+                            _sulphide.Add(new ProcessComplianceSulphide()
+                            {
+                                FeedGrade = sulphideTemplateWorksheet.Cells[2 + i, 1].Value.ToString(),
+                                Budget = double.Parse(sulphideTemplateWorksheet.Cells[2 + i, 2].Value.ToString()),
+                                Actual = double.Parse(sulphideTemplateWorksheet.Cells[2 + i, 3].Value.ToString()),
+                                Compliance = double.Parse(sulphideTemplateWorksheet.Cells[2 + i, 4].Value.ToString())/100,
+                                Distribution = sulphideTemplateWorksheet.Cells[2 + i, 6].Value.ToString(),
+                                DistributionBudget = double.Parse(sulphideTemplateWorksheet.Cells[2 + i, 7].Value.ToString())/100,
+                                DistributionActual = double.Parse(sulphideTemplateWorksheet.Cells[2 + i, 8].Value.ToString())/100
+                            });
                         }
-
-                        byte[] fileText2 = pck2.GetAsByteArray();
-                        File.WriteAllBytes(fileName, fileText2);
-
-                        UpdateA = $"Actualizado: {DateTime.Now}";
-
+                        excelPackage.Dispose();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Upload Error");
+                        MessageBox.Show(ex.Message, StringResources.UploadError);
                     }
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                }
 
 
+
+                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ProcessComplianceExcelFilePath;
+                var loadFileInfo = new FileInfo(loadFilePath);
+
+
+                if (loadFileInfo.Exists)
+                {
+                   try
+                   {
+                        var package = new ExcelPackage(loadFileInfo);
+                        var oreToMillWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.OreToMillProcessComplianceWorksheet];
+                        var recoveryWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.RecoveryProcessComplianceWorksheet];
+                        var OLAPWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.OLAPProcessComplianceWorksheet];
+                        var sulphideWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.SulphideProcessComplianceWorksheet];
+
+                        if (oreToMillWorksheet != null & recoveryWorksheet != null & OLAPWorksheet != null & sulphideWorksheet != null)
+                        {
+                            var newDate = new DateTime(MyMonthlyDate.Year, MyMonthlyDate.Month, 1, 00, 00, 00);
+                            var lastRow1 = oreToMillWorksheet.Dimension.End.Row + 1;
+                            for (var i = 0; i < _oreToMill.Count; i++)
+                            {
+                                oreToMillWorksheet.Cells[i + lastRow1, 1].Value = newDate;
+                                oreToMillWorksheet.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                oreToMillWorksheet.Cells[i + lastRow1, 2].Value = _oreToMill[i].SpiGlobalBudget;
+                                oreToMillWorksheet.Cells[i + lastRow1, 3].Value = _oreToMill[i].SpiGlobalActual;
+                                oreToMillWorksheet.Cells[i + lastRow1, 4].Value = _oreToMill[i].Phase;
+                                oreToMillWorksheet.Cells[i + lastRow1, 5].Value = _oreToMill[i].OretoMillBudget;
+                                oreToMillWorksheet.Cells[i + lastRow1, 6].Value = _oreToMill[i].OretoMillActual;
+                                oreToMillWorksheet.Cells[i + lastRow1, 7].Value = _oreToMill[i].HardnessBudget;
+                                oreToMillWorksheet.Cells[i + lastRow1, 8].Value = _oreToMill[i].HardnessActual;
+                            }
+
+                            var lastRow2 = recoveryWorksheet.Dimension.End.Row + 1;
+                            for (var i = 0; i < _recovery.Count; i++)
+                            {
+                                recoveryWorksheet.Cells[i + lastRow2, 1].Value = newDate;
+                                recoveryWorksheet.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                recoveryWorksheet.Cells[i + lastRow2, 2].Value = _recovery[i].RecGlobalBudget;
+                                recoveryWorksheet.Cells[i + lastRow2, 3].Value = _recovery[i].RecGlobalActual;
+                                recoveryWorksheet.Cells[i + lastRow2, 4].Value = _recovery[i].Phase;
+                                recoveryWorksheet.Cells[i + lastRow2, 5].Value = _recovery[i].RecoveryBudget;
+                                recoveryWorksheet.Cells[i + lastRow2, 6].Value = _recovery[i].RecoveryActual;
+                                recoveryWorksheet.Cells[i + lastRow2, 7].Value = _recovery[i].FeedCuBudget;
+                                recoveryWorksheet.Cells[i + lastRow2, 8].Value = _recovery[i].FeedCuActual;
+                            }
+
+                            var lastRow3 = OLAPWorksheet.Dimension.End.Row + 1;
+                            for (var i = 0; i < _OLAP.Count; i++)
+                            {
+                                OLAPWorksheet.Cells[i + lastRow3, 1].Value = newDate;
+                                OLAPWorksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                OLAPWorksheet.Cells[i + lastRow3, 2].Value = _OLAP[i].FeedGrade;
+                                OLAPWorksheet.Cells[i + lastRow3, 3].Value = _OLAP[i].Budget;
+                                OLAPWorksheet.Cells[i + lastRow3, 4].Value = _OLAP[i].Actual;
+                                OLAPWorksheet.Cells[i + lastRow3, 5].Value = _OLAP[i].Compliance;
+                                OLAPWorksheet.Cells[i + lastRow3, 6].Value = _OLAP[i].Distribution;
+                                OLAPWorksheet.Cells[i + lastRow3, 7].Value = _OLAP[i].DistributionBudget;
+                                OLAPWorksheet.Cells[i + lastRow3, 8].Value = _OLAP[i].DistributionActual;
+                            }
+
+                            var lastRow4 = sulphideWorksheet.Dimension.End.Row + 1;
+                            for (var i = 0; i < _sulphide.Count; i++)
+                            {
+                                sulphideWorksheet.Cells[i + lastRow4, 1].Value = newDate;
+                                sulphideWorksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                sulphideWorksheet.Cells[i + lastRow4, 2].Value = _sulphide[i].FeedGrade;
+                                sulphideWorksheet.Cells[i + lastRow4, 3].Value = _sulphide[i].Budget;
+                                sulphideWorksheet.Cells[i + lastRow4, 4].Value = _sulphide[i].Actual;
+                                sulphideWorksheet.Cells[i + lastRow4, 5].Value = _sulphide[i].Compliance;
+                                sulphideWorksheet.Cells[i + lastRow4, 6].Value = _sulphide[i].Distribution;
+                                sulphideWorksheet.Cells[i + lastRow4, 7].Value = _sulphide[i].DistributionBudget;
+                                sulphideWorksheet.Cells[i + lastRow4, 8].Value = _sulphide[i].DistributionActual;
+                            }
+                            byte[] fileText2 = package.GetAsByteArray();
+                            File.WriteAllBytes(loadFilePath, fileText2);
+                            MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
+
+                   }
+                   catch (Exception ex)
+                   {
+                        MessageBox.Show(ex.Message, StringResources.UploadError);
+                   }
+
+                    //if (oreToMillWorksheet != null & recoveryWorksheet != null & OLAPWorksheet != null & sulphideWorksheet != null)
+                    //{
+                    //    try
+                    //    {
+                    //        //var openWriteCheck = File.OpenWrite(loadFilePath);
+                    //        //openWriteCheck.Close();
+
+                            
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        MessageBox.Show(ex.Message, StringResources.UploadError);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                    //    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                    //}                   
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
             }
         }
     }
 }
+

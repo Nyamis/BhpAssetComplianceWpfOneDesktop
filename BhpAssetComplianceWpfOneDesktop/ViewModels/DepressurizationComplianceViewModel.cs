@@ -13,6 +13,8 @@ using OfficeOpenXml.Style;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using BhpAssetComplianceWpfOneDesktop.Constants;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Models.DepressurizationComplianceModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
@@ -21,493 +23,510 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         protected override string MyPosterName { get; set; } = StringResources.DepressurizationCompliance;
         protected override string MyPosterIcon { get; set; } = IconKeys.Depressurization;
 
-        public string generateContent { get; set; } = StringResources.GenerateTemplate;
-        public string loadContent { get; set; } = StringResources.LoadTemplate;
-        public string dateContent { get; set; } = StringResources.Date;
-        public string fiscalYearContent { get; set; } = StringResources.FiscalYear;
-        public string monthlyContent { get; set; } = StringResources.MonthlyCompliancedepressurizationTemplate;
-        public string targetContent { get; set; } = StringResources.TargetDepressurizationTemplate;
-        public string loadImageContent { get; set; } = StringResources.LoadImage;
-
-
-        private string _image;
-        public string image
+        private string _myImage;
+        public string MyImage
         {
-            get { return _image; }
-            set { SetProperty(ref _image, value); }
+            get { return _myImage; }
+            set { SetProperty(ref _myImage, value); }
         }
 
-        ImageSource _Source;
-        public ImageSource Source
+        private ImageSource _myImageSource;
+        public ImageSource MyImageSource
         {
-            get { return _Source; }
-            set { SetProperty(ref _Source, value); }
+            get { return _myImageSource; }
+            set { SetProperty(ref _myImageSource, value); }
         }
 
-        private string _UpdateA;
-        public string UpdateA
+        private string _myLastDateRefreshMonthlyImage;
+        public string MyLastDateRefreshMonthlyImage
         {
-            get { return _UpdateA; }
-            set { SetProperty(ref _UpdateA, value); }
+            get { return _myLastDateRefreshMonthlyImage; }
+            set { SetProperty(ref _myLastDateRefreshMonthlyImage, value); }
         }
 
-        private string _UpdateB;
-        public string UpdateB
+        private string _myLastDateRefreshMonthlyValues;
+        public string MyLastDateRefreshMonthlyValues
         {
-            get { return _UpdateB; }
-            set { SetProperty(ref _UpdateB, value); }
+            get { return _myLastDateRefreshMonthlyValues; }
+            set { SetProperty(ref _myLastDateRefreshMonthlyValues, value); }
         }
 
-        DateTime _Date;
-        public DateTime Date
+        private string _myLastDateRefreshTargetValues;
+        public string MyLastDateRefreshTargetValues
         {
-            get { return _Date; }
-            set { SetProperty(ref _Date, value); }
+            get { return _myLastDateRefreshTargetValues; }
+            set { SetProperty(ref _myLastDateRefreshTargetValues, value); }
         }
 
-        private int _FiscalYear;
-        public int FiscalYear
+        private DateTime _myDateActual;
+        public DateTime MyDateActual
         {
-            get { return _FiscalYear; }
-            set { SetProperty(ref _FiscalYear, value); }
+            get { return _myDateActual; }
+            set { SetProperty(ref _myDateActual, value); }
         }
 
-        private bool _isEnabled1;
-        public bool IsEnabled1
+        private int _myFiscalYear;
+        public int MyFiscalYear
         {
-            get { return _isEnabled1; }
-            set { SetProperty(ref _isEnabled1, value); }
+            get { return _myFiscalYear; }
+            set { SetProperty(ref _myFiscalYear, value); }
         }
 
-        private bool _isEnabled2;
-        public bool IsEnabled2
+        private bool _isEnabledLoadImagePath;
+        public bool IsEnabledLoadImagePath
         {
-            get { return _isEnabled2; }
-            set { SetProperty(ref _isEnabled2, value); }
+            get { return _isEnabledLoadImagePath; }
+            set { SetProperty(ref _isEnabledLoadImagePath, value); }
         }
 
-        private bool _isEnabled3;
-        public bool IsEnabled3
+        private bool _isEnabledGenerateMonthlyTemplate;
+        public bool IsEnabledGenerateMonthlyTemplate
         {
-            get { return _isEnabled3; }
-            set { SetProperty(ref _isEnabled3, value); }
+            get { return _isEnabledGenerateMonthlyTemplate; }
+            set { SetProperty(ref _isEnabledGenerateMonthlyTemplate, value); }
         }
 
-        public DelegateCommand CargarI1 { get; private set; }
-        public DelegateCommand GenerarDMT { get; private set; }
-        public DelegateCommand CargarDMT { get; private set; }
-        public DelegateCommand GenerarDTT { get; private set; }
-        public DelegateCommand CargarDTT { get; private set; }
+        private bool _isEnabledGenerateTargetTemplate;
+        public bool IsEnabledGenerateTargetTemplate
+        {
+            get { return _isEnabledGenerateTargetTemplate; }
+            set { SetProperty(ref _isEnabledGenerateTargetTemplate, value); }
+        }
+        public DelegateCommand SelectImageCommand { get; private set; }
+        public DelegateCommand LoadImageCommand { get; private set; }
+        public DelegateCommand GenerateMonthlyDepressurizationTemplateCommand { get; private set; }
+        public DelegateCommand LoadMonthlyDepressurizationTemplateCommand { get; private set; }
+        public DelegateCommand GenerateTargetDepressurizationTemplateCommand { get; private set; }
+        public DelegateCommand LoadTargetDepressurizationTemplateCommand { get; private set; }
+
+        private readonly List<DepressurizationComplianceMonthlyCompliance> _monthlyCompliance = new List<DepressurizationComplianceMonthlyCompliance>();      
+        private readonly List<DepressurizationComplianceTargetCompliance> _targetCompliance = new List<DepressurizationComplianceTargetCompliance>();
 
         public DepressurizationComplianceViewModel()
         {
-            Date = DateTime.Now;
-            FiscalYear = Date.Year;
-            CargarI1 = new DelegateCommand(ImagePath);
-            GenerarDMT = new DelegateCommand(GenerateDepressurizationMonthlyTemplate);
-            CargarDMT = new DelegateCommand(LoadDepressurizationMonthlyTemplate, CanLoadDMT).ObservesProperty(() => IsEnabled1).ObservesProperty(() => IsEnabled2);
-            GenerarDTT = new DelegateCommand(GenerateDepressurizationTargetTemplate);
-            CargarDTT = new DelegateCommand(LoadDepressurizationTargetTemplate).ObservesCanExecute(() => IsEnabled3);            
+            MyDateActual = DateTime.Now;
+            MyFiscalYear = MyDateActual.Year;
+            IsEnabledLoadImagePath = false;
+            IsEnabledGenerateMonthlyTemplate = false;
+            IsEnabledGenerateTargetTemplate = false;
+            SelectImageCommand = new DelegateCommand(SelectImagePath);
+            LoadImageCommand = new DelegateCommand(LoadImage).ObservesCanExecute(() => IsEnabledLoadImagePath);
+            GenerateMonthlyDepressurizationTemplateCommand = new DelegateCommand(GenerateDepressurizationMonthlyTemplate);
+            LoadMonthlyDepressurizationTemplateCommand = new DelegateCommand(LoadDepressurizationMonthlyTemplate).ObservesCanExecute(() => IsEnabledGenerateMonthlyTemplate);
+            GenerateTargetDepressurizationTemplateCommand = new DelegateCommand(GenerateDepressurizationTargetTemplate);
+            LoadTargetDepressurizationTemplateCommand = new DelegateCommand(LoadDepressurizationTargetTemplate).ObservesCanExecute(() => IsEnabledGenerateTargetTemplate);            
         }
 
-        private void ImagePath()
+        private void SelectImagePath()
         {
-            OpenFileDialog op = new OpenFileDialog
+            var openFileDialog = new OpenFileDialog
             {
                 Title = "Select a picture",
                 Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
               "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
               "Portable Network Graphic (*.png)|*.png"
             };
-            if (op.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == true)
             {
-                image = op.FileName;
-                Source = new BitmapImage(new Uri(op.FileName));
+                MyImage = openFileDialog.FileName;
+                MyImageSource = new BitmapImage(new Uri(openFileDialog.FileName));
             }
-            IsEnabled1 = true;
+            IsEnabledLoadImagePath = true;
+        }
+
+        private void LoadImage()
+        {
+            var targetFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.DepressurizationComplianceCSVFilePath;
+            var loadFileInfo = new FileInfo(targetFilePath);
+            if (loadFileInfo.Exists)
+            {
+                if (targetFilePath.Substring(targetFilePath.Length - 41) == "DepressurizationCompliancePictureData.csv")
+                {
+                    try
+                    {
+                        var openWriteCheck = File.OpenWrite(targetFilePath);
+                        openWriteCheck.Close();
+
+                        var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                        var findImageOnDate = ExportImageToCsv.SearchByDateMineSequence(newDate, targetFilePath);
+                        if (findImageOnDate == -1)
+                        {
+                            ExportImageToCsv.AppendImageDepressurizationToCSV(MyImage, newDate, targetFilePath);
+                        }
+                        else
+                        {
+                            ExportImageToCsv.RemoveItem(targetFilePath, findImageOnDate);
+                            ExportImageToCsv.AppendImageDepressurizationToCSV(MyImage, newDate, targetFilePath);
+                        }
+                        MyLastDateRefreshMonthlyImage = $"{StringResources.Updated}: {DateTime.Now}";
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, StringResources.UploadError);
+                    }
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {targetFilePath} {StringResources.IsTheRightOne}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                }               
+            }
+            else
+            {
+                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {targetFilePath} {StringResources.ExistsOrNotSelect}";
+                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+            }
         }
 
         private void GenerateDepressurizationMonthlyTemplate()
         {
-            List<string> lstHeader = new List<string>() { "Zona", "Observado (MPa)", "Compliance (%)", "Pit" };
-            List<string> lstZone = new List<string>() { "Pared Noreste Fuera Rajo", "Pared Noreste", "Pared Noreste Talud Bajo", "Pared Los Colorados", "Pared Los Colorados Talud Bajo", "Pared Este Fuera Rajo", "Pared Este Talud Medio" };
-            ExcelPackage pck = new ExcelPackage();
+            var headers = new List<string> { "Wall", "Observado (kPa)", "Compliance (%)", "Pit" };
+            var zones = new List<string> { "Pared Noreste Fuera Rajo", "Pared Noreste", "Pared Noreste Talud Bajo", "Pared Los Colorados", "Pared Los Colorados Talud Bajo", "Pared Este Fuera Rajo", "Pared Este Talud Medio" };            
+            var excelPackage = new ExcelPackage();
 
-            pck.Workbook.Properties.Author = "BHP";
-            pck.Workbook.Properties.Title = "Monthly Compliance Depressurization Template";
-            pck.Workbook.Properties.Company = "BHP";
+            excelPackage.Workbook.Properties.Author = "BHP";
+            excelPackage.Workbook.Properties.Title = DepressurizationComplianceConstants.MonthlyDepressurizationWorksheetTitle;
+            excelPackage.Workbook.Properties.Company = "BHP";
+            var worksheet = excelPackage.Workbook.Worksheets.Add(DepressurizationComplianceConstants.MonthlyDepressurizationWorksheet);
 
-            var ws = pck.Workbook.Worksheets.Add("MonthlyDepressurization");
-
-            for (int i = 0; i < lstHeader.Count; i++)
+            for (var i = 0; i < headers.Count; i++)
             {
-                ws.Cells[1, i + 1].Value = lstHeader[i];
-                ws.Cells[1, i + 1].Style.Font.Bold = true;
-                ws.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Column(1 + i).Width = 16;
-                ws.Cells[1, 1 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[1, 1 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D9E1F2"));
+                worksheet.Cells[1, i + 1].Value = headers[i];
+                worksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                worksheet.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Column(1 + i).Width = 16;
+                worksheet.Cells[1, 1 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[1, 1 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
             }
-            ws.Column(1).Width = 27;
+            worksheet.Column(1).Width = 27;
 
-            for (int i = 0; i < lstZone.Count; i++)
+            for (var i = 0; i < zones.Count; i++)
             {
-                ws.Cells[2 + i, 1].Value = lstZone[i];
-            }
-
-            for (int i = 0; i <= 12; i++)
-            {
-                ws.Cells[i + 1, 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                ws.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[2 + i, 1].Value = zones[i];
             }
 
-            byte[] fileText = pck.GetAsByteArray();
-
-            SaveFileDialog dialog = new SaveFileDialog()
+            for (var i = 0; i <= 12; i++)
             {
-                FileName = "DepressurizationMonthlyTemplate.xlsx",
+                worksheet.Cells[i + 1, 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[$"A{1 + i}:D{1 + i}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+            }
+
+            byte[] fileText = excelPackage.GetAsByteArray();
+
+            var dialog = new SaveFileDialog()
+            {
+                FileName = DepressurizationComplianceConstants.MonthlyDepressurizationExcelFileName,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
             try
             {
-                FileStream fs = File.OpenWrite(dialog.FileName);
-                fs.Close();
+                var fileStream = File.OpenWrite(dialog.FileName);
+                fileStream.Close();
                 if (dialog.ShowDialog() == true)
                 {
                     File.WriteAllBytes(dialog.FileName, fileText);
-                    IsEnabled2 = true;
+                    IsEnabledGenerateMonthlyTemplate = true;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Upload Error");
+                MessageBox.Show(ex.Message, StringResources.UploadError);
             }
-        }
-
-        public class MonthlyCompliance
-        {
-            public string Zone { get; set; }
-            public double Observado { get; set; }
-            public double Compliance { get; set; }
-            public string Pit { get; set; }
-        }
-
-        readonly List<MonthlyCompliance> lstCompliance = new List<MonthlyCompliance>();
-
-        private bool CanLoadDMT()
-        {
-            if (IsEnabled1 & IsEnabled2)
-            {
-                return true;
-            }
-            return false;
         }
 
         private void LoadDepressurizationMonthlyTemplate()
         {
-
-            lstCompliance.Clear();
-            OpenFileDialog op = new OpenFileDialog
+            _monthlyCompliance.Clear();
+            var openFileDialog = new OpenFileDialog
             {
-                Title = "Select File",
+                Title = StringResources.SelectFile,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
-            if (op.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == true)
             {
+                var openFilePath = new FileInfo(openFileDialog.FileName);
+                var excelPackage = new ExcelPackage(openFilePath);
+                var templateWorksheet = excelPackage.Workbook.Worksheets[DepressurizationComplianceConstants.MonthlyDepressurizationWorksheet];
 
-                try
-                {
-                    FileInfo FilePath = new FileInfo(op.FileName);
-                    ExcelPackage pck = new ExcelPackage(FilePath);
-                    ExcelWorksheet ws = pck.Workbook.Worksheets["MonthlyDepressurization"];
-
-                    FileStream fs = File.OpenWrite(op.FileName);
-                    fs.Close();
-
-                    int rows = ws.Dimension.Rows;
-
-                    for (int i = 1; i < rows; i++)
-                    {
-                        if (ws.Cells[i + 1, 1].Value != null)
-                        {
-                            for (int j = 0; j < 2; j++)
-                            {
-                                if (ws.Cells[1 + i, 2 + j].Value == null)
-                                {
-                                    ws.Cells[1 + i, 2 + j].Value = -99;
-                                }
-                            }
-
-                            if (ws.Cells[1 + i, 4].Value == null)
-                            {
-                                ws.Cells[1 + i, 4].Value = " ";
-                            }
-
-                            lstCompliance.Add(new MonthlyCompliance()
-                            {
-                                Zone = ws.Cells[1 + i, 1].Value.ToString(),
-                                Observado = double.Parse(ws.Cells[1 + i, 2].Value.ToString()),
-                                Compliance = double.Parse(ws.Cells[1 + i, 3].Value.ToString()),
-                                Pit = ws.Cells[1 + i, 4].Value.ToString()
-                            });
-                        }
-                    }
-                    pck.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Upload Error");
-                }
-
-                string fileName = @"c:\users\nyamis\oneDrive - bmining\BHP\DepressurizationComplianceData.xlsx";
-                FileInfo filePath = new FileInfo(fileName);
-
-                if (filePath.Exists)
+                if (openFilePath.FullName.Substring(openFilePath.FullName.Length - DepressurizationComplianceConstants.MonthlyDepressurizationExcelFileName.Length) == DepressurizationComplianceConstants.MonthlyDepressurizationExcelFileName)
                 {
                     try
                     {
-                        ExcelPackage pck2 = new ExcelPackage(filePath);
-                        ExcelWorksheet ws2 = pck2.Workbook.Worksheets["Observado"];
+                        // Check if the file is already open
+                        var fileStream = File.OpenWrite(openFileDialog.FileName);
+                        fileStream.Close();
 
-                        FileStream fs = File.OpenWrite(fileName);
-                        fs.Close();
-                        DateTime newDate = new DateTime(Date.Year, Date.Month, 1, 00, 00, 00);
-                        int lastRow = ws2.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstCompliance.Count; i++)
+                        var rows = templateWorksheet.Dimension.Rows;
+                        for (var i = 1; i < rows; i++)
                         {
-                            ws2.Cells[i + lastRow, 1].Value = newDate;
-                            ws2.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            ws2.Cells[i + lastRow, 2].Value = lstCompliance[i].Zone;
-                            ws2.Cells[i + lastRow, 3].Value = lstCompliance[i].Observado;
-                            ws2.Cells[i + lastRow, 4].Value = lstCompliance[i].Compliance;
-                            ws2.Cells[i + lastRow, 5].Value = lstCompliance[i].Pit;
+                            if (templateWorksheet.Cells[i + 1, 1].Value != null)
+                            {
+                                for (var j = 0; j < 2; j++)
+                                    if (templateWorksheet.Cells[1 + i, 2 + j].Value == null)
+                                        templateWorksheet.Cells[1 + i, 2 + j].Value = -99;
+
+                                if (templateWorksheet.Cells[1 + i, 4].Value == null)
+                                    templateWorksheet.Cells[1 + i, 4].Value = " ";
+
+                                _monthlyCompliance.Add(new DepressurizationComplianceMonthlyCompliance()
+                                {
+                                    Zone = templateWorksheet.Cells[1 + i, 1].Value.ToString(),
+                                    Observado = double.Parse(templateWorksheet.Cells[1 + i, 2].Value.ToString())/1000,
+                                    Compliance = double.Parse(templateWorksheet.Cells[1 + i, 3].Value.ToString())/100,
+                                    Pit = templateWorksheet.Cells[1 + i, 4].Value.ToString()
+                                });
+                            }
                         }
-
-                        string target = @"c:\users\nyamis\oneDrive - bmining\BHP\DepressurizationCompliancePictureData.csv";
-
-                        int findI = ExportImageToCsv.SearchByDateMineSequence(newDate, target);
-                        if (findI == -1)
-                        {
-                            ExportImageToCsv.AppendImageDepressurizationToCSV(image, newDate, target);
-                        }
-                        else
-                        {
-                            ExportImageToCsv.RemoveItem(target, findI);
-                            ExportImageToCsv.AppendImageDepressurizationToCSV(image, newDate, target);
-                        }
-
-
-                        byte[] fileText2 = pck2.GetAsByteArray();
-
-                        File.WriteAllBytes(fileName, fileText2);
-                        UpdateA = $"{StringResources.Updated}: {DateTime.Now}";
-
+                        excelPackage.Dispose();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Upload Error");
+                        MessageBox.Show(ex.Message, StringResources.UploadError);
                     }
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                }              
 
+                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.DepressurizationComplianceExcelFilePath;
+                var loadFileInfo = new FileInfo(loadFilePath);
+
+                if (loadFileInfo.Exists)
+                {
+                    var package = new ExcelPackage(loadFileInfo);
+                    var worksheet = package.Workbook.Worksheets[DepressurizationComplianceConstants.MonthlyDepressurizationSpotfireWorksheet];
+
+                    if (worksheet != null)
+                    {
+                        try
+                        {
+                            var openWriteCheck = File.OpenWrite(loadFilePath);
+                            openWriteCheck.Close();
+
+                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                            var lastRow = worksheet.Dimension.End.Row + 1;
+
+                            for (var i = 0; i < _monthlyCompliance.Count; i++)
+                            {
+                                worksheet.Cells[i + lastRow, 1].Value = newDate;
+                                worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                worksheet.Cells[i + lastRow, 2].Value = _monthlyCompliance[i].Zone;
+                                worksheet.Cells[i + lastRow, 3].Value = _monthlyCompliance[i].Observado;
+                                worksheet.Cells[i + lastRow, 4].Value = _monthlyCompliance[i].Compliance;
+                                worksheet.Cells[i + lastRow, 5].Value = _monthlyCompliance[i].Pit;
+                            }
+                            byte[] fileText2 = package.GetAsByteArray();
+                            File.WriteAllBytes(loadFilePath, fileText2);
+                            MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, StringResources.UploadError);
+                        }
+                    }
+                    else
+                    {
+                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                    }                    
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
             }
-
         }
 
         private void GenerateDepressurizationTargetTemplate()
         {
-            List<string> lstMonths = new List<string>() { "July", "August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June" };
-            List<string> lstPlace = new List<string>() { "Pared Noreste Fuera Rajo", "Pared Noreste", "Pared Noreste Talud Bajo", "Pared Los Colorados", "Pared Los Colorados Talud Bajo", "Pared Este Fuera Rajo", "Pared Este Talud Medio" };
+            var months = new List<string> { "July", "August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June" };
+            var places = new List<string> { "Pared Noreste Fuera Rajo", "Pared Noreste", "Pared Noreste Talud Bajo", "Pared Los Colorados", "Pared Los Colorados Talud Bajo", "Pared Este Fuera Rajo", "Pared Este Talud Medio" };
 
-            ExcelPackage pck = new ExcelPackage();
-            pck.Workbook.Properties.Author = "BHP";
-            pck.Workbook.Properties.Title = "Target Depressurization Template";
-            pck.Workbook.Properties.Company = "BHP";
-            var ws = pck.Workbook.Worksheets.Add("Target Compliance");
-            ws.Protection.IsProtected = true;
+            var excelPackage = new ExcelPackage();
+            excelPackage.Workbook.Properties.Author = "BHP";
+            excelPackage.Workbook.Properties.Title = DepressurizationComplianceConstants.TargetDepressurizationWorksheetTitle;
+            excelPackage.Workbook.Properties.Company = "BHP";
 
-            for (int i = 0; i < 14; i++)
+            var worksheet = excelPackage.Workbook.Worksheets.Add(DepressurizationComplianceConstants.TargetDepressurizationWorksheet);
+            worksheet.Protection.IsProtected = true;
+
+            for (var i = 0; i < 14; i++)            
+                worksheet.Column(1 + i).Style.Locked = false;           
+
+            worksheet.Cells["A2:A3"].Merge = true;
+            worksheet.Cells["A2"].Value = "Depressurization Wall";
+            worksheet.Cells["A2:B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            worksheet.Cells["A2:B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+            worksheet.Cells["B2"].Style.Font.Bold = true;
+            worksheet.Column(1).Style.Font.Bold = true;
+            worksheet.Column(1).Width = 27;
+
+            for (var i = 0; i < places.Count; i++)            
+                worksheet.Cells[4 + i, 1].Value = places[i];            
+
+            worksheet.Cells["A4:A13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells["A4:A13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
+
+            worksheet.Cells["B2:M2"].Merge = true;
+            worksheet.Cells["B2"].Value = $"Targets (kPa) FY{MyFiscalYear}";
+            worksheet.Cells["A2:A3"].Style.Font.Bold = true;
+            worksheet.Cells["A2:M2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells["A2:M2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
+
+            worksheet.Row(3).Style.Font.Bold = true;
+            for (var i = 0; i < months.Count; i++)
             {
-                ws.Column(1 + i).Style.Locked = false;
+                worksheet.Cells[3, 2 + i].Value = months[i];
+                worksheet.Cells[3, 2 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[3, 2 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
+                worksheet.Cells[3, 2 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Column(2 + i).Width = 10;
             }
 
-            ws.Cells["A2:A3"].Merge = true;
-            ws.Cells["A2"].Value = "Depressurization Place";
-            ws.Cells["A2:B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            ws.Cells["A2:B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            ws.Cells["B2"].Style.Font.Bold = true;
-            ws.Column(1).Style.Font.Bold = true;
-            ws.Column(1).Width = 27;
-            for (int i = 0; i < lstPlace.Count; i++)
+            for (var i = 0; i < 12; i++)
             {
-                ws.Cells[4 + i, 1].Value = lstPlace[i];
+                worksheet.Cells[$"A{1 + i}:M{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                for (var j = 0; j < 13; j++)                
+                    worksheet.Cells[2 + i, 1 + j].Style.Border.Right.Style = ExcelBorderStyle.Thin;
             }
-            ws.Cells["A4:A13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["A4:A13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D9E1F2"));
+            worksheet.Cells[$"A13:M13"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
 
-            ws.Cells["B2:M2"].Merge = true;
-            ws.Cells["B2"].Value = $"FY{FiscalYear}";
-            ws.Cells["A2:A3"].Style.Font.Bold = true;
-            ws.Cells["A2:M2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells["A2:M2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D9E1F2"));
+            byte[] fileText = excelPackage.GetAsByteArray();
 
-            ws.Row(3).Style.Font.Bold = true;
-            for (int i = 0; i < lstMonths.Count; i++)
+            var dialog = new SaveFileDialog()
             {
-                ws.Cells[3, 2 + i].Value = lstMonths[i];
-                ws.Cells[3, 2 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells[3, 2 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#D9E1F2"));
-                ws.Cells[3, 2 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                ws.Column(2 + i).Width = 10;
-            }
-
-            for (int i = 0; i < 12; i++)
-            {
-                ws.Cells[$"A{1 + i}:M{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                for (int j = 0; j < 13; j++)
-                {
-                    ws.Cells[2 + i, 1 + j].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                }
-            }
-            ws.Cells[$"A13:M13"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-
-            byte[] fileText = pck.GetAsByteArray();
-
-            SaveFileDialog dialog = new SaveFileDialog()
-            {
-                FileName = "DepressurizationTargetTemplate.xlsx",
+                FileName = DepressurizationComplianceConstants.TargetDepressurizationExcelFileName,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
             try
             {
-                FileStream fs = File.OpenWrite(dialog.FileName);
-                fs.Close();
+                var fileStream = File.OpenWrite(dialog.FileName);
+                fileStream.Close();
                 if (dialog.ShowDialog() == true)
                 {
                     File.WriteAllBytes(dialog.FileName, fileText);
-                    IsEnabled3 = true;
+                    IsEnabledGenerateTargetTemplate = true;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Upload Error");
+                MessageBox.Show(ex.Message, StringResources.UploadError);
             }
         }
-
-        public class TargetD
-        {
-            public DateTime Date { get; set; }
-            public string Zone { get; set; }
-            public double Target { get; set; }
-        }
-
-        readonly List<TargetD> lstTarget = new List<TargetD>();
 
         private void LoadDepressurizationTargetTemplate()
         {
-            lstTarget.Clear();
-            OpenFileDialog op = new OpenFileDialog
+            _targetCompliance.Clear();
+            var openFileDialog = new OpenFileDialog
             {
-                Title = "Select File",
+                Title = StringResources.SelectFile,
                 Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
             };
 
-            if (op.ShowDialog() == true)
-            {     
-                try
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var openFilePath = new FileInfo(openFileDialog.FileName);
+                var excelPackage = new ExcelPackage(openFilePath);
+                var templateWorksheet = excelPackage.Workbook.Worksheets[DepressurizationComplianceConstants.TargetDepressurizationWorksheet];
+
+                if (openFilePath.FullName.Substring(openFilePath.FullName.Length - DepressurizationComplianceConstants.TargetDepressurizationExcelFileName.Length) == DepressurizationComplianceConstants.TargetDepressurizationExcelFileName)
                 {
-                    FileInfo FilePath = new FileInfo(op.FileName);
-                    ExcelPackage pck = new ExcelPackage(FilePath);
-                    ExcelWorksheet ws = pck.Workbook.Worksheets["Target Compliance"];
-
-                    FileStream fs = File.OpenWrite(op.FileName);
-                    fs.Close();
-
-                    DateTime Db = DateTime.Now;
-
-                    for (int i = 0; i < 12; i++)
-                    {
-                        int M = DateTime.ParseExact(ws.Cells[3, 2 + i].Value.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
-
-                        if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4 || i == 5)
-                        {
-                            Db = new DateTime(FiscalYear - 1, M, 1, 00, 00, 00).AddMilliseconds(000);
-                        }
-                        else if (i == 6 || i == 7 || i == 8 || i == 9 || i == 10 || i == 11)
-                        {
-                            Db = new DateTime(FiscalYear, M, 1, 00, 00, 00).AddMilliseconds(000);
-                        }
-
-                        int rows = ws.Dimension.Rows;
-
-                        for (int j = 0; j < rows; j++)
-                        {
-                            if (ws.Cells[4 + j, 1].Value != null)
-                            {
-                                if (ws.Cells[4 + j, 2 + i].Value == null)
-                                {
-                                    ws.Cells[4 + j, 2 + i].Value = -99;
-                                }
-
-                                lstTarget.Add(new TargetD()
-                                {
-                                    Date = Db,
-                                    Zone = ws.Cells[4 + j, 1].Value.ToString(),
-                                    Target = double.Parse(ws.Cells[4 + j, 2 + i].Value.ToString())
-                                });
-                            }
-                        }
-
-                    }
-
-                    pck.Dispose();
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Upload Error");
-                }
-
-                string fileName = @"c:\users\nyamis\oneDrive - bmining\BHP\DepressurizationComplianceData.xlsx";
-                FileInfo filePath = new FileInfo(fileName);
-
-                if (filePath.Exists)
-                {                  
                     try
                     {
-                        ExcelPackage pck2 = new ExcelPackage(filePath);
-                        ExcelWorksheet ws2 = pck2.Workbook.Worksheets["Target"];
+                        // Check if the file is already open
+                        var fileStream = File.OpenWrite(openFileDialog.FileName);
+                        fileStream.Close();
 
-                        FileStream fs = File.OpenWrite(fileName);
-                        fs.Close();
+                        var _date = DateTime.Now;
 
-                        int lastRow = ws2.Dimension.End.Row + 1;
-
-                        for (int i = 0; i < lstTarget.Count; i++)
+                        for (var i = 0; i < 12; i++)
                         {
-                            ws2.Cells[i + lastRow, 1].Value = lstTarget[i].Date;
-                            ws2.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            ws2.Cells[i + lastRow, 2].Value = lstTarget[i].Zone;
-                            ws2.Cells[i + lastRow, 3].Value = lstTarget[i].Target;
+                            var _month = DateTime.ParseExact(templateWorksheet.Cells[3, 2 + i].Value.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
+                            _date = TemplateDates.ConvertDateToFiscalYearDate(i, MyFiscalYear, _month);
+
+                            var rows = templateWorksheet.Dimension.Rows;
+
+                            for (var j = 0; j < rows; j++)
+                            {
+                                if (templateWorksheet.Cells[4 + j, 1].Value != null)
+                                {
+                                    if (templateWorksheet.Cells[4 + j, 2 + i].Value == null)
+                                    {
+                                        templateWorksheet.Cells[4 + j, 2 + i].Value = -99;
+                                    }
+
+                                    _targetCompliance.Add(new DepressurizationComplianceTargetCompliance()
+                                    {
+                                        Date = _date,
+                                        Zone = templateWorksheet.Cells[4 + j, 1].Value.ToString(),
+                                        Target = double.Parse(templateWorksheet.Cells[4 + j, 2 + i].Value.ToString())/1000
+                                    });
+                                }
+                            }
                         }
-
-                        byte[] fileText2 = pck2.GetAsByteArray();
-                        File.WriteAllBytes(fileName, fileText2);
-
-                        UpdateB = $"{StringResources.Updated}: {DateTime.Now}";
+                        excelPackage.Dispose();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Upload Error");
+                        MessageBox.Show(ex.Message, StringResources.UploadError);
                     }
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                }
 
+                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.DepressurizationComplianceExcelFilePath;
+                var loadFileInfo = new FileInfo(loadFilePath);
+
+                if (loadFileInfo.Exists)
+                {
+                    var package = new ExcelPackage(loadFileInfo);
+                    var worksheet = package.Workbook.Worksheets[DepressurizationComplianceConstants.TargetDepressurizationSpotfireWorksheet];
+                    if (worksheet != null)
+                    {
+                        try
+                        {
+                            var openWriteCheck = File.OpenWrite(loadFilePath);
+                            openWriteCheck.Close();
+
+                            var lastRow = worksheet.Dimension.End.Row + 1;
+                            for (var i = 0; i < _targetCompliance.Count; i++)
+                            {
+                                worksheet.Cells[i + lastRow, 1].Value = _targetCompliance[i].Date;
+                                worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                worksheet.Cells[i + lastRow, 2].Value = _targetCompliance[i].Zone;
+                                worksheet.Cells[i + lastRow, 3].Value = _targetCompliance[i].Target;
+                            }
+                            byte[] fileText2 = package.GetAsByteArray();
+                            File.WriteAllBytes(loadFilePath, fileText2);
+                            MyLastDateRefreshTargetValues = $"{StringResources.Updated}: {DateTime.Now}";
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, StringResources.UploadError);
+                        }
+                    }                   
+                    else
+                    {
+                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                        MessageBox.Show( wrongFileMessage, StringResources.UploadError);
+                    }
+                }
+                else
+                {
+                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
             }
         }
-
     }
 }
