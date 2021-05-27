@@ -2,6 +2,9 @@
 
 namespace BhpAssetComplianceWpfOneDesktop.Models.ConcentrateQualityModels
 {
+    /// <summary>
+    /// Concentrate
+    /// </summary>
     public class ConcentrateQualityActualFreight
     {
         public string Name { get; set; }
