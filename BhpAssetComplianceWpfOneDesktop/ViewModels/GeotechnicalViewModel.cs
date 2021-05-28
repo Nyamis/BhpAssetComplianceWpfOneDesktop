@@ -338,8 +338,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     try
                     {
                         // Check if the file is already open
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
 
                         var rows = escondidaWorksheet.Dimension.Rows;
                         for (var i = 1; i < rows; i++)
@@ -387,6 +387,58 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             }
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.GeotechnicalNotesExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var worksheet = package.Workbook.Worksheets[GeotechnicalNotesConstants.NotesGeotechnicalNotesSpotfireWorksheet];
+
+                            if (worksheet != null)
+                            {
+                                var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                                var lastRow = worksheet.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _notes.Count; i++)
+                                {
+                                    worksheet.Cells[i + lastRow, 1].Value = newDate;
+                                    worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    worksheet.Cells[i + lastRow, 2].Value = _notes[i].Place;
+                                    worksheet.Cells[i + lastRow, 3].Value = _notes[i].NoteType;
+                                    worksheet.Cells[i + lastRow, 4].Value = _notes[i].Phase;
+                                    worksheet.Cells[i + lastRow, 5].Value = _notes[i].State;
+
+                                    if (_notes[i].State == "Positive")
+                                    {
+                                        worksheet.Cells[i + lastRow, 6].Value = 0;
+                                    }
+                                    else if (_notes[i].State == "Negative")
+                                    {
+                                        worksheet.Cells[i + lastRow, 6].Value = 1;
+                                    }
+                                    else if (_notes[i].State == "Neutral")
+                                    {
+                                        worksheet.Cells[i + lastRow, 6].Value = 2;
+                                    }
+                                    worksheet.Cells[i + lastRow, 7].Value = _notes[i].Note;
+                                }
+                                byte[] fileText = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText);
+                                MyLastRefreshValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -399,67 +451,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
 
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.GeotechnicalNotesExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var worksheet = package.Workbook.Worksheets[GeotechnicalNotesConstants.NotesGeotechnicalNotesSpotfireWorksheet];
-
-                    if (worksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
-                            var lastRow = worksheet.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _notes.Count; i++)
-                            {
-                                worksheet.Cells[i + lastRow, 1].Value = newDate;
-                                worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                worksheet.Cells[i + lastRow, 2].Value = _notes[i].Place;
-                                worksheet.Cells[i + lastRow, 3].Value = _notes[i].NoteType;
-                                worksheet.Cells[i + lastRow, 4].Value = _notes[i].Phase;
-                                worksheet.Cells[i + lastRow, 5].Value = _notes[i].State;
-
-                                if (_notes[i].State == "Positive")
-                                {
-                                    worksheet.Cells[i + lastRow, 6].Value = 0;
-                                }
-                                else if (_notes[i].State == "Negative")
-                                {
-                                    worksheet.Cells[i + lastRow, 6].Value = 1;
-                                }
-                                else if (_notes[i].State == "Neutral")
-                                {
-                                    worksheet.Cells[i + lastRow, 6].Value = 2;
-                                }
-                                worksheet.Cells[i + lastRow, 7].Value = _notes[i].Note;
-                            }
-                            byte[] fileText = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText);
-                            MyLastRefreshValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    }                 
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
+                
             }
         }       
     }

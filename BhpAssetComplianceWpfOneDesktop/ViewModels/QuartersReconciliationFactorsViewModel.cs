@@ -308,8 +308,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     try
                     {
                         // Check if the file is already open
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
 
                         for (var i = 0; i < 4; i++)
                         {
@@ -383,6 +383,93 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             });
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.QuartersReconciliationFactorsExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var F0Worksheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F0QuartersReconciliationFactorsSpotfireWorksheet];
+                            var F1Worsheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F1QuartersReconciliationFactorsSpotfireWorksheet];
+                            var F2Worksheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F2QuartersReconciliationFactorsSpotfireWorksheet];
+                            var F3Woksheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F3QuartersReconciliationFactorsSpotfireWorksheet];
+
+                            if (F0Worksheet != null & F1Worsheet != null & F2Worksheet != null & F3Woksheet != null)
+                            {
+                                var newDate = new DateTime(MyMonthlyDate.Year, MyMonthlyDate.Month, 1, 00, 00, 00);
+                                var lastRow1 = F0Worksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _F0.Count; i++)
+                                {
+                                    F0Worksheet.Cells[i + lastRow1, 1].Value = newDate;
+                                    F0Worksheet.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    F0Worksheet.Cells[i + lastRow1, 2].Value = _F0[i].Quarter;
+                                    F0Worksheet.Cells[i + lastRow1, 3].Value = _F0[i].MillOre;
+                                    F0Worksheet.Cells[i + lastRow1, 4].Value = _F0[i].OLOre;
+                                    F0Worksheet.Cells[i + lastRow1, 5].Value = _F0[i].SLOre;
+                                    F0Worksheet.Cells[i + lastRow1, 6].Value = _F0[i].MillCuT;
+                                    F0Worksheet.Cells[i + lastRow1, 7].Value = _F0[i].OLCuT;
+                                    F0Worksheet.Cells[i + lastRow1, 8].Value = _F0[i].SLCuT;
+                                    F0Worksheet.Cells[i + lastRow1, 9].Value = _F0[i].MillCuFines;
+                                    F0Worksheet.Cells[i + lastRow1, 10].Value = _F0[i].OLCuFines;
+                                    F0Worksheet.Cells[i + lastRow1, 11].Value = _F0[i].SLCuFines;
+                                }
+
+                                var lastRow2 = F1Worsheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _F1.Count; i++)
+                                {
+                                    F1Worsheet.Cells[i + lastRow2, 1].Value = newDate;
+                                    F1Worsheet.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    F1Worsheet.Cells[i + lastRow2, 2].Value = _F1[i].Quarter;
+                                    F1Worsheet.Cells[i + lastRow2, 3].Value = _F1[i].MillOre;
+                                    F1Worsheet.Cells[i + lastRow2, 4].Value = _F1[i].OLOre;
+                                    F1Worsheet.Cells[i + lastRow2, 5].Value = _F1[i].SLOre;
+                                    F1Worsheet.Cells[i + lastRow2, 6].Value = _F1[i].MillCuT;
+                                    F1Worsheet.Cells[i + lastRow2, 7].Value = _F1[i].OLCuT;
+                                    F1Worsheet.Cells[i + lastRow2, 8].Value = _F1[i].SLCuT;
+                                    F1Worsheet.Cells[i + lastRow2, 9].Value = _F1[i].MillCuFines;
+                                    F1Worsheet.Cells[i + lastRow2, 10].Value = _F1[i].OLCuFines;
+                                    F1Worsheet.Cells[i + lastRow2, 11].Value = _F1[i].SLCuFines;
+                                }
+
+                                var lastRow3 = F2Worksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _F2.Count; i++)
+                                {
+                                    F2Worksheet.Cells[i + lastRow3, 1].Value = newDate;
+                                    F2Worksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    F2Worksheet.Cells[i + lastRow3, 2].Value = _F2[i].Quarter;
+                                    F2Worksheet.Cells[i + lastRow3, 3].Value = _F2[i].MillOre;
+                                    F2Worksheet.Cells[i + lastRow3, 4].Value = _F2[i].OLOre;
+                                    F2Worksheet.Cells[i + lastRow3, 5].Value = _F2[i].MillCuT;
+                                    F2Worksheet.Cells[i + lastRow3, 6].Value = _F2[i].OLCuT;
+                                    F2Worksheet.Cells[i + lastRow3, 7].Value = _F2[i].MillCuFines;
+                                    F2Worksheet.Cells[i + lastRow3, 8].Value = _F2[i].OLCuFines;
+                                }
+
+                                var lastRow4 = F3Woksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _F3.Count; i++)
+                                {
+                                    F3Woksheet.Cells[i + lastRow4, 1].Value = newDate;
+                                    F3Woksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    F3Woksheet.Cells[i + lastRow4, 2].Value = _F3[i].Quarter;
+                                    F3Woksheet.Cells[i + lastRow4, 3].Value = _F3[i].MillCuFines;
+                                }
+                                byte[] fileText2 = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText2);
+                                MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
+
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -392,102 +479,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 else
                 {
                     var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
-
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.QuartersReconciliationFactorsExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var F0Worksheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F0QuartersReconciliationFactorsSpotfireWorksheet];
-                    var F1Worsheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F1QuartersReconciliationFactorsSpotfireWorksheet];
-                    var F2Worksheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F2QuartersReconciliationFactorsSpotfireWorksheet];
-                    var F3Woksheet = package.Workbook.Worksheets[QuartersReconciliationFactorsConstants.F3QuartersReconciliationFactorsSpotfireWorksheet];
-
-                    if (F0Worksheet != null & F1Worsheet != null & F2Worksheet != null & F3Woksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var newDate = new DateTime(MyMonthlyDate.Year, MyMonthlyDate.Month, 1, 00, 00, 00);
-                            var lastRow1 = F0Worksheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _F0.Count; i++)
-                            {
-                                F0Worksheet.Cells[i + lastRow1, 1].Value = newDate;
-                                F0Worksheet.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                F0Worksheet.Cells[i + lastRow1, 2].Value = _F0[i].Quarter;
-                                F0Worksheet.Cells[i + lastRow1, 3].Value = _F0[i].MillOre;
-                                F0Worksheet.Cells[i + lastRow1, 4].Value = _F0[i].OLOre;
-                                F0Worksheet.Cells[i + lastRow1, 5].Value = _F0[i].SLOre;
-                                F0Worksheet.Cells[i + lastRow1, 6].Value = _F0[i].MillCuT;
-                                F0Worksheet.Cells[i + lastRow1, 7].Value = _F0[i].OLCuT;
-                                F0Worksheet.Cells[i + lastRow1, 8].Value = _F0[i].SLCuT;
-                                F0Worksheet.Cells[i + lastRow1, 9].Value = _F0[i].MillCuFines;
-                                F0Worksheet.Cells[i + lastRow1, 10].Value = _F0[i].OLCuFines;
-                                F0Worksheet.Cells[i + lastRow1, 11].Value = _F0[i].SLCuFines;
-                            }
-
-                            var lastRow2 = F1Worsheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _F1.Count; i++)
-                            {
-                                F1Worsheet.Cells[i + lastRow2, 1].Value = newDate;
-                                F1Worsheet.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                F1Worsheet.Cells[i + lastRow2, 2].Value = _F1[i].Quarter;
-                                F1Worsheet.Cells[i + lastRow2, 3].Value = _F1[i].MillOre;
-                                F1Worsheet.Cells[i + lastRow2, 4].Value = _F1[i].OLOre;
-                                F1Worsheet.Cells[i + lastRow2, 5].Value = _F1[i].SLOre;
-                                F1Worsheet.Cells[i + lastRow2, 6].Value = _F1[i].MillCuT;
-                                F1Worsheet.Cells[i + lastRow2, 7].Value = _F1[i].OLCuT;
-                                F1Worsheet.Cells[i + lastRow2, 8].Value = _F1[i].SLCuT;
-                                F1Worsheet.Cells[i + lastRow2, 9].Value = _F1[i].MillCuFines;
-                                F1Worsheet.Cells[i + lastRow2, 10].Value = _F1[i].OLCuFines;
-                                F1Worsheet.Cells[i + lastRow2, 11].Value = _F1[i].SLCuFines;
-                            }
-
-                            var lastRow3 = F2Worksheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _F2.Count; i++)
-                            {
-                                F2Worksheet.Cells[i + lastRow3, 1].Value = newDate;
-                                F2Worksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                F2Worksheet.Cells[i + lastRow3, 2].Value = _F2[i].Quarter;
-                                F2Worksheet.Cells[i + lastRow3, 3].Value = _F2[i].MillOre;
-                                F2Worksheet.Cells[i + lastRow3, 4].Value = _F2[i].OLOre;
-                                F2Worksheet.Cells[i + lastRow3, 5].Value = _F2[i].MillCuT;
-                                F2Worksheet.Cells[i + lastRow3, 6].Value = _F2[i].OLCuT;
-                                F2Worksheet.Cells[i + lastRow3, 7].Value = _F2[i].MillCuFines;
-                                F2Worksheet.Cells[i + lastRow3, 8].Value = _F2[i].OLCuFines;
-                            }
-
-                            var lastRow4 = F3Woksheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _F3.Count; i++)
-                            {
-                                F3Woksheet.Cells[i + lastRow4, 1].Value = newDate;
-                                F3Woksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                F3Woksheet.Cells[i + lastRow4, 2].Value = _F3[i].Quarter;
-                                F3Woksheet.Cells[i + lastRow4, 3].Value = _F3[i].MillCuFines;
-                            }
-                            byte[] fileText2 = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText2);
-                            MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    }                   
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
             }

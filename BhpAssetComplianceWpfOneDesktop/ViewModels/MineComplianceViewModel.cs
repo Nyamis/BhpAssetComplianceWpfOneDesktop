@@ -573,6 +573,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 {
                     try
                     {
+                        // Check if the file is already open
                         var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
                         openWriteCheck.Close();
 
@@ -717,6 +718,203 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             });
                         }
                         excelPackage.Dispose();
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.MineComplianceExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var realMovementProductionWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealMovementProductionMineComplianceSpotfireWorksheet];
+                            var realPitDisintegratedWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealPitDisintegratedMineComplianceSpotfireWorksheet];
+                            var realMillWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealMillFCMineComplianceSpotfireWorksheet];
+                            var realLoadingWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealLoadingFCMineComplianceSpotfireWorksheet];
+                            var realLoadingSSWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealLoadingSSYTDMineComplianceSpotfireWorksheet];
+                            var realHaulingWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealHaulingFCMineComplianceSpotfireWorksheet];
+                            var realHaulingTF = package.Workbook.Worksheets[MineComplianceConstants.RealHaulingTFYTDMineComplianceSpotfireWorksheet];
+
+                            if (realMovementProductionWorksheet != null & realPitDisintegratedWorksheet != null & realMillWorksheet != null & realLoadingWorksheet != null & realHaulingWorksheet != null)
+                            {
+                                var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                                var lastRow1 = realMovementProductionWorksheet.Dimension.End.Row + 1;
+
+                                realMovementProductionWorksheet.Cells[lastRow1, 1].Value = newDate;
+                                realMovementProductionWorksheet.Cells[lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                realMovementProductionWorksheet.Cells[lastRow1, 2].Value = _realMovementProduction[0].LosColoradosOreGradeCutPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 3].Value = _realMovementProduction[0].LosColoradosMillRecoveryPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 4].Value = _realMovementProduction[0].LosColoradosMillFeedTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 5].Value = _realMovementProduction[0].LosColoradosCuExMillTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 6].Value = _realMovementProduction[0].LosColoradosRuntimePercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 7].Value = _realMovementProduction[0].LosColoradosHoursHours;
+                                realMovementProductionWorksheet.Cells[lastRow1, 8].Value = _realMovementProduction[0].LagunaSecaOreGradeCutPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 9].Value = _realMovementProduction[0].LagunaSecaMillRecoveryPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 10].Value = _realMovementProduction[0].LagunaSecaMillFeedTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 11].Value = _realMovementProduction[0].LagunaSecaCuExMillTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 12].Value = _realMovementProduction[0].LagunaSecaRuntimePercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 13].Value = _realMovementProduction[0].LagunaSecaHoursHours;
+                                realMovementProductionWorksheet.Cells[lastRow1, 14].Value = _realMovementProduction[0].LagunaSeca2OreGradeCutPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 15].Value = _realMovementProduction[0].LagunaSeca2MillRecoveryPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 16].Value = _realMovementProduction[0].LagunaSeca2MillFeedTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 17].Value = _realMovementProduction[0].LagunaSeca2CuExMillTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 18].Value = _realMovementProduction[0].LagunaSeca2RuntimePercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 19].Value = _realMovementProduction[0].LagunaSeca2HoursHours;
+                                realMovementProductionWorksheet.Cells[lastRow1, 20].Value = _realMovementProduction[0].OxideCutOreGradeRomPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 21].Value = _realMovementProduction[0].OxideCusOreGradeRomPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 22].Value = _realMovementProduction[0].OxideCutOreGradeCrusherPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 23].Value = _realMovementProduction[0].OxideCusOreGradeCrusherPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 24].Value = _realMovementProduction[0].OxideRecoveryCrusherAndRomPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 25].Value = _realMovementProduction[0].OxideRomTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 26].Value = _realMovementProduction[0].OxideCrushedMaterialTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 27].Value = _realMovementProduction[0].OxideTotalStackedMaterialTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 28].Value = _realMovementProduction[0].OxideCuCathodesTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 29].Value = _realMovementProduction[0].SulphideLeachCutOreGradePercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 30].Value = _realMovementProduction[0].SulphideLeachCusOreGradePercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 31].Value = _realMovementProduction[0].SulphideLeachRecoveryPercentage;
+                                realMovementProductionWorksheet.Cells[lastRow1, 32].Value = _realMovementProduction[0].SulphideLeachStackedMaterialFromMineTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 33].Value = _realMovementProduction[0].SulphideLeachContractorsStackedMaterialFromStocksTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 34].Value = _realMovementProduction[0].SulphideLeachMelStackedMaterialFromStocksTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 35].Value = _realMovementProduction[0].SulphideLeachTotalStackedMaterialTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 36].Value = _realMovementProduction[0].SulphideLeachCuCathodesTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 37].Value = _realMovementProduction[0].ColosoCuExColosoTonnes;
+                                realMovementProductionWorksheet.Cells[lastRow1, 38].Value = _realMovementProduction[0].ColosoCuFromLowGradeConcentrateTonnes;
+
+                                var lastRow2 = realPitDisintegratedWorksheet.Dimension.End.Row + 1;
+
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 1].Value = newDate;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 2].Value = _realPitDisintegrated[0].ExpitEsTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 3].Value = _realPitDisintegrated[0].ExpitEnTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 4].Value = _realPitDisintegrated[0].TotalExpitTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 5].Value = _realPitDisintegrated[0].MillRehandlingTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 6].Value = _realPitDisintegrated[0].OlRehandlingTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 7].Value = _realPitDisintegrated[0].SlRehandlingTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 8].Value = _realPitDisintegrated[0].OtherRehandlingTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 9].Value = _realPitDisintegrated[0].TotalRehandlingTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 10].Value = _realPitDisintegrated[0].TotalMovementTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 11].Value = _realPitDisintegrated[0].RehandlingTotalTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 12].Value = _realPitDisintegrated[0].MovementTotalTonnes;
+                                realPitDisintegratedWorksheet.Cells[lastRow2, 13].Value = _realPitDisintegrated[0].TotalTonnes;
+
+                                var lastRow3 = realMillWorksheet.Dimension.End.Row + 1;
+
+                                realMillWorksheet.Cells[lastRow3, 1].Value = newDate;
+                                realMillWorksheet.Cells[lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                realMillWorksheet.Cells[lastRow3, 2].Value = _realMillFc[0].OreGradeCut;
+                                realMillWorksheet.Cells[lastRow3, 3].Value = _realMillFc[0].MillRecovery;
+                                realMillWorksheet.Cells[lastRow3, 4].Value = _realMillFc[0].MillFeed;
+
+                                var lastRow4 = realLoadingWorksheet.Dimension.End.Row + 1;
+                                var lastRow5 = realLoadingSSWorksheet.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _realLoadingFc.Count; i++)
+                                {
+                                    realLoadingWorksheet.Cells[i + lastRow4, 1].Value = newDate;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    realLoadingWorksheet.Cells[i + lastRow4, 2].Value = _realLoadingFc[i].Name;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 3].Value = _realLoadingFc[i].Units;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 4].Value = _realLoadingFc[i].AvailabilityPercentage;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 5].Value = _realLoadingFc[i].UtilizationPercentage;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 6].Value = _realLoadingFc[i].TotalHoursHours;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 7].Value = _realLoadingFc[i].AvailableHoursHours;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 8].Value = _realLoadingFc[i].EquipmentScheduledDowntimeHours;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 9].Value = _realLoadingFc[i].EquipmentNonScheduledDowntimeHours;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 10].Value = _realLoadingFc[i].ProcessScheduledDowntimeHours;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 11].Value = _realLoadingFc[i].ProcessNonScheduledDowntimeHours;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 12].Value = _realLoadingFc[i].StandByHours;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 13].Value = _realLoadingFc[i].HangTimeHours;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 14].Value = _realLoadingFc[i].ProductionTimeHours;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 15].Value = _realLoadingFc[i].PerformanceTonnesPerHour;
+                                    realLoadingWorksheet.Cells[i + lastRow4, 16].Value = _realLoadingFc[i].TotalTonnesTonnes;
+
+                                    if (_realLoadingFc[i].Name == "SUMMARY SHOVEL 73 yd3")
+                                    {
+                                        realLoadingSSWorksheet.Cells[lastRow5, 1].Value = newDate;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                        realLoadingSSWorksheet.Cells[lastRow5, 2].Value = _realLoadingFc[i].Name;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 3].Value = _realLoadingFc[i].Units;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 4].Value = _realLoadingFc[i].AvailabilityPercentage;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 5].Value = _realLoadingFc[i].UtilizationPercentage;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 6].Value = _realLoadingFc[i].TotalHoursHours;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 7].Value = _realLoadingFc[i].AvailableHoursHours;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 8].Value = _realLoadingFc[i].EquipmentScheduledDowntimeHours;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 9].Value = _realLoadingFc[i].EquipmentNonScheduledDowntimeHours;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 10].Value = _realLoadingFc[i].ProcessScheduledDowntimeHours;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 11].Value = _realLoadingFc[i].ProcessNonScheduledDowntimeHours;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 12].Value = _realLoadingFc[i].StandByHours;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 13].Value = _realLoadingFc[i].HangTimeHours;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 14].Value = _realLoadingFc[i].ProductionTimeHours;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 15].Value = _realLoadingFc[i].PerformanceTonnesPerHour;
+                                        realLoadingSSWorksheet.Cells[lastRow5, 16].Value = _realLoadingFc[i].TotalTonnesTonnes;
+                                    }
+
+                                    if (_realLoadingFc[i].Name == "TOTAL FLEET")
+                                    {
+                                        realLoadingSSWorksheet.Cells[lastRow5, 17].Value = _realLoadingFc[i].TotalTonnesTonnes;
+                                    }
+                                }
+
+                                var lastRow6 = realHaulingWorksheet.Dimension.End.Row + 1;
+                                var lastRow7 = realHaulingTF.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _realHaulingFc.Count; i++)
+                                {
+                                    realHaulingWorksheet.Cells[i + lastRow6, 1].Value = newDate;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    realHaulingWorksheet.Cells[i + lastRow6, 2].Value = _realHaulingFc[i].Name;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 3].Value = _realHaulingFc[i].Units;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 4].Value = _realHaulingFc[i].MechanicalAvailabilityPercentage;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 5].Value = _realHaulingFc[i].PhysicalAvailabilityPercentage;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 6].Value = _realHaulingFc[i].UtilizationPercentage;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 7].Value = _realHaulingFc[i].TotalHoursHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 8].Value = _realHaulingFc[i].AvailableHoursHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 9].Value = _realHaulingFc[i].EquipmentScheduledDowntimeHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 10].Value = _realHaulingFc[i].EquipmentNonScheduledDowntimeHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 11].Value = _realHaulingFc[i].ProcessScheduledDowntimeHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 12].Value = _realHaulingFc[i].ProcessNonScheduledDowntimeHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 13].Value = _realHaulingFc[i].StandByHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 14].Value = _realHaulingFc[i].QueueTimeHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 15].Value = _realHaulingFc[i].ProductionTimeHoursHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 16].Value = _realHaulingFc[i].PerformanceTonnesPerHour;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 17].Value = _realHaulingFc[i].CycleTimeHours;
+                                    realHaulingWorksheet.Cells[i + lastRow6, 18].Value = _realHaulingFc[i].TotalTonnesTonnes;
+
+                                    if (_realHaulingFc[i].Name == "Total Fleet")
+                                    {
+                                        realHaulingTF.Cells[lastRow7, 1].Value = newDate;
+                                        realHaulingTF.Cells[lastRow7, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                        realHaulingTF.Cells[lastRow7, 2].Value = _realHaulingFc[i].Name;
+                                        realHaulingTF.Cells[lastRow7, 3].Value = _realHaulingFc[i].Units;
+                                        realHaulingTF.Cells[lastRow7, 4].Value = _realHaulingFc[i].MechanicalAvailabilityPercentage;
+                                        realHaulingTF.Cells[lastRow7, 5].Value = _realHaulingFc[i].PhysicalAvailabilityPercentage;
+                                        realHaulingTF.Cells[lastRow7, 6].Value = _realHaulingFc[i].UtilizationPercentage;
+                                        realHaulingTF.Cells[lastRow7, 7].Value = _realHaulingFc[i].TotalHoursHours;
+                                        realHaulingTF.Cells[lastRow7, 8].Value = _realHaulingFc[i].AvailableHoursHours;
+                                        realHaulingTF.Cells[lastRow7, 9].Value = _realHaulingFc[i].EquipmentScheduledDowntimeHours;
+                                        realHaulingTF.Cells[lastRow7, 10].Value = _realHaulingFc[i].EquipmentNonScheduledDowntimeHours;
+                                        realHaulingTF.Cells[lastRow7, 11].Value = _realHaulingFc[i].ProcessScheduledDowntimeHours;
+                                        realHaulingTF.Cells[lastRow7, 12].Value = _realHaulingFc[i].ProcessNonScheduledDowntimeHours;
+                                        realHaulingTF.Cells[lastRow7, 13].Value = _realHaulingFc[i].StandByHours;
+                                        realHaulingTF.Cells[lastRow7, 14].Value = _realHaulingFc[i].QueueTimeHours;
+                                        realHaulingTF.Cells[lastRow7, 15].Value = _realHaulingFc[i].ProductionTimeHoursHours;
+                                        realHaulingTF.Cells[lastRow7, 16].Value = _realHaulingFc[i].PerformanceTonnesPerHour;
+                                        realHaulingTF.Cells[lastRow7, 17].Value = _realHaulingFc[i].CycleTimeHours;
+                                        realHaulingTF.Cells[lastRow7, 18].Value = _realHaulingFc[i].TotalTonnesTonnes;
+                                    }
+                                }
+                                byte[] fileText2 = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText2);
+                                MyLastDateRefreshRealValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -726,214 +924,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 else
                 {
                     var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
-
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.MineComplianceExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-                
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var realMovementProductionWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealMovementProductionMineComplianceSpotfireWorksheet];
-                    var realPitDisintegratedWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealPitDisintegratedMineComplianceSpotfireWorksheet];
-                    var realMillWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealMillFCMineComplianceSpotfireWorksheet];
-                    var realLoadingWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealLoadingFCMineComplianceSpotfireWorksheet];
-                    var realLoadingSSWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealLoadingSSYTDMineComplianceSpotfireWorksheet];
-                    var realHaulingWorksheet = package.Workbook.Worksheets[MineComplianceConstants.RealHaulingFCMineComplianceSpotfireWorksheet];
-                    var realHaulingTF = package.Workbook.Worksheets[MineComplianceConstants.RealHaulingTFYTDMineComplianceSpotfireWorksheet];
-
-                    if (realMovementProductionWorksheet != null & realPitDisintegratedWorksheet != null & realMillWorksheet != null & realLoadingWorksheet != null & realHaulingWorksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
-                            var lastRow1 = realMovementProductionWorksheet.Dimension.End.Row + 1;
-
-                            realMovementProductionWorksheet.Cells[lastRow1, 1].Value = newDate;
-                            realMovementProductionWorksheet.Cells[lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            realMovementProductionWorksheet.Cells[lastRow1, 2].Value = _realMovementProduction[0].LosColoradosOreGradeCutPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 3].Value = _realMovementProduction[0].LosColoradosMillRecoveryPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 4].Value = _realMovementProduction[0].LosColoradosMillFeedTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 5].Value = _realMovementProduction[0].LosColoradosCuExMillTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 6].Value = _realMovementProduction[0].LosColoradosRuntimePercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 7].Value = _realMovementProduction[0].LosColoradosHoursHours;
-                            realMovementProductionWorksheet.Cells[lastRow1, 8].Value = _realMovementProduction[0].LagunaSecaOreGradeCutPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 9].Value = _realMovementProduction[0].LagunaSecaMillRecoveryPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 10].Value = _realMovementProduction[0].LagunaSecaMillFeedTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 11].Value = _realMovementProduction[0].LagunaSecaCuExMillTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 12].Value = _realMovementProduction[0].LagunaSecaRuntimePercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 13].Value = _realMovementProduction[0].LagunaSecaHoursHours;
-                            realMovementProductionWorksheet.Cells[lastRow1, 14].Value = _realMovementProduction[0].LagunaSeca2OreGradeCutPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 15].Value = _realMovementProduction[0].LagunaSeca2MillRecoveryPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 16].Value = _realMovementProduction[0].LagunaSeca2MillFeedTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 17].Value = _realMovementProduction[0].LagunaSeca2CuExMillTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 18].Value = _realMovementProduction[0].LagunaSeca2RuntimePercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 19].Value = _realMovementProduction[0].LagunaSeca2HoursHours;
-                            realMovementProductionWorksheet.Cells[lastRow1, 20].Value = _realMovementProduction[0].OxideCutOreGradeRomPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 21].Value = _realMovementProduction[0].OxideCusOreGradeRomPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 22].Value = _realMovementProduction[0].OxideCutOreGradeCrusherPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 23].Value = _realMovementProduction[0].OxideCusOreGradeCrusherPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 24].Value = _realMovementProduction[0].OxideRecoveryCrusherAndRomPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 25].Value = _realMovementProduction[0].OxideRomTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 26].Value = _realMovementProduction[0].OxideCrushedMaterialTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 27].Value = _realMovementProduction[0].OxideTotalStackedMaterialTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 28].Value = _realMovementProduction[0].OxideCuCathodesTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 29].Value = _realMovementProduction[0].SulphideLeachCutOreGradePercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 30].Value = _realMovementProduction[0].SulphideLeachCusOreGradePercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 31].Value = _realMovementProduction[0].SulphideLeachRecoveryPercentage;
-                            realMovementProductionWorksheet.Cells[lastRow1, 32].Value = _realMovementProduction[0].SulphideLeachStackedMaterialFromMineTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 33].Value = _realMovementProduction[0].SulphideLeachContractorsStackedMaterialFromStocksTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 34].Value = _realMovementProduction[0].SulphideLeachMelStackedMaterialFromStocksTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 35].Value = _realMovementProduction[0].SulphideLeachTotalStackedMaterialTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 36].Value = _realMovementProduction[0].SulphideLeachCuCathodesTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 37].Value = _realMovementProduction[0].ColosoCuExColosoTonnes;
-                            realMovementProductionWorksheet.Cells[lastRow1, 38].Value = _realMovementProduction[0].ColosoCuFromLowGradeConcentrateTonnes;
-
-                            var lastRow2 = realPitDisintegratedWorksheet.Dimension.End.Row + 1;
-
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 1].Value = newDate;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 2].Value = _realPitDisintegrated[0].ExpitEsTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 3].Value = _realPitDisintegrated[0].ExpitEnTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 4].Value = _realPitDisintegrated[0].TotalExpitTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 5].Value = _realPitDisintegrated[0].MillRehandlingTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 6].Value = _realPitDisintegrated[0].OlRehandlingTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 7].Value = _realPitDisintegrated[0].SlRehandlingTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 8].Value = _realPitDisintegrated[0].OtherRehandlingTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 9].Value = _realPitDisintegrated[0].TotalRehandlingTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 10].Value = _realPitDisintegrated[0].TotalMovementTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 11].Value = _realPitDisintegrated[0].RehandlingTotalTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 12].Value = _realPitDisintegrated[0].MovementTotalTonnes;
-                            realPitDisintegratedWorksheet.Cells[lastRow2, 13].Value = _realPitDisintegrated[0].TotalTonnes;
-
-                            var lastRow3 = realMillWorksheet.Dimension.End.Row + 1;
-
-                            realMillWorksheet.Cells[lastRow3, 1].Value = newDate;
-                            realMillWorksheet.Cells[lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            realMillWorksheet.Cells[lastRow3, 2].Value = _realMillFc[0].OreGradeCut;
-                            realMillWorksheet.Cells[lastRow3, 3].Value = _realMillFc[0].MillRecovery;
-                            realMillWorksheet.Cells[lastRow3, 4].Value = _realMillFc[0].MillFeed;
-
-                            var lastRow4 = realLoadingWorksheet.Dimension.End.Row + 1;
-                            var lastRow5 = realLoadingSSWorksheet.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _realLoadingFc.Count; i++)
-                            {
-                                realLoadingWorksheet.Cells[i + lastRow4, 1].Value = newDate;
-                                realLoadingWorksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                realLoadingWorksheet.Cells[i + lastRow4, 2].Value = _realLoadingFc[i].Name;
-                                realLoadingWorksheet.Cells[i + lastRow4, 3].Value = _realLoadingFc[i].Units;
-                                realLoadingWorksheet.Cells[i + lastRow4, 4].Value = _realLoadingFc[i].AvailabilityPercentage;
-                                realLoadingWorksheet.Cells[i + lastRow4, 5].Value = _realLoadingFc[i].UtilizationPercentage;
-                                realLoadingWorksheet.Cells[i + lastRow4, 6].Value = _realLoadingFc[i].TotalHoursHours;
-                                realLoadingWorksheet.Cells[i + lastRow4, 7].Value = _realLoadingFc[i].AvailableHoursHours;
-                                realLoadingWorksheet.Cells[i + lastRow4, 8].Value = _realLoadingFc[i].EquipmentScheduledDowntimeHours;
-                                realLoadingWorksheet.Cells[i + lastRow4, 9].Value = _realLoadingFc[i].EquipmentNonScheduledDowntimeHours;
-                                realLoadingWorksheet.Cells[i + lastRow4, 10].Value = _realLoadingFc[i].ProcessScheduledDowntimeHours;
-                                realLoadingWorksheet.Cells[i + lastRow4, 11].Value = _realLoadingFc[i].ProcessNonScheduledDowntimeHours;
-                                realLoadingWorksheet.Cells[i + lastRow4, 12].Value = _realLoadingFc[i].StandByHours;
-                                realLoadingWorksheet.Cells[i + lastRow4, 13].Value = _realLoadingFc[i].HangTimeHours;
-                                realLoadingWorksheet.Cells[i + lastRow4, 14].Value = _realLoadingFc[i].ProductionTimeHours;
-                                realLoadingWorksheet.Cells[i + lastRow4, 15].Value = _realLoadingFc[i].PerformanceTonnesPerHour;
-                                realLoadingWorksheet.Cells[i + lastRow4, 16].Value = _realLoadingFc[i].TotalTonnesTonnes;
-
-                                if (_realLoadingFc[i].Name == "SUMMARY SHOVEL 73 yd3")
-                                {
-                                    realLoadingSSWorksheet.Cells[lastRow5, 1].Value = newDate;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                    realLoadingSSWorksheet.Cells[lastRow5, 2].Value = _realLoadingFc[i].Name;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 3].Value = _realLoadingFc[i].Units;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 4].Value = _realLoadingFc[i].AvailabilityPercentage;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 5].Value = _realLoadingFc[i].UtilizationPercentage;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 6].Value = _realLoadingFc[i].TotalHoursHours;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 7].Value = _realLoadingFc[i].AvailableHoursHours;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 8].Value = _realLoadingFc[i].EquipmentScheduledDowntimeHours;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 9].Value = _realLoadingFc[i].EquipmentNonScheduledDowntimeHours;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 10].Value = _realLoadingFc[i].ProcessScheduledDowntimeHours;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 11].Value = _realLoadingFc[i].ProcessNonScheduledDowntimeHours;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 12].Value = _realLoadingFc[i].StandByHours;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 13].Value = _realLoadingFc[i].HangTimeHours;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 14].Value = _realLoadingFc[i].ProductionTimeHours;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 15].Value = _realLoadingFc[i].PerformanceTonnesPerHour;
-                                    realLoadingSSWorksheet.Cells[lastRow5, 16].Value = _realLoadingFc[i].TotalTonnesTonnes;
-                                }
-
-                                if (_realLoadingFc[i].Name == "TOTAL FLEET")
-                                {
-                                    realLoadingSSWorksheet.Cells[lastRow5, 17].Value = _realLoadingFc[i].TotalTonnesTonnes;
-                                }
-                            }
-
-                            var lastRow6 = realHaulingWorksheet.Dimension.End.Row + 1;
-                            var lastRow7 = realHaulingTF.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _realHaulingFc.Count; i++)
-                            {
-                                realHaulingWorksheet.Cells[i + lastRow6, 1].Value = newDate;
-                                realHaulingWorksheet.Cells[i + lastRow6, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                realHaulingWorksheet.Cells[i + lastRow6, 2].Value = _realHaulingFc[i].Name;
-                                realHaulingWorksheet.Cells[i + lastRow6, 3].Value = _realHaulingFc[i].Units;
-                                realHaulingWorksheet.Cells[i + lastRow6, 4].Value = _realHaulingFc[i].MechanicalAvailabilityPercentage;
-                                realHaulingWorksheet.Cells[i + lastRow6, 5].Value = _realHaulingFc[i].PhysicalAvailabilityPercentage;
-                                realHaulingWorksheet.Cells[i + lastRow6, 6].Value = _realHaulingFc[i].UtilizationPercentage;
-                                realHaulingWorksheet.Cells[i + lastRow6, 7].Value = _realHaulingFc[i].TotalHoursHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 8].Value = _realHaulingFc[i].AvailableHoursHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 9].Value = _realHaulingFc[i].EquipmentScheduledDowntimeHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 10].Value = _realHaulingFc[i].EquipmentNonScheduledDowntimeHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 11].Value = _realHaulingFc[i].ProcessScheduledDowntimeHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 12].Value = _realHaulingFc[i].ProcessNonScheduledDowntimeHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 13].Value = _realHaulingFc[i].StandByHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 14].Value = _realHaulingFc[i].QueueTimeHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 15].Value = _realHaulingFc[i].ProductionTimeHoursHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 16].Value = _realHaulingFc[i].PerformanceTonnesPerHour;
-                                realHaulingWorksheet.Cells[i + lastRow6, 17].Value = _realHaulingFc[i].CycleTimeHours;
-                                realHaulingWorksheet.Cells[i + lastRow6, 18].Value = _realHaulingFc[i].TotalTonnesTonnes;
-
-                                if (_realHaulingFc[i].Name == "Total Fleet")
-                                {
-                                    realHaulingTF.Cells[lastRow7, 1].Value = newDate;
-                                    realHaulingTF.Cells[lastRow7, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                    realHaulingTF.Cells[lastRow7, 2].Value = _realHaulingFc[i].Name;
-                                    realHaulingTF.Cells[lastRow7, 3].Value = _realHaulingFc[i].Units;
-                                    realHaulingTF.Cells[lastRow7, 4].Value = _realHaulingFc[i].MechanicalAvailabilityPercentage;
-                                    realHaulingTF.Cells[lastRow7, 5].Value = _realHaulingFc[i].PhysicalAvailabilityPercentage;
-                                    realHaulingTF.Cells[lastRow7, 6].Value = _realHaulingFc[i].UtilizationPercentage;
-                                    realHaulingTF.Cells[lastRow7, 7].Value = _realHaulingFc[i].TotalHoursHours;
-                                    realHaulingTF.Cells[lastRow7, 8].Value = _realHaulingFc[i].AvailableHoursHours;
-                                    realHaulingTF.Cells[lastRow7, 9].Value = _realHaulingFc[i].EquipmentScheduledDowntimeHours;
-                                    realHaulingTF.Cells[lastRow7, 10].Value = _realHaulingFc[i].EquipmentNonScheduledDowntimeHours;
-                                    realHaulingTF.Cells[lastRow7, 11].Value = _realHaulingFc[i].ProcessScheduledDowntimeHours;
-                                    realHaulingTF.Cells[lastRow7, 12].Value = _realHaulingFc[i].ProcessNonScheduledDowntimeHours;
-                                    realHaulingTF.Cells[lastRow7, 13].Value = _realHaulingFc[i].StandByHours;
-                                    realHaulingTF.Cells[lastRow7, 14].Value = _realHaulingFc[i].QueueTimeHours;
-                                    realHaulingTF.Cells[lastRow7, 15].Value = _realHaulingFc[i].ProductionTimeHoursHours;
-                                    realHaulingTF.Cells[lastRow7, 16].Value = _realHaulingFc[i].PerformanceTonnesPerHour;
-                                    realHaulingTF.Cells[lastRow7, 17].Value = _realHaulingFc[i].CycleTimeHours;
-                                    realHaulingTF.Cells[lastRow7, 18].Value = _realHaulingFc[i].TotalTonnesTonnes;
-                                }
-                            }
-                            byte[] fileText2 = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText2);
-                            MyLastDateRefreshRealValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    }
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
             }
@@ -1287,11 +1277,11 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 {
                     try
                     {
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        // Check if the file is already open
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
                         
                         var _date = DateTime.Now;
-
                         for (var i = 0; i < 12; i++)
                         {
                             var _month = DateTime.ParseExact(budgetPrincipalTemplateWorksheet.Cells[3, 4 + i].Value.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
@@ -1398,6 +1388,128 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             });
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.MineComplianceExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var budgetPrincipalWorksheet = package.Workbook.Worksheets[MineComplianceConstants.BudgetPrincipalMineComplianceSpotfireWorksheet];
+                            var budgetMovementProductionWorksheet = package.Workbook.Worksheets[MineComplianceConstants.BudgetMovementProductionMineComplianceSpotfireWorksheet];
+                            var budgetPitDisintegratedWorksheet = package.Workbook.Worksheets[MineComplianceConstants.BudgetPitDisintegratedMineComplianceSpotfireWorksheet];
+
+                            if (budgetPrincipalWorksheet != null & budgetMovementProductionWorksheet != null & budgetPitDisintegratedWorksheet != null)
+                            {
+                                var lastRow1 = budgetPrincipalWorksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _budgetPrincipal.Count; i++)
+                                {
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 1].Value = _budgetPrincipal[i].Date;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 2].Value = _budgetPrincipal[i].ExpitTonnes;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 3].Value = _budgetPrincipal[i].RehandlingTonnes;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 4].Value = _budgetPrincipal[i].MovementTonnes;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 5].Value = _budgetPrincipal[i].ShovelsUnits73Yd3;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 6].Value = _budgetPrincipal[i].ShovelsAvailabilityPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 7].Value = _budgetPrincipal[i].ShovelsUtilizationPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 8].Value = _budgetPrincipal[i].ShovelsPerformanceTonnesPerHour;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 9].Value = _budgetPrincipal[i].ShovelsStandByHours;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 10].Value = _budgetPrincipal[i].ShovelsProductionTimeHours;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 11].Value = _budgetPrincipal[i].ShovelAvailableHoursHours;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 12].Value = _budgetPrincipal[i].ShovelHoursHours;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 13].Value = _budgetPrincipal[i].TrucksUnits;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 14].Value = _budgetPrincipal[i].TrucksAvailabilityPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 15].Value = _budgetPrincipal[i].TrucksUtilizationPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 16].Value = _budgetPrincipal[i].TrucksPerformanceTonnesPerDay;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 17].Value = _budgetPrincipal[i].TrucksStandByHours;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 18].Value = _budgetPrincipal[i].TrucksHoursHours;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 19].Value = _budgetPrincipal[i].TrucksProductionTimeHours;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 20].Value = _budgetPrincipal[i].TrucksAvailableHoursHours;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 21].Value = _budgetPrincipal[i].MillThroughputTonnes;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 22].Value = _budgetPrincipal[i].MillGradeCuPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 23].Value = _budgetPrincipal[i].MillRecoveryPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 24].Value = _budgetPrincipal[i].MillRehandlingPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 25].Value = _budgetPrincipal[i].OlThroughputTonnes;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 26].Value = _budgetPrincipal[i].OlGradeCuPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 27].Value = _budgetPrincipal[i].OlRecoveryPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 28].Value = _budgetPrincipal[i].OlCuSPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 29].Value = _budgetPrincipal[i].SlThroughputTonnes;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 30].Value = _budgetPrincipal[i].SlGradeCuPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 31].Value = _budgetPrincipal[i].SlRecoveryPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 32].Value = _budgetPrincipal[i].SlCuSPercentage;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 33].Value = _budgetPrincipal[i].MillProductionTonnes;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 34].Value = _budgetPrincipal[i].CathodesTonnes;
+                                    budgetPrincipalWorksheet.Cells[i + lastRow1, 35].Value = _budgetPrincipal[i].TotalProductionTonnes;
+                                }
+
+                                var lastRow2 = budgetMovementProductionWorksheet.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _budgetMovementProduction.Count; i++)
+                                {
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 1].Value = _budgetMovementProduction[i].Date;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 2].Value = _budgetMovementProduction[i].LosColoradosOreGradeCutPercentage;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 3].Value = _budgetMovementProduction[i].LosColoradosMillRecoveryPercentage;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 4].Value = _budgetMovementProduction[i].LosColoradosMillFeedTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 5].Value = _budgetMovementProduction[i].LosColoradosCuExMillTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 6].Value = _budgetMovementProduction[i].LosColoradosRuntimePercentage;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 7].Value = _budgetMovementProduction[i].LosColoradosHoursHours;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 8].Value = _budgetMovementProduction[i].LagunaSecaOreGradeCutPercentage;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 9].Value = _budgetMovementProduction[i].LagunaSecaMillRecoveryPercentage;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 10].Value = _budgetMovementProduction[i].LagunaSecaMillFeedTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 11].Value = _budgetMovementProduction[i].LagunaSecaCuExMillTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 12].Value = _budgetMovementProduction[i].LagunaSecaRuntimePercentage;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 13].Value = _budgetMovementProduction[i].LagunaSecaHoursHours;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 14].Value = _budgetMovementProduction[i].LagunaSeca2OreGradeCutPercentage;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 15].Value = _budgetMovementProduction[i].LagunaSeca2MillRecoveryPercentage;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 16].Value = _budgetMovementProduction[i].LagunaSeca2MillFeedTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 17].Value = _budgetMovementProduction[i].LagunaSeca2CuExMillTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 18].Value = _budgetMovementProduction[i].LagunaSeca2RuntimePercentage;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 19].Value = _budgetMovementProduction[i].LagunaSeca2HoursHours;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 20].Value = _budgetMovementProduction[i].OxideOreToOlTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 21].Value = _budgetMovementProduction[i].OxideCuCathodesTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 22].Value = _budgetMovementProduction[i].SulphideLeachStackedMaterialFromMineTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 23].Value = _budgetMovementProduction[i].SulphideLeachContractorsStackedMaterialFromStocksTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 24].Value = _budgetMovementProduction[i].SulphideLeachMelStackedMaterialFromStocksTonnesTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 25].Value = _budgetMovementProduction[i].SulphideLeachTotalStackedMaterialTonnes;
+                                    budgetMovementProductionWorksheet.Cells[i + lastRow2, 26].Value = _budgetMovementProduction[i].SulphideLeachCuCathodesTonnes;
+                                }
+
+                                var lastRow3 = budgetPitDisintegratedWorksheet.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _budgetPitDisintegrated.Count; i++)
+                                {
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 1].Value = _budgetPitDisintegrated[i].Date;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 2].Value = _budgetPitDisintegrated[i].ExpitEsTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 3].Value = _budgetPitDisintegrated[i].ExpitEnTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 4].Value = _budgetPitDisintegrated[i].TotalExpitTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 5].Value = _budgetPitDisintegrated[i].MillRehandlingTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 6].Value = _budgetPitDisintegrated[i].OlRehandlingTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 7].Value = _budgetPitDisintegrated[i].SlRehandlingTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 8].Value = _budgetPitDisintegrated[i].OtherRehandlingTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 9].Value = _budgetPitDisintegrated[i].TotalRehandlingTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 10].Value = _budgetPitDisintegrated[i].TotalMovementTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 11].Value = _budgetPitDisintegrated[i].RehandlingTotalTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 12].Value = _budgetPitDisintegrated[i].MovementTotalTonnes;
+                                    budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 13].Value = _budgetPitDisintegrated[i].TotalTonnes;
+                                }
+
+                                byte[] fileText2 = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText2);
+                                MyLastDateRefreshBudgetValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1409,138 +1521,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }               
-
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.MineComplianceExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var budgetPrincipalWorksheet = package.Workbook.Worksheets[MineComplianceConstants.BudgetPrincipalMineComplianceSpotfireWorksheet];
-                    var budgetMovementProductionWorksheet = package.Workbook.Worksheets[MineComplianceConstants.BudgetMovementProductionMineComplianceSpotfireWorksheet];
-                    var budgetPitDisintegratedWorksheet = package.Workbook.Worksheets[MineComplianceConstants.BudgetPitDisintegratedMineComplianceSpotfireWorksheet];
-
-                    if (budgetPrincipalWorksheet != null & budgetMovementProductionWorksheet != null & budgetPitDisintegratedWorksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var lastRow1 = budgetPrincipalWorksheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _budgetPrincipal.Count; i++)
-                            {
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 1].Value = _budgetPrincipal[i].Date;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 2].Value = _budgetPrincipal[i].ExpitTonnes;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 3].Value = _budgetPrincipal[i].RehandlingTonnes;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 4].Value = _budgetPrincipal[i].MovementTonnes;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 5].Value = _budgetPrincipal[i].ShovelsUnits73Yd3;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 6].Value = _budgetPrincipal[i].ShovelsAvailabilityPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 7].Value = _budgetPrincipal[i].ShovelsUtilizationPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 8].Value = _budgetPrincipal[i].ShovelsPerformanceTonnesPerHour;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 9].Value = _budgetPrincipal[i].ShovelsStandByHours;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 10].Value = _budgetPrincipal[i].ShovelsProductionTimeHours;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 11].Value = _budgetPrincipal[i].ShovelAvailableHoursHours;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 12].Value = _budgetPrincipal[i].ShovelHoursHours;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 13].Value = _budgetPrincipal[i].TrucksUnits;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 14].Value = _budgetPrincipal[i].TrucksAvailabilityPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 15].Value = _budgetPrincipal[i].TrucksUtilizationPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 16].Value = _budgetPrincipal[i].TrucksPerformanceTonnesPerDay;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 17].Value = _budgetPrincipal[i].TrucksStandByHours;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 18].Value = _budgetPrincipal[i].TrucksHoursHours;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 19].Value = _budgetPrincipal[i].TrucksProductionTimeHours;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 20].Value = _budgetPrincipal[i].TrucksAvailableHoursHours;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 21].Value = _budgetPrincipal[i].MillThroughputTonnes;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 22].Value = _budgetPrincipal[i].MillGradeCuPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 23].Value = _budgetPrincipal[i].MillRecoveryPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 24].Value = _budgetPrincipal[i].MillRehandlingPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 25].Value = _budgetPrincipal[i].OlThroughputTonnes;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 26].Value = _budgetPrincipal[i].OlGradeCuPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 27].Value = _budgetPrincipal[i].OlRecoveryPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 28].Value = _budgetPrincipal[i].OlCuSPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 29].Value = _budgetPrincipal[i].SlThroughputTonnes;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 30].Value = _budgetPrincipal[i].SlGradeCuPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 31].Value = _budgetPrincipal[i].SlRecoveryPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 32].Value = _budgetPrincipal[i].SlCuSPercentage;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 33].Value = _budgetPrincipal[i].MillProductionTonnes;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 34].Value = _budgetPrincipal[i].CathodesTonnes;
-                                budgetPrincipalWorksheet.Cells[i + lastRow1, 35].Value = _budgetPrincipal[i].TotalProductionTonnes;
-                            }
-
-                            var lastRow2 = budgetMovementProductionWorksheet.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _budgetMovementProduction.Count; i++)
-                            {
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 1].Value = _budgetMovementProduction[i].Date;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 2].Value = _budgetMovementProduction[i].LosColoradosOreGradeCutPercentage;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 3].Value = _budgetMovementProduction[i].LosColoradosMillRecoveryPercentage;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 4].Value = _budgetMovementProduction[i].LosColoradosMillFeedTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 5].Value = _budgetMovementProduction[i].LosColoradosCuExMillTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 6].Value = _budgetMovementProduction[i].LosColoradosRuntimePercentage;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 7].Value = _budgetMovementProduction[i].LosColoradosHoursHours;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 8].Value = _budgetMovementProduction[i].LagunaSecaOreGradeCutPercentage;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 9].Value = _budgetMovementProduction[i].LagunaSecaMillRecoveryPercentage;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 10].Value = _budgetMovementProduction[i].LagunaSecaMillFeedTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 11].Value = _budgetMovementProduction[i].LagunaSecaCuExMillTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 12].Value = _budgetMovementProduction[i].LagunaSecaRuntimePercentage;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 13].Value = _budgetMovementProduction[i].LagunaSecaHoursHours;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 14].Value = _budgetMovementProduction[i].LagunaSeca2OreGradeCutPercentage;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 15].Value = _budgetMovementProduction[i].LagunaSeca2MillRecoveryPercentage;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 16].Value = _budgetMovementProduction[i].LagunaSeca2MillFeedTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 17].Value = _budgetMovementProduction[i].LagunaSeca2CuExMillTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 18].Value = _budgetMovementProduction[i].LagunaSeca2RuntimePercentage;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 19].Value = _budgetMovementProduction[i].LagunaSeca2HoursHours;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 20].Value = _budgetMovementProduction[i].OxideOreToOlTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 21].Value = _budgetMovementProduction[i].OxideCuCathodesTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 22].Value = _budgetMovementProduction[i].SulphideLeachStackedMaterialFromMineTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 23].Value = _budgetMovementProduction[i].SulphideLeachContractorsStackedMaterialFromStocksTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 24].Value = _budgetMovementProduction[i].SulphideLeachMelStackedMaterialFromStocksTonnesTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 25].Value = _budgetMovementProduction[i].SulphideLeachTotalStackedMaterialTonnes;
-                                budgetMovementProductionWorksheet.Cells[i + lastRow2, 26].Value = _budgetMovementProduction[i].SulphideLeachCuCathodesTonnes;
-                            }
-
-                            var lastRow3 = budgetPitDisintegratedWorksheet.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _budgetPitDisintegrated.Count; i++)
-                            {
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 1].Value = _budgetPitDisintegrated[i].Date;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 2].Value = _budgetPitDisintegrated[i].ExpitEsTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 3].Value = _budgetPitDisintegrated[i].ExpitEnTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 4].Value = _budgetPitDisintegrated[i].TotalExpitTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 5].Value = _budgetPitDisintegrated[i].MillRehandlingTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 6].Value = _budgetPitDisintegrated[i].OlRehandlingTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 7].Value = _budgetPitDisintegrated[i].SlRehandlingTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 8].Value = _budgetPitDisintegrated[i].OtherRehandlingTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 9].Value = _budgetPitDisintegrated[i].TotalRehandlingTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 10].Value = _budgetPitDisintegrated[i].TotalMovementTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 11].Value = _budgetPitDisintegrated[i].RehandlingTotalTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 12].Value = _budgetPitDisintegrated[i].MovementTotalTonnes;
-                                budgetPitDisintegratedWorksheet.Cells[i + lastRow3, 13].Value = _budgetPitDisintegrated[i].TotalTonnes;
-                            }
-
-                            byte[] fileText2 = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText2);
-                            MyLastDateRefreshBudgetValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    }
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
             }
         }
     }

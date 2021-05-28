@@ -256,17 +256,20 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     try
                     {
                         // Check if the file is already open
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
 
                         var rows = templateWorksheet.Dimension.Rows;
                         for (var i = 1; i < rows; i++)
                         {
                             if (templateWorksheet.Cells[i + 1, 1].Value != null)
                             {
-                                for (var j = 0; j < 2; j++)
-                                    if (templateWorksheet.Cells[1 + i, 2 + j].Value == null)
-                                        templateWorksheet.Cells[1 + i, 2 + j].Value = -99;
+                               if (templateWorksheet.Cells[1 + i, 2].Value == null)
+                                    templateWorksheet.Cells[1 + i, 2].Value = -99000;
+
+                                if (templateWorksheet.Cells[1 + i, 3].Value == null)
+                                    templateWorksheet.Cells[1 + i, 3].Value = -9900;
+
 
                                 if (templateWorksheet.Cells[1 + i, 4].Value == null)
                                     templateWorksheet.Cells[1 + i, 4].Value = " ";
@@ -281,6 +284,44 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             }
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.DepressurizationComplianceExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var worksheet = package.Workbook.Worksheets[DepressurizationComplianceConstants.MonthlyDepressurizationSpotfireWorksheet];
+
+                            if (worksheet != null)
+                            {
+                                var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                                var lastRow = worksheet.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _monthlyCompliance.Count; i++)
+                                {
+                                    worksheet.Cells[i + lastRow, 1].Value = newDate;
+                                    worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    worksheet.Cells[i + lastRow, 2].Value = _monthlyCompliance[i].Zone;
+                                    worksheet.Cells[i + lastRow, 3].Value = _monthlyCompliance[i].Observado;
+                                    worksheet.Cells[i + lastRow, 4].Value = _monthlyCompliance[i].Compliance;
+                                    worksheet.Cells[i + lastRow, 5].Value = _monthlyCompliance[i].Pit;
+                                }
+                                byte[] fileText2 = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText2);
+                                MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -292,54 +333,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }              
-
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.DepressurizationComplianceExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var worksheet = package.Workbook.Worksheets[DepressurizationComplianceConstants.MonthlyDepressurizationSpotfireWorksheet];
-
-                    if (worksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
-                            var lastRow = worksheet.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _monthlyCompliance.Count; i++)
-                            {
-                                worksheet.Cells[i + lastRow, 1].Value = newDate;
-                                worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                worksheet.Cells[i + lastRow, 2].Value = _monthlyCompliance[i].Zone;
-                                worksheet.Cells[i + lastRow, 3].Value = _monthlyCompliance[i].Observado;
-                                worksheet.Cells[i + lastRow, 4].Value = _monthlyCompliance[i].Compliance;
-                                worksheet.Cells[i + lastRow, 5].Value = _monthlyCompliance[i].Pit;
-                            }
-                            byte[] fileText2 = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText2);
-                            MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    }                    
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
             }
         }
 
@@ -441,8 +434,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     try
                     {
                         // Check if the file is already open
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
 
                         var _date = DateTime.Now;
 
@@ -472,6 +465,39 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             }
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.DepressurizationComplianceExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var worksheet = package.Workbook.Worksheets[DepressurizationComplianceConstants.TargetDepressurizationSpotfireWorksheet];
+                            if (worksheet != null)
+                            {
+                                var lastRow = worksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _targetCompliance.Count; i++)
+                                {
+                                    worksheet.Cells[i + lastRow, 1].Value = _targetCompliance[i].Date;
+                                    worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    worksheet.Cells[i + lastRow, 2].Value = _targetCompliance[i].Zone;
+                                    worksheet.Cells[i + lastRow, 3].Value = _targetCompliance[i].Target;
+                                }
+                                byte[] fileText2 = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText2);
+                                MyLastDateRefreshTargetValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -482,50 +508,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 {
                     var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
-
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.DepressurizationComplianceExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var worksheet = package.Workbook.Worksheets[DepressurizationComplianceConstants.TargetDepressurizationSpotfireWorksheet];
-                    if (worksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var lastRow = worksheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _targetCompliance.Count; i++)
-                            {
-                                worksheet.Cells[i + lastRow, 1].Value = _targetCompliance[i].Date;
-                                worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                worksheet.Cells[i + lastRow, 2].Value = _targetCompliance[i].Zone;
-                                worksheet.Cells[i + lastRow, 3].Value = _targetCompliance[i].Target;
-                            }
-                            byte[] fileText2 = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText2);
-                            MyLastDateRefreshTargetValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }                   
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show( wrongFileMessage, StringResources.UploadError);
-                    }
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
+                }                
             }
         }
     }

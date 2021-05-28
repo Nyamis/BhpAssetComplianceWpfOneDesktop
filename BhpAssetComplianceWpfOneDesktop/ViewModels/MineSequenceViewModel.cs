@@ -347,13 +347,14 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 {
                     try
                     {
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        // Check if the file is already open
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
 
                         if (l1ExpitTemplateWorksheet.Cells[2, 1].Value == null)
                             l1ExpitTemplateWorksheet.Cells[2, 1].Value = -99;
                         if (l1ExpitTemplateWorksheet.Cells[2, 2].Value == null)
-                            l1ExpitTemplateWorksheet.Cells[2, 2].Value = -99;
+                            l1ExpitTemplateWorksheet.Cells[2, 2].Value = -9900;
                         if (l1ExpitTemplateWorksheet.Cells[2, 3].Value == null)
                             l1ExpitTemplateWorksheet.Cells[2, 3].Value = " ";
 
@@ -367,11 +368,11 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         if (adherenceTemplateWorksheet.Cells[2, 1].Value == null)
                             adherenceTemplateWorksheet.Cells[2, 1].Value = -99;
                         if (adherenceTemplateWorksheet.Cells[2, 2].Value == null)
-                            adherenceTemplateWorksheet.Cells[2, 2].Value = -99;
+                            adherenceTemplateWorksheet.Cells[2, 2].Value = -9900;
                         if (adherenceTemplateWorksheet.Cells[2, 3].Value == null)
-                            adherenceTemplateWorksheet.Cells[2, 3].Value = -99;
+                            adherenceTemplateWorksheet.Cells[2, 3].Value = -9900;
                         if (adherenceTemplateWorksheet.Cells[2, 4].Value == null)
-                            adherenceTemplateWorksheet.Cells[2, 4].Value = -99;
+                            adherenceTemplateWorksheet.Cells[2, 4].Value = -9900;
 
                         _adherenceToB01L1.Add(new MineSequenceAdherenceToB01L1()
                         {
@@ -424,6 +425,73 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             }
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.MineSequenceExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var l1ExpitWorksheet = package.Workbook.Worksheets[MineSequenceConstants.L1ExpitMineSequenceWorksheet];
+                            var adherenceWorksheet = package.Workbook.Worksheets[MineSequenceConstants.AdherenceMineSequenceWorksheet];
+                            var delayrecoverWorksheet = package.Workbook.Worksheets[MineSequenceConstants.DelayRecoverMineSequenceWorksheet];
+                            var commentWorksheet = package.Workbook.Worksheets[MineSequenceConstants.CommentsMineSequenceWorksheet];
+
+                            if (l1ExpitWorksheet != null & adherenceWorksheet != null & delayrecoverWorksheet != null & commentWorksheet != null)
+                            {
+                                var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                                var lastRow1 = l1ExpitWorksheet.Dimension.End.Row + 1;
+
+                                l1ExpitWorksheet.Cells[lastRow1, 1].Value = newDate;
+                                l1ExpitWorksheet.Cells[lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                l1ExpitWorksheet.Cells[lastRow1, 2].Value = _l1Expit[0].ExpitBudgetTonnes;
+                                l1ExpitWorksheet.Cells[lastRow1, 3].Value = _l1Expit[0].ExpitActualPercent;
+                                l1ExpitWorksheet.Cells[lastRow1, 4].Value = _l1Expit[0].BudgetBaseline;
+
+                                var lastRow2 = adherenceWorksheet.Dimension.End.Row + 1;
+
+                                adherenceWorksheet.Cells[lastRow2, 1].Value = newDate;
+                                adherenceWorksheet.Cells[lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                adherenceWorksheet.Cells[lastRow2, 2].Value = _adherenceToB01L1[0].UnplannedDelayTonnes;
+                                adherenceWorksheet.Cells[lastRow2, 3].Value = _adherenceToB01L1[0].VolumeYtdPercent;
+                                adherenceWorksheet.Cells[lastRow2, 4].Value = _adherenceToB01L1[0].SpatialYtdPercent;
+                                adherenceWorksheet.Cells[lastRow2, 5].Value = _adherenceToB01L1[0].AdherenceL1YtdPercent;
+
+                                var lastRow3 = delayrecoverWorksheet.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _delayRecover.Count; i++)
+                                {
+                                    delayrecoverWorksheet.Cells[i + lastRow3, 1].Value = newDate;
+                                    delayrecoverWorksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    delayrecoverWorksheet.Cells[i + lastRow3, 2].Value = _delayRecover[i].YtdPushBackTonnes;
+                                    delayrecoverWorksheet.Cells[i + lastRow3, 3].Value = _delayRecover[i].PhaseName;
+                                    delayrecoverWorksheet.Cells[i + lastRow3, 4].Value = _delayRecover[i].DelayRecoverPushbackTonnes;
+                                }
+
+                                var lastRow4 = commentWorksheet.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _comments.Count; i++)
+                                {
+                                    commentWorksheet.Cells[i + lastRow4, 1].Value = newDate;
+                                    commentWorksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    commentWorksheet.Cells[i + lastRow4, 2].Value = _comments[i].Tag;
+                                    commentWorksheet.Cells[i + lastRow4, 3].Value = _comments[i].Comment;
+                                }
+                                byte[] fileText = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText);
+                                MyLastRefreshValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -433,83 +501,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 else
                 {
                     var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
-
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.MineSequenceExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var l1ExpitWorksheet = package.Workbook.Worksheets[MineSequenceConstants.L1ExpitMineSequenceWorksheet];
-                    var adherenceWorksheet = package.Workbook.Worksheets[MineSequenceConstants.AdherenceMineSequenceWorksheet];
-                    var delayrecoverWorksheet = package.Workbook.Worksheets[MineSequenceConstants.DelayRecoverMineSequenceWorksheet];
-                    var commentWorksheet = package.Workbook.Worksheets[MineSequenceConstants.CommentsMineSequenceWorksheet];
-
-                    if (l1ExpitWorksheet != null & adherenceWorksheet != null & delayrecoverWorksheet != null & commentWorksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
-                            var lastRow1 = l1ExpitWorksheet.Dimension.End.Row + 1;
-
-                            l1ExpitWorksheet.Cells[lastRow1, 1].Value = newDate;
-                            l1ExpitWorksheet.Cells[lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            l1ExpitWorksheet.Cells[lastRow1, 2].Value = _l1Expit[0].ExpitBudgetTonnes;
-                            l1ExpitWorksheet.Cells[lastRow1, 3].Value = _l1Expit[0].ExpitActualPercent;
-                            l1ExpitWorksheet.Cells[lastRow1, 4].Value = _l1Expit[0].BudgetBaseline;
-
-                            var lastRow2 = adherenceWorksheet.Dimension.End.Row + 1;
-
-                            adherenceWorksheet.Cells[lastRow2, 1].Value = newDate;
-                            adherenceWorksheet.Cells[lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                            adherenceWorksheet.Cells[lastRow2, 2].Value = _adherenceToB01L1[0].UnplannedDelayTonnes;
-                            adherenceWorksheet.Cells[lastRow2, 3].Value = _adherenceToB01L1[0].VolumeYtdPercent;
-                            adherenceWorksheet.Cells[lastRow2, 4].Value = _adherenceToB01L1[0].SpatialYtdPercent;
-                            adherenceWorksheet.Cells[lastRow2, 5].Value = _adherenceToB01L1[0].AdherenceL1YtdPercent;
-
-                            var lastRow3 = delayrecoverWorksheet.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _delayRecover.Count; i++)
-                            {
-                                delayrecoverWorksheet.Cells[i + lastRow3, 1].Value = newDate;
-                                delayrecoverWorksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                delayrecoverWorksheet.Cells[i + lastRow3, 2].Value = _delayRecover[i].YtdPushBackTonnes;
-                                delayrecoverWorksheet.Cells[i + lastRow3, 3].Value = _delayRecover[i].PhaseName;
-                                delayrecoverWorksheet.Cells[i + lastRow3, 4].Value = _delayRecover[i].DelayRecoverPushbackTonnes;
-                            }
-
-                            var lastRow4 = commentWorksheet.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _comments.Count; i++)
-                            {
-                                commentWorksheet.Cells[i + lastRow4, 1].Value = newDate;
-                                commentWorksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                commentWorksheet.Cells[i + lastRow4, 2].Value = _comments[i].Tag;
-                                commentWorksheet.Cells[i + lastRow4, 3].Value = _comments[i].Comment;
-                            }
-                            byte[] fileText = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText);
-                            MyLastRefreshValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    }                    
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
             }
