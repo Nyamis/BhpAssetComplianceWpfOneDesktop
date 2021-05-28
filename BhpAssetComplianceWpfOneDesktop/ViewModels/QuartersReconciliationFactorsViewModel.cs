@@ -457,7 +457,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 byte[] fileText2 = package.GetAsByteArray();
                                 File.WriteAllBytes(loadFilePath, fileText2);
                                 MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
-
                             }
                             else
                             {

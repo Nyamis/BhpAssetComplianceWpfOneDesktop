@@ -452,7 +452,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 {
                                     if (templateWorksheet.Cells[4 + j, 2 + i].Value == null)
                                     {
-                                        templateWorksheet.Cells[4 + j, 2 + i].Value = -99;
+                                        templateWorksheet.Cells[4 + j, 2 + i].Value = -99000;
                                     }
 
                                     _targetCompliance.Add(new DepressurizationComplianceTargetCompliance()

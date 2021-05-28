@@ -211,6 +211,16 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         {
                             if (templateWorksheet.Cells[i + 3, 1].Value != null)
                             {
+                                if (templateWorksheet.Cells[3 + i, 1].Value == null)
+                                    templateWorksheet.Cells[3 + i, 1].Value = " ";
+
+                                if (templateWorksheet.Cells[3 + i, 2].Value == null)
+                                    templateWorksheet.Cells[3 + i, 2].Value = -99;
+
+                                for (var j = 0; j < 2; j++)
+                                    if (templateWorksheet.Cells[3 + i, 3 + j].Value == null)
+                                        templateWorksheet.Cells[3 + i, 3 + j].Value = DateTime.Now;
+
                                 for (var j = 0; j < 17; j++)
                                     if (templateWorksheet.Cells[3 + i, 5 + j].Value == null)
                                         templateWorksheet.Cells[3 + i, 5 + j].Value = -99;
