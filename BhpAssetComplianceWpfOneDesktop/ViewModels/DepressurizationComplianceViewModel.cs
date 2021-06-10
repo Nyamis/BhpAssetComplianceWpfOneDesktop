@@ -461,7 +461,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                         Zone = templateWorksheet.Cells[4 + j, 1].Value.ToString(),
                                         Target = double.Parse(templateWorksheet.Cells[4 + j, 2 + i].Value.ToString())/1000
                                     });
-
                                 }
                             }
                         }
