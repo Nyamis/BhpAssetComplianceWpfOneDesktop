@@ -15,5 +15,6 @@
         public static string MineSequence = $"{Folder}Secuencia minera.png";
         public static string ConcentrateQuality = $"{Folder}Calidad concentrado.png";
         public static string Repository = $"{Folder}Poster.png";
+        public static string Blasting = $"{Folder}Tronadura.png";
     }
 }

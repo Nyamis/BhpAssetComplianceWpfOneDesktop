@@ -57,6 +57,11 @@ namespace BhpAssetComplianceWpfOneDesktop.Services
             _regionManager.RequestNavigate(RegionNames.MainRegion, ViewNames.RepositoryView);
         }
 
+        public void BlastingInventoryView()
+        {
+            _regionManager.RequestNavigate(RegionNames.MainRegion, ViewNames.BlastingInventoryView);
+        }
+
 
     }
 }

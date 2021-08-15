@@ -18,5 +18,6 @@ namespace BhpAssetComplianceWpfOneDesktop.Services
         void QuartersReconciliationFactorsView();
         void HistoricalRecordView();
         void RepositoryView();
+        void BlastingInventoryView();
     }
 }

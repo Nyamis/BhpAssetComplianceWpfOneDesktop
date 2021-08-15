@@ -273,4 +273,16 @@
   <data name="SelectAreaInputComment" xml:space="preserve">
     <value>You must select an area and input a comment.</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="SelectTableImage" xml:space="preserve">
+    <value>Select Table Image</value>
+  </data>
+  <data name="BlastingInventory" xml:space="preserve">
+    <value>Blasting Inventory</value>
+  </data>
+  <data name="Pictures" xml:space="preserve">
+    <value>Pictures</value>
+  </data>
 </root>

@@ -108,14 +108,15 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             OreToMillWorksheet.Column(1).Width = 11;
 
             var RecoveryWorksheet = excelPackage.Workbook.Worksheets.Add(ProcessComplianceConstants.RecoveryProcessComplianceWorksheet);
-            RecoveryWorksheet.Cells["B1:C1"].Style.Font.Bold = true;
-            RecoveryWorksheet.Cells["B1:C1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            RecoveryWorksheet.Cells["B1:C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
-            RecoveryWorksheet.Cells["B1:C1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            RecoveryWorksheet.Cells["B1:D1"].Style.Font.Bold = true;
+            RecoveryWorksheet.Cells["B1:D1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            RecoveryWorksheet.Cells["B1:D1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+            RecoveryWorksheet.Cells["B1:D1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             RecoveryWorksheet.Cells["B1"].Value = "Budget (%)";
             RecoveryWorksheet.Cells["C1"].Value = "Actual (%)";
+            RecoveryWorksheet.Cells["D1"].Value = "MD (%)";
 
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < 4; i++)
             {
                 RecoveryWorksheet.Cells[1, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                 RecoveryWorksheet.Cells[2, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
@@ -125,7 +126,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             RecoveryWorksheet.Cells["A2"].Style.Font.Bold = true;
             RecoveryWorksheet.Cells["A2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
             RecoveryWorksheet.Cells["A2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
-            RecoveryWorksheet.Cells["A2:C2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            RecoveryWorksheet.Cells["A2:D2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             RecoveryWorksheet.Cells["A2"].Value = "Rec Global";
 
             RecoveryWorksheet.Cells["A5:E5"].Style.Font.Bold = true;
@@ -311,6 +312,9 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 if (recoveryTemplateWorksheet.Cells[2, 3].Value == null)
                                     recoveryTemplateWorksheet.Cells[2, 3].Value = -99;
 
+                                if (recoveryTemplateWorksheet.Cells[2, 4].Value == null)
+                                    recoveryTemplateWorksheet.Cells[2, 4].Value = -99;
+
                                 for (var j = 0; j < 4; j++)
                                     if (recoveryTemplateWorksheet.Cells[6 + i, 2 + j].Value == null)
                                         recoveryTemplateWorksheet.Cells[6 + i, 2 + j].Value = -9900;
@@ -319,6 +323,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 {
                                     RecGlobalBudget = double.Parse(recoveryTemplateWorksheet.Cells[2, 2].Value.ToString()),
                                     RecGlobalActual = double.Parse(recoveryTemplateWorksheet.Cells[2, 3].Value.ToString()),
+                                    RecGlobalMD = double.Parse(recoveryTemplateWorksheet.Cells[2, 4].Value.ToString()),
                                     Phase = recoveryTemplateWorksheet.Cells[6 + i, 1].Value.ToString(),
                                     RecoveryBudget = double.Parse(recoveryTemplateWorksheet.Cells[6 + i, 2].Value.ToString())/100,
                                     RecoveryActual = double.Parse(recoveryTemplateWorksheet.Cells[6 + i, 3].Value.ToString())/100,
@@ -419,6 +424,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                     recoveryWorksheet.Cells[i + lastRow2, 6].Value = _recovery[i].RecoveryActual;
                                     recoveryWorksheet.Cells[i + lastRow2, 7].Value = _recovery[i].FeedCuBudget;
                                     recoveryWorksheet.Cells[i + lastRow2, 8].Value = _recovery[i].FeedCuActual;
+                                    recoveryWorksheet.Cells[i + lastRow2, 9].Value = _recovery[i].RecGlobalMD;
                                 }
 
                                 var lastRow3 = OLAPWorksheet.Dimension.End.Row + 1;

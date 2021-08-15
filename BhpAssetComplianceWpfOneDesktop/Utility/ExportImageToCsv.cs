@@ -23,6 +23,14 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
             File.AppendAllLines(targetFilePath, new List<string> { content });
         }
 
+        public static void AppendImageGeotechnicalToCSV(string escondidaImageFilePath, string escondidaNorteImageFilePath, string type, DateTime date, string targetFilePath)
+        {
+            var escondidaImageString = ConvertImageToString(escondidaImageFilePath);
+            var escondidaNorteImageString = ConvertImageToString(escondidaNorteImageFilePath);
+            var content = $"{date},{type},{escondidaImageString},{escondidaNorteImageString}";
+            File.AppendAllLines(targetFilePath, new List<string> { content });
+        }
+
         public static void AppendImageDepressurizationToCSV(string imageFilePath, DateTime date, string targetFilePath)
         {
             var imageString = ConvertImageToString(imageFilePath);
@@ -38,7 +46,7 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
             File.AppendAllLines(targetFilePath, new List<string> { content });
         }
 
-        public static int SearchByDate(string place, DateTime date, string targetFilePath)
+        public static int SearchByDateGeotechnical(string type, DateTime date, string targetFilePath)
         {
             var strLines = File.ReadLines(targetFilePath);
             var count = 0;
@@ -53,8 +61,8 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
                 else
                 {
                     var lineDate = DateTime.Parse(splits[0]).Date;
-                    var linePlace = splits[1];
-                    if (lineDate == date.Date && linePlace == place)
+                    var lineType = splits[1];
+                    if (lineDate == date.Date && lineType == type)
                     {
                         return count;
                     }

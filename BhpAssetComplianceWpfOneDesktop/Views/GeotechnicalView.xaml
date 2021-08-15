@@ -26,16 +26,24 @@
             <GroupBox Header="{x:Static resources:StringResources.Escondida}" Grid.Column="0">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="180"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="180"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <Image Source="{Binding MyEscondidaImageSource}"  />
                     </Grid>
-
                     <Grid Grid.Row="1">
                         <Button Content="{x:Static resources:StringResources.SelectImage}"
                         Command="{Binding SelectEscondidaImageCommand}"/>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Image Source="{Binding MyEscondidaTableSource}"  />
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Button Content="{x:Static resources:StringResources.SelectTableImage}"
+                        Command="{Binding SelectEscondidaTableCommand}"/>
                     </Grid>
                 </Grid>
             </GroupBox>
@@ -43,16 +51,24 @@
             <GroupBox Header="{x:Static resources:StringResources.EscondidaNorte}" Grid.Column="1">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="180"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="180"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <Image  Source="{Binding MyEscondidaNorteImageSource}"  />
                     </Grid>
-
                     <Grid Grid.Row="1">
                         <Button Content="{x:Static resources:StringResources.SelectImage}"
                         Command="{Binding SelectEscondidaNorteImageCommand}"/>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Image  Source="{Binding MyEscondidaNorteTableSource}"  />
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Button Content="{x:Static resources:StringResources.SelectTableImage}"
+                        Command="{Binding SelectEscondidaNorteTableCommand}"/>
                     </Grid>
                 </Grid>
             </GroupBox>

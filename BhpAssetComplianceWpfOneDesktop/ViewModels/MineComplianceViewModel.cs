@@ -658,7 +658,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             MillFeed = double.Parse(realMillFCTemplateWorksheet.Cells[6, 3].Value.ToString())/1000000
                         });
 
-                        int[] rows1 = { 0, 16, 32, 48, 64, 80, 96, 112, 128 };
+                        int[] rows1 = { 0, 16, 32, 48, 64, 80, 96, 112, 128, 144 };
                         for (var i = rows1.GetLowerBound(0); i <= rows1.GetUpperBound(0); i++)
                         {
                             for (var j = 1; j < 15; j++)

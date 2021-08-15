@@ -270,4 +270,16 @@
   <data name="SelectAreaInputComment" xml:space="preserve">
     <value>Debe seleccionar un área e ingresar un comentario.</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>Todas</value>
+  </data>
+  <data name="SelectTableImage" xml:space="preserve">
+    <value>Selecionar Imagen de tabla</value>
+  </data>
+  <data name="BlastingInventory" xml:space="preserve">
+    <value>Inventario de Tronaduras</value>
+  </data>
+  <data name="Pictures" xml:space="preserve">
+    <value>Imágenes</value>
+  </data>
 </root>

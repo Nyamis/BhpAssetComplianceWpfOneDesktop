@@ -76,6 +76,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constants\BlastingInventoryConstants.cs" />
     <Compile Include="Constants\ConcentrateQualityConstants.cs" />
     <Compile Include="Constants\DepressurizationComplianceConstants.cs" />
     <Compile Include="Constants\GeotechnicalNotesConstants.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Constants\MineSequenceConstants.cs" />
     <Compile Include="Constants\ProcessComplianceConstants.cs" />
     <Compile Include="Constants\QuartersReconciliationFactorsConstants.cs" />
+    <Compile Include="Constants\TemplateColors\BlastingInventoryTemplatColors.cs" />
     <Compile Include="Constants\TemplateColors\ConcentrateQualityTemplateColors.cs" />
     <Compile Include="Constants\TemplateColors\DepressurizationComplianceTemplateColors.cs" />
     <Compile Include="Constants\TemplateColors\GeotechnicalNotesTemplateColors.cs" />
@@ -92,6 +94,10 @@
     <Compile Include="Constants\TemplateColors\MineSequenceTemplateColors.cs" />
     <Compile Include="Constants\TemplateColors\ProcessComplianceTemplateColors.cs" />
     <Compile Include="Constants\TemplateColors\QuartersReconciliationFactorsTemplateColors.cs" />
+    <Compile Include="Models\BlastingInventoryModels\BlastingInventoryBlast.cs" />
+    <Compile Include="Models\BlastingInventoryModels\BlastingInventoryPhaseBlast.cs" />
+    <Compile Include="Models\BlastingInventoryModels\BlastingInventoryShovels.cs" />
+    <Compile Include="Models\BlastingInventoryModels\BlastingInventoryWeeklySummary.cs" />
     <Compile Include="Models\ConcentrateQualityModels\ConcentrateQualityBudgetFreight.cs" />
     <Compile Include="Models\DepressurizationComplianceModels\DepressurizationComplianceMonthlyCompliance.cs" />
     <Compile Include="Models\DepressurizationComplianceModels\DepressurizationComplianceTargetCompliance.cs" />
@@ -124,6 +130,7 @@
     <Compile Include="Utility\ExportImageToCsv.cs" />
     <Compile Include="Models\ConcentrateQualityModels\ConcentrateQualityActualFreight.cs" />
     <Compile Include="Utility\TemplateDates.cs" />
+    <Compile Include="ViewModels\BlastingInventoryViewModel.cs" />
     <Compile Include="ViewModels\ConcentrateQualityViewModel.cs" />
     <Compile Include="ViewModels\DepressurizationComplianceViewModel.cs" />
     <Compile Include="ViewModels\GeotechnicalViewModel.cs" />
@@ -132,6 +139,9 @@
     <Compile Include="ViewModels\ProcessComplianceViewModel.cs" />
     <Compile Include="ViewModels\QuartersReconciliationFactorsViewModel.cs" />
     <Compile Include="ViewModels\RepositoryViewModel.cs" />
+    <Compile Include="Views\BlastingInventoryView.xaml.cs">
+      <DependentUpon>BlastingInventoryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ConcentrateQualityView.xaml.cs">
       <DependentUpon>ConcentrateQualityView.xaml</DependentUpon>
     </Compile>
@@ -198,6 +208,10 @@
     <Page Include="Themes\Metro\Theme.Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\BlastingInventoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ConcentrateQualityView.xaml">
       <SubType>Designer</SubType>
@@ -305,6 +319,7 @@
     <Folder Include="Engines\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Icons\Orange\Tronadura.png" />
     <Resource Include="Poster.ico" />
     <Resource Include="IconDesktopBeige.ico" />
     <Resource Include="IconDesktopLightBlue.ico" />
@@ -339,6 +354,7 @@
     <Resource Include="Resources\Icons\DesktopIcons\IconDesktopBeige.png" />
     <Resource Include="Resources\Icons\DesktopIcons\IconDesktopLightBlue.png" />
     <Resource Include="Resources\Icons\DesktopIcons\IconDesktopWhite.png" />
+    <Resource Include="Resources\Icons\Blue\Tronadura.png" />
     <Content Include="Resources\Icons\Gray\Calidad concentrado.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -366,6 +382,7 @@
     <Content Include="Resources\Icons\Gray\Secuencia minera.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\Gray\Tronadura.png" />
     <Content Include="Resources\Icons\Orange\Calidad concentrado.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
