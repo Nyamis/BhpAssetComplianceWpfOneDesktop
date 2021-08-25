@@ -11,8 +11,6 @@ namespace BhpAssetCompliance.Test.Engines
         [TestInitialize]
         public void Test()
         {
-            // SOLID
-            // Single Purpose Class 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
@@ -22,7 +20,8 @@ namespace BhpAssetCompliance.Test.Engines
             var path = @"..\..\..\TestData\FilledTemplates\ReconciliationFactorsTemplate.xlsx";
             var exists =File.Exists(path);
 
-            // var reconcilationEngine = new QuarterReconciliationFactorsLoadTemplateEngine();
+            var reconciliationEngine = new QuartersReconciliationFactorsReadTemplate(path);
+            
         }
     }
 }
