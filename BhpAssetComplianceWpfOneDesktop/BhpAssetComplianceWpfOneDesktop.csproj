@@ -92,6 +92,9 @@
     <Compile Include="Constants\TemplateColors\MineSequenceTemplateColors.cs" />
     <Compile Include="Constants\TemplateColors\ProcessComplianceTemplateColors.cs" />
     <Compile Include="Constants\TemplateColors\QuartersReconciliationFactorsTemplateColors.cs" />
+    <Compile Include="Engines\QuarterReconciliationFactorsLoadTemplateEngine.cs" />
+    <Compile Include="Engines\QuartersReconciliationFactorsReadTemplate.cs" />
+    <Compile Include="Engines\QuarterReconciliationFactors.cs" />
     <Compile Include="Models\ConcentrateQualityModels\ConcentrateQualityBudgetFreight.cs" />
     <Compile Include="Models\DepressurizationComplianceModels\DepressurizationComplianceMonthlyCompliance.cs" />
     <Compile Include="Models\DepressurizationComplianceModels\DepressurizationComplianceTargetCompliance.cs" />
@@ -297,7 +300,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EPPlus">
-      <Version>5.6.4</Version>
+      <Version>5.7.3</Version>
     </PackageReference>
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
   </ItemGroup>
