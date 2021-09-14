@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using Color = System.Drawing.Color;
 
 namespace BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors
 {
@@ -26,5 +29,9 @@ namespace BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors
         public const string DarkOrangeBackgroundMineCompliance = "#833C0C";
         public const string OrangeBackgroundMineCompliance = "#C65911";
         public const string LightOrangeBackgroundMineCompliance = "#F4B084";
+
+        
+        public static Color MainColor = ColorTranslator.FromHtml("#C65911");
+        
     }
 }

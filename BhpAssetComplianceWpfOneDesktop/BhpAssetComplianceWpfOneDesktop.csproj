@@ -92,9 +92,10 @@
     <Compile Include="Constants\TemplateColors\MineSequenceTemplateColors.cs" />
     <Compile Include="Constants\TemplateColors\ProcessComplianceTemplateColors.cs" />
     <Compile Include="Constants\TemplateColors\QuartersReconciliationFactorsTemplateColors.cs" />
-    <Compile Include="Engines\QuarterReconciliationFactorsLoadTemplateEngine.cs" />
+    <Compile Include="Engines\QuartersReconciliationFactorsLoadTemplateEngine.cs" />
     <Compile Include="Engines\QuartersReconciliationFactorsReadTemplate.cs" />
     <Compile Include="Engines\QuarterReconciliationFactors.cs" />
+    <Compile Include="Extensions\ExcelExtensions.cs" />
     <Compile Include="Models\ConcentrateQualityModels\ConcentrateQualityBudgetFreight.cs" />
     <Compile Include="Models\DepressurizationComplianceModels\DepressurizationComplianceMonthlyCompliance.cs" />
     <Compile Include="Models\DepressurizationComplianceModels\DepressurizationComplianceTargetCompliance.cs" />

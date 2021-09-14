@@ -12,7 +12,6 @@ using OfficeOpenXml.Style;
 using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
 using BhpAssetComplianceWpfOneDesktop.Engines;
 using BhpAssetComplianceWpfOneDesktop.Utility;
-using BhpAssetComplianceWpfOneDesktop.Models.QuartersReconciliationFactorsModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
@@ -22,7 +21,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         protected override string MyPosterIcon { get; set; } = IconKeys.ReconciliationFactors;
 
         private string _myLastDateRefreshMonthlyValues;
-
         public string MyLastDateRefreshMonthlyValues
         {
             get { return _myLastDateRefreshMonthlyValues; }
@@ -30,7 +28,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         }
 
         private DateTime _myMonthlyDate;
-
         public DateTime MyMonthlyDate
         {
             get { return _myMonthlyDate; }
@@ -38,7 +35,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         }
 
         private bool _isEnabledLoadMonthlyValues;
-
         public bool IsEnabledLoadMonthlyValues
         {
             get { return _isEnabledLoadMonthlyValues; }

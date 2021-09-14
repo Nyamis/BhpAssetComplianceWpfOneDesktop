@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using BhpAssetComplianceWpfOneDesktop.Constants;
 using BhpAssetComplianceWpfOneDesktop.Models.QuartersReconciliationFactorsModels;
@@ -20,15 +21,16 @@ namespace BhpAssetComplianceWpfOneDesktop.Engines
         {
             var factors = new QuarterReconciliationFactors
             {
+                F0 = new List<QuartersReconciliationFactorsF0>(),
+                F1 = new List<QuartersReconciliationFactorsF1>(),
+                F2 = new List<QuartersReconciliationFactorsF2>(),
+                F3 = new List<QuartersReconciliationFactorsF3>()
             };
-
 
             // Check if the name of the file is standard
             // TODO: Agregar el checkeo de los estilos
-            if (_path.Substring(_path.Length -
-                                QuartersReconciliationFactorsConstants.QuartersReconciliationFactorExcelFileName
-                                    .Length) == QuartersReconciliationFactorsConstants
-                .QuartersReconciliationFactorExcelFileName)
+
+            if (Path.GetFileName(_path) != QuartersReconciliationFactorsConstants.QuartersReconciliationFactorExcelFileName)
             {
                 var wrongFileMessage = $"{StringResources.WrongUploadedFile} {_path} {StringResources.IsTheRightOne}";
                 throw new Exception(wrongFileMessage);
@@ -124,6 +126,7 @@ namespace BhpAssetComplianceWpfOneDesktop.Engines
                     MillCuFines = double.Parse(worksheet.Cells[7 + i, 13].Value.ToString()) / 100
                 });
             }
+
             excelPackage.Dispose();
             return factors;
         }

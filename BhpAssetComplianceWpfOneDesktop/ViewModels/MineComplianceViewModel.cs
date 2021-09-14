@@ -11,6 +11,7 @@ using System.Globalization;
 using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
 using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Extensions;
 using BhpAssetComplianceWpfOneDesktop.Models.MineComplianceModels;
 using BhpAssetComplianceWpfOneDesktop.Utility;
 
