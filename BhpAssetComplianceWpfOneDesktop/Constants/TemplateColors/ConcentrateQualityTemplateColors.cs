@@ -19,4 +19,6 @@ namespace BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors
         public const string HeaderBackgroundBudgetConcentrateQuality = "#AEAAAA";
         public const string ItemsBackgroundBudgetConcentrateQuality = "#E7E6E6";
     }
+    
+    
 }
