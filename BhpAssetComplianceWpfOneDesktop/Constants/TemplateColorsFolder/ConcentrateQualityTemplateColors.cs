@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors
+namespace BhpAssetComplianceWpfOneDesktop.Constants.TemplateColorsFolder
 {
+
     public class ConcentrateQualityTemplateColors
     {
         //Concentrate Quality

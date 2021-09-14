@@ -1,8 +1,10 @@
-﻿using System;
+﻿using BhpAssetComplianceWpfOneDesktop.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BhpAssetComplianceWpfOneDesktop.Utility
 {
@@ -38,6 +40,25 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
             {
                 var fiscalYearString = $"FY{_fiscalYear}";
                 return fiscalYearString;
+            }
+        }
+
+        public static IEnumerable<DateTime> GetDateRange(DateTime startDate, DateTime endDate)
+        {
+            if (endDate < startDate)
+            {
+                //throw new Exception(StringResources.WrongDateRange);
+                MessageBox.Show("FF", StringResources.WrongDateRange);
+
+            }
+            //throw new ArgumentException("endDate must be greater than or equal to startDate");
+            //     var wrongFileMessage = $"{StringResources.WrongDateRange}";
+
+
+            while (startDate <= endDate)
+            {
+                yield return startDate;
+                startDate = startDate.AddDays(1);
             }
         }
 

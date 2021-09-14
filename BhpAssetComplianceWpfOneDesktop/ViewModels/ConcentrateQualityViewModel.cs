@@ -1,5 +1,5 @@
 ﻿using BhpAssetComplianceWpfOneDesktop.Constants;
-using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColorsFolder;
 using BhpAssetComplianceWpfOneDesktop.Models.ConcentrateQualityModels;
 using BhpAssetComplianceWpfOneDesktop.Resources;
 using BhpAssetComplianceWpfOneDesktop.Utility;

@@ -9,7 +9,7 @@ using Microsoft.Win32;
 using System.Drawing;
 using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
-using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColorsFolder;
 using BhpAssetComplianceWpfOneDesktop.Models.ProcessComplianceModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels

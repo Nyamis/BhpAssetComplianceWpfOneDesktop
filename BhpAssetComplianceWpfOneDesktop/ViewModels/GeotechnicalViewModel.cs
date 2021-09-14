@@ -13,7 +13,7 @@ using System.Windows.Media;
 using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
 using OfficeOpenXml.DataValidation;
-using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColorsFolder;
 using BhpAssetComplianceWpfOneDesktop.Models.GeotechnicalNotesModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels

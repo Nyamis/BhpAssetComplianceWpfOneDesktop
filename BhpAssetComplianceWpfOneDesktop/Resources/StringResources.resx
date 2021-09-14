@@ -285,4 +285,16 @@
   <data name="Pictures" xml:space="preserve">
     <value>Pictures</value>
   </data>
+  <data name="DateRange" xml:space="preserve">
+    <value>Date range</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="WrongDateRange" xml:space="preserve">
+    <value>The End Date must be greater than or equal to the Start Date.</value>
+  </data>
 </root>

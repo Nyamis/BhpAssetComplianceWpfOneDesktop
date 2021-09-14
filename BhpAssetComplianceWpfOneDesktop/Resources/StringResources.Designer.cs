@@ -160,11 +160,29 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date range.
+        /// </summary>
+        public static string DateRange {
+            get {
+                return ResourceManager.GetString("DateRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Depressurization Compliance.
         /// </summary>
         public static string DepressurizationCompliance {
             get {
                 return ResourceManager.GetString("DepressurizationCompliance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End Date.
+        /// </summary>
+        public static string EndDate {
+            get {
+                return ResourceManager.GetString("EndDate", resourceCulture);
             }
         }
         
@@ -493,6 +511,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start Date.
+        /// </summary>
+        public static string StartDate {
+            get {
+                return ResourceManager.GetString("StartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target Depressurization Template.
         /// </summary>
         public static string TargetDepressurizationTemplate {
@@ -543,6 +570,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         public static string WorksheetNotExist {
             get {
                 return ResourceManager.GetString("WorksheetNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The End Date must be greater than or equal to the Start Date..
+        /// </summary>
+        public static string WrongDateRange {
+            get {
+                return ResourceManager.GetString("WrongDateRange", resourceCulture);
             }
         }
         

@@ -13,7 +13,7 @@ using OfficeOpenXml.Style;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using BhpAssetComplianceWpfOneDesktop.Constants;
-using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColorsFolder;
 using BhpAssetComplianceWpfOneDesktop.Models.DepressurizationComplianceModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
@@ -113,8 +113,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             LoadImageCommand = new DelegateCommand(LoadImage).ObservesCanExecute(() => IsEnabledLoadImagePath);
             GenerateMonthlyDepressurizationTemplateCommand = new DelegateCommand(GenerateDepressurizationMonthlyTemplate);
             LoadMonthlyDepressurizationTemplateCommand = new DelegateCommand(LoadDepressurizationMonthlyTemplate).ObservesCanExecute(() => IsEnabledGenerateMonthlyTemplate);
-            GenerateTargetDepressurizationTemplateCommand = new DelegateCommand(GenerateDepressurizationTargetTemplate);
-            LoadTargetDepressurizationTemplateCommand = new DelegateCommand(LoadDepressurizationTargetTemplate).ObservesCanExecute(() => IsEnabledGenerateTargetTemplate);            
+        //    GenerateTargetDepressurizationTemplateCommand = new DelegateCommand(GenerateDepressurizationTargetTemplate);
+        //    LoadTargetDepressurizationTemplateCommand = new DelegateCommand(LoadDepressurizationTargetTemplate).ObservesCanExecute(() => IsEnabledGenerateTargetTemplate);
         }
 
         private void SelectImagePath()
@@ -336,180 +336,182 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             }
         }
 
-        private void GenerateDepressurizationTargetTemplate()
-        {
-            var months = new List<string> { "July", "August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June" };
-            var places = new List<string> { "Pared Noreste Fuera Rajo", "Pared Noreste", "Pared Noreste Talud Bajo", "Pared Los Colorados", "Pared Los Colorados Talud Bajo", "Pared Este Fuera Rajo", "Pared Este Talud Medio" };
+        //private void GenerateDepressurizationTargetTemplate()
+        //{
+        //    var months = new List<string> { "July", "August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June" };
+        //    var places = new List<string> { "Pared Noreste Fuera Rajo", "Pared Noreste", "Pared Noreste Talud Bajo", "Pared Los Colorados", "Pared Los Colorados Talud Bajo", "Pared Este Fuera Rajo", "Pared Este Talud Medio" };
 
-            var excelPackage = new ExcelPackage();
-            excelPackage.Workbook.Properties.Author = "BHP";
-            excelPackage.Workbook.Properties.Title = DepressurizationComplianceConstants.TargetDepressurizationWorksheetTitle;
-            excelPackage.Workbook.Properties.Company = "BHP";
+        //    var excelPackage = new ExcelPackage();
+        //    excelPackage.Workbook.Properties.Author = "BHP";
+        //    excelPackage.Workbook.Properties.Title = DepressurizationComplianceConstants.TargetDepressurizationWorksheetTitle;
+        //    excelPackage.Workbook.Properties.Company = "BHP";
 
-            var worksheet = excelPackage.Workbook.Worksheets.Add(DepressurizationComplianceConstants.TargetDepressurizationWorksheet);
-            worksheet.Protection.IsProtected = true;
+        //    var worksheet = excelPackage.Workbook.Worksheets.Add(DepressurizationComplianceConstants.TargetDepressurizationWorksheet);
+        //    worksheet.Protection.IsProtected = true;
 
-            for (var i = 0; i < 14; i++)            
-                worksheet.Column(1 + i).Style.Locked = false;           
+        //    for (var i = 0; i < 14; i++)            
+        //        worksheet.Column(1 + i).Style.Locked = false;           
 
-            worksheet.Cells["A2:A3"].Merge = true;
-            worksheet.Cells["A2"].Value = "Depressurization Wall";
-            worksheet.Cells["A2:B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            worksheet.Cells["A2:B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            worksheet.Cells["B2"].Style.Font.Bold = true;
-            worksheet.Column(1).Style.Font.Bold = true;
-            worksheet.Column(1).Width = 27;
+        //    worksheet.Cells["A2:A3"].Merge = true;
+        //    worksheet.Cells["A2"].Value = "Depressurization Wall";
+        //    worksheet.Cells["A2:B2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        //    worksheet.Cells["A2:B2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+        //    worksheet.Cells["B2"].Style.Font.Bold = true;
+        //    worksheet.Column(1).Style.Font.Bold = true;
+        //    worksheet.Column(1).Width = 27;
 
-            for (var i = 0; i < places.Count; i++)            
-                worksheet.Cells[4 + i, 1].Value = places[i];            
+        //    for (var i = 0; i < places.Count; i++)            
+        //        worksheet.Cells[4 + i, 1].Value = places[i];            
 
-            worksheet.Cells["A4:A13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells["A4:A13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
+        //    worksheet.Cells["A4:A13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+        //    worksheet.Cells["A4:A13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
 
-            worksheet.Cells["B2:M2"].Merge = true;
-            worksheet.Cells["B2"].Value = $"Targets (kPa) FY{MyFiscalYear}";
-            worksheet.Cells["A2:A3"].Style.Font.Bold = true;
-            worksheet.Cells["A2:M2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells["A2:M2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
+        //    worksheet.Cells["B2:M2"].Merge = true;
+        //    worksheet.Cells["B2"].Value = $"Targets (kPa) FY{MyFiscalYear}";
+        //    worksheet.Cells["A2:A3"].Style.Font.Bold = true;
+        //    worksheet.Cells["A2:M2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+        //    worksheet.Cells["A2:M2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
 
-            worksheet.Row(3).Style.Font.Bold = true;
-            for (var i = 0; i < months.Count; i++)
-            {
-                worksheet.Cells[3, 2 + i].Value = months[i];
-                worksheet.Cells[3, 2 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[3, 2 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
-                worksheet.Cells[3, 2 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Column(2 + i).Width = 10;
-            }
+        //    worksheet.Row(3).Style.Font.Bold = true;
+        //    for (var i = 0; i < months.Count; i++)
+        //    {
+        //        worksheet.Cells[3, 2 + i].Value = months[i];
+        //        worksheet.Cells[3, 2 + i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+        //        worksheet.Cells[3, 2 + i].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(DepressurizationComplianceTemplateColors.HeaderBackgroundMonthlyDepressurizationCompliance));
+        //        worksheet.Cells[3, 2 + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        //        worksheet.Column(2 + i).Width = 10;
+        //    }
 
-            for (var i = 0; i < 12; i++)
-            {
-                worksheet.Cells[$"A{1 + i}:M{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                for (var j = 0; j < 13; j++)                
-                    worksheet.Cells[2 + i, 1 + j].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-            }
-            worksheet.Cells[$"A13:M13"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+        //    for (var i = 0; i < 12; i++)
+        //    {
+        //        worksheet.Cells[$"A{1 + i}:M{1 + i}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+        //        for (var j = 0; j < 13; j++)                
+        //            worksheet.Cells[2 + i, 1 + j].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+        //    }
+        //    worksheet.Cells[$"A13:M13"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
 
-            byte[] fileText = excelPackage.GetAsByteArray();
+        //    byte[] fileText = excelPackage.GetAsByteArray();
 
-            var dialog = new SaveFileDialog()
-            {
-                FileName = DepressurizationComplianceConstants.TargetDepressurizationExcelFileName,
-                Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
-            };
+        //    var dialog = new SaveFileDialog()
+        //    {
+        //        FileName = DepressurizationComplianceConstants.TargetDepressurizationExcelFileName,
+        //        Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
+        //    };
 
-            try
-            {
-                var fileStream = File.OpenWrite(dialog.FileName);
-                fileStream.Close();
-                if (dialog.ShowDialog() == true)
-                {
-                    File.WriteAllBytes(dialog.FileName, fileText);
-                    IsEnabledGenerateTargetTemplate = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, StringResources.UploadError);
-            }
-        }
+        //    try
+        //    {
+        //        var fileStream = File.OpenWrite(dialog.FileName);
+        //        fileStream.Close();
+        //        if (dialog.ShowDialog() == true)
+        //        {
+        //            File.WriteAllBytes(dialog.FileName, fileText);
+        //            IsEnabledGenerateTargetTemplate = true;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message, StringResources.UploadError);
+        //    }
+        //}
 
-        private void LoadDepressurizationTargetTemplate()
-        {
-            _targetCompliance.Clear();
-            var openFileDialog = new OpenFileDialog
-            {
-                Title = StringResources.SelectFile,
-                Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
-            };
+        //private void LoadDepressurizationTargetTemplate()
+        //{
+        //    _targetCompliance.Clear();
+        //    var openFileDialog = new OpenFileDialog
+        //    {
+        //        Title = StringResources.SelectFile,
+        //        Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
+        //    };
 
-            if (openFileDialog.ShowDialog() == true)
-            {
-                var openFilePath = new FileInfo(openFileDialog.FileName);
-                var excelPackage = new ExcelPackage(openFilePath);
-                var templateWorksheet = excelPackage.Workbook.Worksheets[DepressurizationComplianceConstants.TargetDepressurizationWorksheet];
+        //    if (openFileDialog.ShowDialog() == true)
+        //    {
+        //        var openFilePath = new FileInfo(openFileDialog.FileName);
+        //        var excelPackage = new ExcelPackage(openFilePath);
+        //        var templateWorksheet = excelPackage.Workbook.Worksheets[DepressurizationComplianceConstants.TargetDepressurizationWorksheet];
 
-                if (openFilePath.FullName.Substring(openFilePath.FullName.Length - DepressurizationComplianceConstants.TargetDepressurizationExcelFileName.Length) == DepressurizationComplianceConstants.TargetDepressurizationExcelFileName)
-                {
-                    try
-                    {
-                        // Check if the file is already open
-                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
-                        openWriteCheck.Close();
+        //        if (openFilePath.FullName.Substring(openFilePath.FullName.Length - DepressurizationComplianceConstants.TargetDepressurizationExcelFileName.Length) == DepressurizationComplianceConstants.TargetDepressurizationExcelFileName)
+        //        {
+        //            try
+        //            {
+        //                // Check if the file is already open
+        //                var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+        //                openWriteCheck.Close();
 
-                        var _date = DateTime.Now;
+        //                var _date = DateTime.Now;
 
-                        for (var i = 0; i < 12; i++)
-                        {
-                            var _month = DateTime.ParseExact(templateWorksheet.Cells[3, 2 + i].Value.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
-                            _date = TemplateDates.ConvertDateToFiscalYearDate(i, MyFiscalYear, _month);
+        //                for (var i = 0; i < 12; i++)
+        //                {
+        //                    var _month = DateTime.ParseExact(templateWorksheet.Cells[3, 2 + i].Value.ToString(), "MMMM", CultureInfo.InvariantCulture).Month;
+        //                    _date = TemplateDates.ConvertDateToFiscalYearDate(i, MyFiscalYear, _month);
 
-                            var rows = templateWorksheet.Dimension.Rows;
+        //                    var rows = templateWorksheet.Dimension.Rows;
 
-                            for (var j = 0; j < rows; j++)
-                            {
-                                if (templateWorksheet.Cells[4 + j, 1].Value != null)
-                                {
-                                    if (templateWorksheet.Cells[4 + j, 2 + i].Value == null)
-                                    {
-                                        templateWorksheet.Cells[4 + j, 2 + i].Value = -99000;
-                                    }
+        //                    for (var j = 0; j < rows; j++)
+        //                    {
+        //                        if (templateWorksheet.Cells[4 + j, 1].Value != null)
+        //                        {
+        //                            if (templateWorksheet.Cells[4 + j, 2 + i].Value == null)
+        //                            {
+        //                                templateWorksheet.Cells[4 + j, 2 + i].Value = -99000;
+        //                            }
 
-                                    _targetCompliance.Add(new DepressurizationComplianceTargetCompliance()
-                                    {
-                                        Date = _date,
-                                        Zone = templateWorksheet.Cells[4 + j, 1].Value.ToString(),
-                                        Target = double.Parse(templateWorksheet.Cells[4 + j, 2 + i].Value.ToString())/1000
-                                    });
-                                }
-                            }
-                        }
-                        excelPackage.Dispose();
+        //                            _targetCompliance.Add(new DepressurizationComplianceTargetCompliance()
+        //                            {
+        //                                Date = _date,
+        //                                Zone = templateWorksheet.Cells[4 + j, 1].Value.ToString(),
+        //                                Target = double.Parse(templateWorksheet.Cells[4 + j, 2 + i].Value.ToString())/1000
+        //                            });
+        //                        }
+        //                    }
+        //                }
+        //                excelPackage.Dispose();
 
-                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.DepressurizationComplianceExcelFilePath;
-                        var loadFileInfo = new FileInfo(loadFilePath);
+        //                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.DepressurizationComplianceExcelFilePath;
+        //                var loadFileInfo = new FileInfo(loadFilePath);
 
-                        if (loadFileInfo.Exists)
-                        {
-                            var package = new ExcelPackage(loadFileInfo);
-                            var worksheet = package.Workbook.Worksheets[DepressurizationComplianceConstants.TargetDepressurizationSpotfireWorksheet];
-                            if (worksheet != null)
-                            {
-                                var lastRow = worksheet.Dimension.End.Row + 1;
-                                for (var i = 0; i < _targetCompliance.Count; i++)
-                                {
-                                    worksheet.Cells[i + lastRow, 1].Value = _targetCompliance[i].Date;
-                                    worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                    worksheet.Cells[i + lastRow, 2].Value = _targetCompliance[i].Zone;
-                                    worksheet.Cells[i + lastRow, 3].Value = _targetCompliance[i].Target;
-                                }
-                                byte[] fileText2 = package.GetAsByteArray();
-                                File.WriteAllBytes(loadFilePath, fileText2);
-                                MyLastDateRefreshTargetValues = $"{StringResources.Updated}: {DateTime.Now}";
-                            }
-                            else
-                            {
-                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                            }
-                        }
-                        else
-                        {
-                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
-                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, StringResources.UploadError);
-                    }
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }                
-            }
-        }
+        //                if (loadFileInfo.Exists)
+        //                {
+        //                    var package = new ExcelPackage(loadFileInfo);
+        //                    var worksheet = package.Workbook.Worksheets[DepressurizationComplianceConstants.TargetDepressurizationSpotfireWorksheet];
+        //                    if (worksheet != null)
+        //                    {
+        //                        var lastRow = worksheet.Dimension.End.Row + 1;
+        //                        for (var i = 0; i < _targetCompliance.Count; i++)
+        //                        {
+        //                            worksheet.Cells[i + lastRow, 1].Value = _targetCompliance[i].Date;
+        //                            worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+        //                            worksheet.Cells[i + lastRow, 2].Value = _targetCompliance[i].Zone;
+        //                            worksheet.Cells[i + lastRow, 3].Value = _targetCompliance[i].Target;
+        //                        }
+        //                        byte[] fileText2 = package.GetAsByteArray();
+        //                        File.WriteAllBytes(loadFilePath, fileText2);
+        //                        MyLastDateRefreshTargetValues = $"{StringResources.Updated}: {DateTime.Now}";
+        //                    }
+        //                    else
+        //                    {
+        //                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+        //                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+        //                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+        //                }
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show(ex.Message, StringResources.UploadError);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
+        //            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+        //        }                
+        //    }
+        //}
+
+
     }
 }

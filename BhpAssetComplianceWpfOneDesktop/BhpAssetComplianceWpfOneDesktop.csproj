@@ -86,18 +86,24 @@
     <Compile Include="Constants\MineSequenceConstants.cs" />
     <Compile Include="Constants\ProcessComplianceConstants.cs" />
     <Compile Include="Constants\QuartersReconciliationFactorsConstants.cs" />
-    <Compile Include="Constants\TemplateColors\BlastingInventoryTemplatColors.cs" />
-    <Compile Include="Constants\TemplateColors\ConcentrateQualityTemplateColors.cs" />
-    <Compile Include="Constants\TemplateColors\DepressurizationComplianceTemplateColors.cs" />
-    <Compile Include="Constants\TemplateColors\GeotechnicalNotesTemplateColors.cs" />
-    <Compile Include="Constants\TemplateColors\MineComplianceTemplateColors.cs" />
-    <Compile Include="Constants\TemplateColors\MineSequenceTemplateColors.cs" />
-    <Compile Include="Constants\TemplateColors\ProcessComplianceTemplateColors.cs" />
-    <Compile Include="Constants\TemplateColors\QuartersReconciliationFactorsTemplateColors.cs" />
+
+
     <Compile Include="Engines\QuartersReconciliationFactorsLoadTemplateEngine.cs" />
     <Compile Include="Engines\QuartersReconciliationFactorsReadTemplate.cs" />
     <Compile Include="Engines\QuarterReconciliationFactors.cs" />
     <Compile Include="Extensions\ExcelExtensions.cs" />
+
+    <Compile Include="Constants\TemplateColors.cs" />
+    <Compile Include="Constants\TemplateColorsFolder\BlastingInventoryTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColorsFolder\ConcentrateQualityTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColorsFolder\DepressurizationComplianceTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColorsFolder\GeotechnicalNotesTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColorsFolder\MineComplianceTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColorsFolder\MineSequenceTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColorsFolder\ProcessComplianceTemplateColors.cs" />
+    <Compile Include="Constants\TemplateColorsFolder\QuartersReconciliationFactorsTemplateColors.cs" />
+
+
     <Compile Include="Models\BlastingInventoryModels\BlastingInventoryBlast.cs" />
     <Compile Include="Models\BlastingInventoryModels\BlastingInventoryPhaseBlast.cs" />
     <Compile Include="Models\BlastingInventoryModels\BlastingInventoryShovels.cs" />
@@ -319,9 +325,7 @@
     </PackageReference>
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Engines\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Icons\Orange\Tronadura.png" />
     <Resource Include="Poster.ico" />

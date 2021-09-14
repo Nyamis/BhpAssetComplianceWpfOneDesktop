@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using Color = System.Drawing.Color;
 
-namespace BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors
+namespace BhpAssetComplianceWpfOneDesktop.Constants.TemplateColorsFolder
 {
     public class MineComplianceTemplateColors
     {
