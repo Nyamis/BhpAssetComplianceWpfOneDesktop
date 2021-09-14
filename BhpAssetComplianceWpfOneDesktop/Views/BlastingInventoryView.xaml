@@ -26,7 +26,7 @@
             <GroupBox Header="{x:Static resources:StringResources.Escondida}" Grid.Column="0">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="219"/>
+                        <RowDefinition Height="300"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
@@ -43,7 +43,7 @@
             <GroupBox Header="{x:Static resources:StringResources.EscondidaNorte}" Grid.Column="1">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="219"/>
+                        <RowDefinition Height="300"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
@@ -100,18 +100,39 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-
                         <Grid Grid.Row="0">
-                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding  GenerateBlastingInventoryTemplateCommand}"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:StringResources.StartDate}"
+                                   Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                            <DatePicker  SelectedDate="{Binding MyStartDateRange}" Grid.Column="1"/>
                         </Grid>
 
                         <Grid Grid.Row="1">
-                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadBlastingInventoryTemplateCommand}"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:StringResources.EndDate}"
+                                   Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                            <DatePicker  SelectedDate="{Binding MyEndDateRange}" Grid.Column="2"/>
                         </Grid>
 
                         <Grid Grid.Row="2">
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding  GenerateBlastingInventoryTemplateCommand }"/>
+                        </Grid>
+
+                        <Grid Grid.Row="3">
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadBlastingInventoryTemplateCommand}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="4">
                             <TextBlock Text="{Binding MyLastRefreshValues}" Style="{StaticResource TextBlockStyle}" />
                         </Grid>
 

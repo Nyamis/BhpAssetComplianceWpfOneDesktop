@@ -13,7 +13,7 @@ using OfficeOpenXml.Style;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using BhpAssetComplianceWpfOneDesktop.Constants;
-using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColorsFolder;
 using BhpAssetComplianceWpfOneDesktop.Models.DepressurizationComplianceModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels

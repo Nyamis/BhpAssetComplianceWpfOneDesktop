@@ -282,4 +282,16 @@
   <data name="Pictures" xml:space="preserve">
     <value>Imágenes</value>
   </data>
+  <data name="DateRange" xml:space="preserve">
+    <value>Rango de fecha</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Fecha Término</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Fecha Inicio</value>
+  </data>
+  <data name="WrongDateRange" xml:space="preserve">
+    <value>La fecha de término debe ser mayor o igual que la fecha de inicio.</value>
+  </data>
 </root>

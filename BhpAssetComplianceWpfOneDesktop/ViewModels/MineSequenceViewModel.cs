@@ -12,7 +12,7 @@ using System.Drawing;
 using System.Windows.Media;
 using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
-using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColorsFolder;
 using BhpAssetComplianceWpfOneDesktop.Models.MineSequenceModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels

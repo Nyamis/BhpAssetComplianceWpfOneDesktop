@@ -10,7 +10,7 @@ using System.Drawing;
 using System.Globalization;
 using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
-using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
+using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColorsFolder;
 using BhpAssetComplianceWpfOneDesktop.Models.MineComplianceModels;
 using BhpAssetComplianceWpfOneDesktop.Utility;
 
@@ -658,6 +658,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             MillFeed = double.Parse(realMillFCTemplateWorksheet.Cells[6, 3].Value.ToString())/1000000
                         });
 
+                        //change
                         int[] rows1 = { 0, 16, 32, 48, 64, 80, 96, 112, 128, 144 };
                         for (var i = rows1.GetLowerBound(0); i <= rows1.GetUpperBound(0); i++)
                         {
