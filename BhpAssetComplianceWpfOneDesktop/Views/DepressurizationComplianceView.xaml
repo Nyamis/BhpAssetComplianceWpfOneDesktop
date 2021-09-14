@@ -8,7 +8,85 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="650">
+
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ContentControl Content="{Binding MyPosterHeader}" Grid.Row="0"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="{x:Static resources:StringResources.Image}" Grid.Column="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Image  Source="{Binding MyImageSource}"  />
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Button Content="{x:Static resources:StringResources.SelectImage}" Command="{Binding SelectImageCommand}"/>
+                    </Grid>
+                </Grid>
+               
+            </GroupBox>
+
+            <GroupBox Header="{x:Static resources:StringResources.Template}" Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition  Height="15"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0"/>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static resources:StringResources.Date}"
+                                   Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                        <DatePicker  SelectedDate="{Binding MyDateActual}" Grid.Column="1"/>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Button Content="{x:Static resources:StringResources.LoadImage}" Command="{Binding  LoadImageCommand}"/>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <TextBlock Text="{Binding MyLastDateRefreshMonthlyImage}" Style="{StaticResource TextBlockStyle}" />
+                    </Grid>
+                    <Grid Grid.Row="4">
+                        <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding GenerateMonthlyDepressurizationTemplateCommand}"/>
+                    </Grid>
+
+                    <Grid Grid.Row="5">
+                        <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadMonthlyDepressurizationTemplateCommand}" />
+                    </Grid>
+
+                    <Grid Grid.Row="6">
+                        <TextBlock Text="{Binding MyLastDateRefreshMonthlyValues}" Style="{StaticResource TextBlockStyle}" />
+                    </Grid>
+                </Grid>
+
+      
+            </GroupBox>
+        </Grid>
+    </Grid>
+    <!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -116,6 +194,6 @@
                 </Grid>
             </GroupBox>
         </Grid>
-    </Grid>
+    </Grid>-->
 </UserControl>
     

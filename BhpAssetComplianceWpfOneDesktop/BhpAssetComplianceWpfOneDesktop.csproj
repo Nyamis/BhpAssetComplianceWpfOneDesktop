@@ -95,6 +95,9 @@
     <Compile Include="Constants\TemplateColorsFolder\MineSequenceTemplateColors.cs" />
     <Compile Include="Constants\TemplateColorsFolder\ProcessComplianceTemplateColors.cs" />
     <Compile Include="Constants\TemplateColorsFolder\QuartersReconciliationFactorsTemplateColors.cs" />
+    <Compile Include="Engines\QuarterReconciliationFactors\QuarterReconciliationFactors.cs" />
+    <Compile Include="Engines\QuarterReconciliationFactors\QuarterReconciliationFactorsLoadTemplateEngine.cs" />
+    <Compile Include="Engines\QuarterReconciliationFactors\QuartersReconciliationFactorsReadTemplate.cs" />
     <Compile Include="Models\BlastingInventoryModels\BlastingInventoryBlast.cs" />
     <Compile Include="Models\BlastingInventoryModels\BlastingInventoryPhaseBlast.cs" />
     <Compile Include="Models\BlastingInventoryModels\BlastingInventoryShovels.cs" />
@@ -316,9 +319,7 @@
     </PackageReference>
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Engines\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Icons\Orange\Tronadura.png" />
     <Resource Include="Poster.ico" />

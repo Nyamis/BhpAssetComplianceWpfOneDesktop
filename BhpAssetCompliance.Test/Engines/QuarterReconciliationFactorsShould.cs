@@ -1,12 +1,12 @@
 ﻿using System.IO;
-using BhpAssetComplianceWpfOneDesktop.Engines;
+using BhpAssetComplianceWpfOneDesktop.Engines.QuarterReconciliationFactors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 
 namespace BhpAssetCompliance.Test.Engines
 {
     [TestClass]
-    public class MineSequenceShould
+    public class QuarterReconciliationFactorsShould
     {
         [TestInitialize]
         public void Test()
@@ -18,10 +18,10 @@ namespace BhpAssetCompliance.Test.Engines
         public void QuartersReconciliationFactorsLoadTemplateFixture()
         {
             var path = @"..\..\..\TestData\FilledTemplates\ReconciliationFactorsTemplate.xlsx";
-            var exists =File.Exists(path);
+            var exists = File.Exists(path);
 
             var reconciliationEngine = new QuartersReconciliationFactorsReadTemplate(path);
-            
+
         }
     }
 }
