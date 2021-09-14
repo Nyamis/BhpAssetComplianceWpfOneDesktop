@@ -203,14 +203,24 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     try
                     {
                         // Check if the file is already open
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
 
                         var rows = templateWorksheet.Dimension.Rows;
                         for (var i = 1; i < rows; i++)
                         {
                             if (templateWorksheet.Cells[i + 3, 1].Value != null)
                             {
+                                if (templateWorksheet.Cells[3 + i, 1].Value == null)
+                                    templateWorksheet.Cells[3 + i, 1].Value = " ";
+
+                                if (templateWorksheet.Cells[3 + i, 2].Value == null)
+                                    templateWorksheet.Cells[3 + i, 2].Value = -99;
+
+                                for (var j = 0; j < 2; j++)
+                                    if (templateWorksheet.Cells[3 + i, 3 + j].Value == null)
+                                        templateWorksheet.Cells[3 + i, 3 + j].Value = DateTime.Now;
+
                                 for (var j = 0; j < 17; j++)
                                     if (templateWorksheet.Cells[3 + i, 5 + j].Value == null)
                                         templateWorksheet.Cells[3 + i, 5 + j].Value = -99;
@@ -242,6 +252,61 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             }
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ConcentrateQualityExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var worksheet = package.Workbook.Worksheets[ConcentrateQualityConstants.ActualFreightSpotfireWorksheet];
+                            if (worksheet != null)
+                            {
+                                var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                                var lastRow = worksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _actualFreights.Count; i++)
+                                {
+                                    worksheet.Cells[i + lastRow, 1].Value = newDate;
+                                    worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    worksheet.Cells[i + lastRow, 2].Value = _actualFreights[i].Name;
+                                    worksheet.Cells[i + lastRow, 3].Value = _actualFreights[i].Number;
+                                    worksheet.Cells[i + lastRow, 4].Value = _actualFreights[i].Start;
+                                    worksheet.Cells[i + lastRow, 4].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    worksheet.Cells[i + lastRow, 5].Value = _actualFreights[i].End;
+                                    worksheet.Cells[i + lastRow, 5].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    worksheet.Cells[i + lastRow, 6].Value = _actualFreights[i].WMT;
+                                    worksheet.Cells[i + lastRow, 7].Value = _actualFreights[i].DMT;
+                                    worksheet.Cells[i + lastRow, 8].Value = _actualFreights[i].Moisture;
+                                    worksheet.Cells[i + lastRow, 9].Value = _actualFreights[i].Cu;
+                                    worksheet.Cells[i + lastRow, 10].Value = _actualFreights[i].As;
+                                    worksheet.Cells[i + lastRow, 11].Value = _actualFreights[i].Fe;
+                                    worksheet.Cells[i + lastRow, 12].Value = _actualFreights[i].Au;
+                                    worksheet.Cells[i + lastRow, 13].Value = _actualFreights[i].Ag;
+                                    worksheet.Cells[i + lastRow, 14].Value = _actualFreights[i].S;
+                                    worksheet.Cells[i + lastRow, 15].Value = _actualFreights[i].Insoluble;
+                                    worksheet.Cells[i + lastRow, 16].Value = _actualFreights[i].Cd;
+                                    worksheet.Cells[i + lastRow, 17].Value = _actualFreights[i].Zn;
+                                    worksheet.Cells[i + lastRow, 18].Value = _actualFreights[i].Hg;
+                                    worksheet.Cells[i + lastRow, 19].Value = _actualFreights[i].SiO2;
+                                    worksheet.Cells[i + lastRow, 20].Value = _actualFreights[i].Al2O3;
+                                    worksheet.Cells[i + lastRow, 21].Value = _actualFreights[i].Sb;
+                                    worksheet.Cells[i + lastRow, 22].Value = _actualFreights[i].Mo;
+                                }
+                                byte[] fileText2 = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText2);
+                                MyLastDateRefreshActualValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -252,73 +317,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 {
                     var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
-                
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ConcentrateQualityExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var worksheet = package.Workbook.Worksheets[ConcentrateQualityConstants.ActualFreightSpotfireWorksheet];
-                    if (worksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var lastRow = worksheet.Dimension.End.Row + 1;
-                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
-
-                            for (var i = 0; i < _actualFreights.Count; i++)
-                            {
-                                worksheet.Cells[i + lastRow, 1].Value = newDate;
-                                worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                worksheet.Cells[i + lastRow, 2].Value = _actualFreights[i].Name;
-                                worksheet.Cells[i + lastRow, 3].Value = _actualFreights[i].Number;
-                                worksheet.Cells[i + lastRow, 4].Value = _actualFreights[i].Start;
-                                worksheet.Cells[i + lastRow, 4].Style.Numberformat.Format = "yyyy-MM-dd";
-                                worksheet.Cells[i + lastRow, 5].Value = _actualFreights[i].End;
-                                worksheet.Cells[i + lastRow, 5].Style.Numberformat.Format = "yyyy-MM-dd";
-                                worksheet.Cells[i + lastRow, 6].Value = _actualFreights[i].WMT;
-                                worksheet.Cells[i + lastRow, 7].Value = _actualFreights[i].DMT;
-                                worksheet.Cells[i + lastRow, 8].Value = _actualFreights[i].Moisture;
-                                worksheet.Cells[i + lastRow, 9].Value = _actualFreights[i].Cu;
-                                worksheet.Cells[i + lastRow, 10].Value = _actualFreights[i].As;
-                                worksheet.Cells[i + lastRow, 11].Value = _actualFreights[i].Fe;
-                                worksheet.Cells[i + lastRow, 12].Value = _actualFreights[i].Au;
-                                worksheet.Cells[i + lastRow, 13].Value = _actualFreights[i].Ag;
-                                worksheet.Cells[i + lastRow, 14].Value = _actualFreights[i].S;
-                                worksheet.Cells[i + lastRow, 15].Value = _actualFreights[i].Insoluble;
-                                worksheet.Cells[i + lastRow, 16].Value = _actualFreights[i].Cd;
-                                worksheet.Cells[i + lastRow, 17].Value = _actualFreights[i].Zn;
-                                worksheet.Cells[i + lastRow, 18].Value = _actualFreights[i].Hg;
-                                worksheet.Cells[i + lastRow, 19].Value = _actualFreights[i].SiO2;
-                                worksheet.Cells[i + lastRow, 20].Value = _actualFreights[i].Al2O3;
-                                worksheet.Cells[i + lastRow, 21].Value = _actualFreights[i].Sb;
-                                worksheet.Cells[i + lastRow, 22].Value = _actualFreights[i].Mo;
-                            }
-                            byte[] fileText2 = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText2);
-                            MyLastDateRefreshActualValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    }                   
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
+                }                   
             }
         }
 
@@ -417,8 +416,9 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 {
                     try
                     {
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        // Check if the file is already open
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
 
                         var _date = DateTime.Now;
 
@@ -454,6 +454,55 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             });
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ConcentrateQualityExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var worksheet = package.Workbook.Worksheets[ConcentrateQualityConstants.BudgetFreightWorksheet];
+
+                            if (worksheet != null)
+                            {
+                                var lastRow = worksheet.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _budgetFreights.Count; i++)
+                                {
+                                    worksheet.Cells[i + lastRow, 1].Value = _budgetFreights[i].Date;
+                                    worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    worksheet.Cells[i + lastRow, 2].Value = _budgetFreights[i].Au;
+                                    worksheet.Cells[i + lastRow, 3].Value = _budgetFreights[i].Ag;
+                                    worksheet.Cells[i + lastRow, 4].Value = _budgetFreights[i].Mo;
+                                    worksheet.Cells[i + lastRow, 5].Value = _budgetFreights[i].As;
+                                    worksheet.Cells[i + lastRow, 6].Value = _budgetFreights[i].Cd;
+                                    worksheet.Cells[i + lastRow, 7].Value = _budgetFreights[i].Pb;
+                                    worksheet.Cells[i + lastRow, 8].Value = _budgetFreights[i].Zn;
+                                    worksheet.Cells[i + lastRow, 9].Value = _budgetFreights[i].Bi;
+                                    worksheet.Cells[i + lastRow, 10].Value = _budgetFreights[i].Sb;
+                                    worksheet.Cells[i + lastRow, 11].Value = _budgetFreights[i].FeConc;
+                                    worksheet.Cells[i + lastRow, 12].Value = _budgetFreights[i].Fe;
+                                    worksheet.Cells[i + lastRow, 13].Value = _budgetFreights[i].PyConc;
+                                    worksheet.Cells[i + lastRow, 14].Value = _budgetFreights[i].Py;
+                                    worksheet.Cells[i + lastRow, 15].Value = _budgetFreights[i].S2;
+                                    worksheet.Cells[i + lastRow, 16].Value = _budgetFreights[i].ConcentrateGrade;
+                                }
+
+                                byte[] fileText2 = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText2);
+                                MyLastDateRefreshBudgetValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -464,64 +513,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 {
                     var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
-
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ConcentrateQualityExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var worksheet = package.Workbook.Worksheets[ConcentrateQualityConstants.BudgetFreightWorksheet];
-                    if (worksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var lastRow = worksheet.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _budgetFreights.Count; i++)
-                            {
-                                worksheet.Cells[i + lastRow, 1].Value = _budgetFreights[i].Date;
-                                worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                worksheet.Cells[i + lastRow, 2].Value = _budgetFreights[i].Au;
-                                worksheet.Cells[i + lastRow, 3].Value = _budgetFreights[i].Ag;
-                                worksheet.Cells[i + lastRow, 4].Value = _budgetFreights[i].Mo;
-                                worksheet.Cells[i + lastRow, 5].Value = _budgetFreights[i].As;
-                                worksheet.Cells[i + lastRow, 6].Value = _budgetFreights[i].Cd;
-                                worksheet.Cells[i + lastRow, 7].Value = _budgetFreights[i].Pb;
-                                worksheet.Cells[i + lastRow, 8].Value = _budgetFreights[i].Zn;
-                                worksheet.Cells[i + lastRow, 9].Value = _budgetFreights[i].Bi;
-                                worksheet.Cells[i + lastRow, 10].Value = _budgetFreights[i].Sb;
-                                worksheet.Cells[i + lastRow, 11].Value = _budgetFreights[i].FeConc;
-                                worksheet.Cells[i + lastRow, 12].Value = _budgetFreights[i].Fe;
-                                worksheet.Cells[i + lastRow, 13].Value = _budgetFreights[i].PyConc;
-                                worksheet.Cells[i + lastRow, 14].Value = _budgetFreights[i].Py;
-                                worksheet.Cells[i + lastRow, 15].Value = _budgetFreights[i].S2;
-                                worksheet.Cells[i + lastRow, 16].Value = _budgetFreights[i].ConcentrateGrade;
-                            }
-
-                            byte[] fileText2 = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText2);
-                            MyLastDateRefreshBudgetValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    }
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
+                }               
             }
         }
     }

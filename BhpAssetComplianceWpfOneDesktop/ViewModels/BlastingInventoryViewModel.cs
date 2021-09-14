@@ -14,13 +14,14 @@ using BhpAssetComplianceWpfOneDesktop.Constants;
 using OfficeOpenXml.Style;
 using BhpAssetComplianceWpfOneDesktop.Constants.TemplateColors;
 using BhpAssetComplianceWpfOneDesktop.Models.MineSequenceModels;
+using BhpAssetComplianceWpfOneDesktop.Models.BlastingInventoryModels;
 
 namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 {
-    public class MineSequenceViewModel : BasePosterViewModel
+    public class BlastingInventoryViewModel : BasePosterViewModel
     {
-        protected override string MyPosterName { get; set; } = StringResources.MineSequence;
-        protected override string MyPosterIcon { get; set; } = IconKeys.MineSequence;
+        protected override string MyPosterName { get; set; } = StringResources.BlastingInventory;
+        protected override string MyPosterIcon { get; set; } = IconKeys.Blasting;
 
         private string _myEscondidaImage;
         public string MyEscondidaImage
@@ -98,23 +99,33 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             get { return _myDateActual; }
             set { SetProperty(ref _myDateActual, value); }
         }
-     
+
         public DelegateCommand SelectEscondidaImageCommand { get; private set; }
         public DelegateCommand SelectEscondidaNorteImageCommand { get; private set; }
         public DelegateCommand LoadImagesCommand { get; private set; }
-        public DelegateCommand GenerateMineSequenceTemplateCommand { get; private set; } 
-        public DelegateCommand LoadMineSequenceTemplateCommand { get; private set; }
-        //public DelegateCommand ProcessAllMineSequenceValuesCommand { get; private set; }
+        public DelegateCommand GenerateBlastingInventoryTemplateCommand { get; private set; }
+        public DelegateCommand LoadBlastingInventoryTemplateCommand { get; private set; }
+
+
+        private readonly List<BlastingInventoryBlast> _blast = new List<BlastingInventoryBlast>();
+
+        private readonly List<BlastingInventoryPhaseBlast> _phaseBlast = new List<BlastingInventoryPhaseBlast>();
+
+        private readonly List<BlastingInventoryShovels> _shovels = new List<BlastingInventoryShovels>();
+
+        private readonly List<BlastingInventoryWeeklySummary> _weeklySummary = new List<BlastingInventoryWeeklySummary>();
+
+
 
         private readonly List<MineSequenceL1Expit> _l1Expit = new List<MineSequenceL1Expit>();
 
         private readonly List<MineSequenceAdherenceToB01L1> _adherenceToB01L1 = new List<MineSequenceAdherenceToB01L1>();
-      
+
         private readonly List<MineSequenceDelayRecover> _delayRecover = new List<MineSequenceDelayRecover>();
-        
+
         private readonly List<MineSequenceComments> _comments = new List<MineSequenceComments>();
 
-        public MineSequenceViewModel()
+        public BlastingInventoryViewModel()
         {
             IsEnabledLoadEscondidaImagePath = false;
             IsEnabledLoadEscondidaNorteImagePath = false;
@@ -123,8 +134,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             SelectEscondidaImageCommand = new DelegateCommand(EscondidaImagePath);
             SelectEscondidaNorteImageCommand = new DelegateCommand(EscondidaNorteImagePath);
             LoadImagesCommand = new DelegateCommand(LoadImages, CanProcess).ObservesProperty(() => IsEnabledLoadEscondidaImagePath).ObservesProperty(() => IsEnabledLoadEscondidaNorteImagePath); ;
-            GenerateMineSequenceTemplateCommand = new DelegateCommand(GenerateMineSequenceTemplate);            
-            LoadMineSequenceTemplateCommand = new DelegateCommand(LoadMineSequenceTemplate).ObservesCanExecute(() => IsEnabledGenerateTemplate);
+            GenerateBlastingInventoryTemplateCommand = new DelegateCommand(GenerateBlastingInventoryTemplate);
+            LoadBlastingInventoryTemplateCommand = new DelegateCommand(LoadBlastingInventoryTemplate).ObservesCanExecute(() => IsEnabledGenerateTemplate);
         }
 
         private void EscondidaImagePath()
@@ -172,27 +183,27 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
         private void LoadImages()
         {
-            var targetFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.MineSequenceCSVFilePath;
+            var targetFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.BlastingInventoryCSVFilePath;
             var loadFileInfo = new FileInfo(targetFilePath);
             if (loadFileInfo.Exists)
             {
-                if (targetFilePath.Substring(targetFilePath.Length - 27) == "MineSequencePictureData.csv")
+                if (targetFilePath.Substring(targetFilePath.Length - 32) == "BlastingInventoryPictureData.csv")
                 {
                     try
                     {
                         var openWriteCheck = File.OpenWrite(targetFilePath);
                         openWriteCheck.Close();
 
-                        var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
-                        var findImageOnDate = ExportImageToCsv.SearchByDateMineSequence(newDate, targetFilePath);
+   
+                        var findImageOnDate = ExportImageToCsv.SearchByDateMineSequence(MyDateActual, targetFilePath);
                         if (findImageOnDate == -1)
                         {
-                            ExportImageToCsv.AppendImageMineSequenceToCSV(MyEscondidaImage, MyEscondidaNorteImage, newDate, targetFilePath);
+                            ExportImageToCsv.AppendImageMineSequenceToCSV(MyEscondidaImage, MyEscondidaNorteImage, MyDateActual, targetFilePath);
                         }
                         else
                         {
                             ExportImageToCsv.RemoveItem(targetFilePath, findImageOnDate);
-                            ExportImageToCsv.AppendImageMineSequenceToCSV(MyEscondidaImage, MyEscondidaNorteImage, newDate, targetFilePath);
+                            ExportImageToCsv.AppendImageMineSequenceToCSV(MyEscondidaImage, MyEscondidaNorteImage, MyDateActual, targetFilePath);
                         }
                         MyLastDateRefreshImages = $"{StringResources.Updated}: {DateTime.Now}";
                     }
@@ -211,17 +222,18 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             {
                 var wrongFileMessage = $"{StringResources.WorksheetNotExist} {targetFilePath} {StringResources.ExistsOrNotSelect}";
                 MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-            }         
+            }
         }
 
-        private void GenerateMineSequenceTemplate()
+        private void GenerateBlastingInventoryTemplate()
         {
             var excelPackage = new ExcelPackage();
 
             excelPackage.Workbook.Properties.Author = "BHP";
-            excelPackage.Workbook.Properties.Title = MineSequenceConstants.MineSequenceExcelFileName;
+            excelPackage.Workbook.Properties.Title = BlastingInventoryConstants.BlastingInventoryExcelFileName;
             excelPackage.Workbook.Properties.Company = "BHP";
 
+            ///////
             var l1ExpitWorksheet = excelPackage.Workbook.Worksheets.Add(MineSequenceConstants.L1ExpitMineSequenceWorksheet);
 
             l1ExpitWorksheet.Cells["A1"].Value = "Expit Budget (t)";
@@ -243,7 +255,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             }
 
             var commentWorksheet = excelPackage.Workbook.Worksheets.Add(MineSequenceConstants.CommentsMineSequenceWorksheet);
-            
+
             commentWorksheet.Cells["A1"].Value = "Tag";
             commentWorksheet.Cells["B1"].Value = "Comment";
             commentWorksheet.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -260,7 +272,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             }
 
             var adherenceWorksheet = excelPackage.Workbook.Worksheets.Add(MineSequenceConstants.AdherenceMineSequenceWorksheet);
-            
+
             var adherenceHeader = new List<string>() { "Unplanned Delay (t)", "Volume Ytd (%)", "Spatial Ytd (%)", "AdherenceL1 Ytd (%)" };
 
             for (var i = 0; i < adherenceHeader.Count; i++)
@@ -269,7 +281,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 adherenceWorksheet.Cells[1, i + 1].Style.Font.Bold = true;
                 adherenceWorksheet.Column(1 + i).Width = 21;
                 adherenceWorksheet.Cells[1, i + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                adherenceWorksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;          
+                adherenceWorksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
             }
             adherenceWorksheet.Cells["B1:D1"].Style.Font.Color.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.FontAdherenceMineSequence));
             adherenceWorksheet.Cells["A1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(MineSequenceTemplateColors.HeaderBackgroundAdherenceMineSequence1));
@@ -284,7 +296,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             }
 
             var delayrecoverWorksheet = excelPackage.Workbook.Worksheets.Add(MineSequenceConstants.DelayRecoverMineSequenceWorksheet);
-           
+
             var delayrecoverHeader = new List<string>() { "Ytd PushBack (t)", "Phase Name", "DelayRecover Pushback (t)" };
 
             for (var i = 0; i < delayrecoverHeader.Count; i++)
@@ -321,8 +333,13 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             IsEnabledGenerateTemplate = true;
         }
 
-        private void LoadMineSequenceTemplate()
+        private void LoadBlastingInventoryTemplate()
         {
+            _blast.Clear();
+            _phaseBlast.Clear();
+            _shovels.Clear();
+            _weeklySummary.Clear(); 
+
             _l1Expit.Clear();
             _adherenceToB01L1.Clear();
             _delayRecover.Clear();
@@ -361,7 +378,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         _l1Expit.Add(new MineSequenceL1Expit()
                         {
                             ExpitBudgetTonnes = double.Parse(l1ExpitTemplateWorksheet.Cells[2, 1].Value.ToString()),
-                            ExpitActualPercent = double.Parse(l1ExpitTemplateWorksheet.Cells[2, 2].Value.ToString())/100,
+                            ExpitActualPercent = double.Parse(l1ExpitTemplateWorksheet.Cells[2, 2].Value.ToString()) / 100,
                             BudgetBaseline = l1ExpitTemplateWorksheet.Cells[2, 3].Value.ToString()
                         });
 
@@ -377,9 +394,9 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                         _adherenceToB01L1.Add(new MineSequenceAdherenceToB01L1()
                         {
                             UnplannedDelayTonnes = double.Parse(adherenceTemplateWorksheet.Cells[2, 1].Value.ToString()),
-                            VolumeYtdPercent = double.Parse(adherenceTemplateWorksheet.Cells[2, 2].Value.ToString())/100,
-                            SpatialYtdPercent = double.Parse(adherenceTemplateWorksheet.Cells[2, 3].Value.ToString())/100,
-                            AdherenceL1YtdPercent = double.Parse(adherenceTemplateWorksheet.Cells[2, 4].Value.ToString())/100
+                            VolumeYtdPercent = double.Parse(adherenceTemplateWorksheet.Cells[2, 2].Value.ToString()) / 100,
+                            SpatialYtdPercent = double.Parse(adherenceTemplateWorksheet.Cells[2, 3].Value.ToString()) / 100,
+                            AdherenceL1YtdPercent = double.Parse(adherenceTemplateWorksheet.Cells[2, 4].Value.ToString()) / 100
                         });
 
                         var rows = delayrecoverTemplateWorksheet.Dimension.Rows;
@@ -504,6 +521,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
             }
-        }      
+        }
     }
 }

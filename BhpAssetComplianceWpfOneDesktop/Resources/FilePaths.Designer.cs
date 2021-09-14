@@ -12,7 +12,7 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class FilePaths : global::System.Configuration.ApplicationSettingsBase {
         
         private static FilePaths defaultInstance = ((FilePaths)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new FilePaths())));
@@ -152,6 +152,30 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
             }
             set {
                 this["HistoricalRecordExcelFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Select Excel file path")]
+        public string BlastingInventoryExcelFilePath {
+            get {
+                return ((string)(this["BlastingInventoryExcelFilePath"]));
+            }
+            set {
+                this["BlastingInventoryExcelFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Select CSV file path")]
+        public string BlastingInventoryCSVFilePath {
+            get {
+                return ((string)(this["BlastingInventoryCSVFilePath"]));
+            }
+            set {
+                this["BlastingInventoryCSVFilePath"] = value;
             }
         }
     }

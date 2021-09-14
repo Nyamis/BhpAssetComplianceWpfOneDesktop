@@ -337,6 +337,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             try
             {
                 quarterReconciliationFactors = quartersReconciliationFactorsEngine.Process();
+
             }
             catch (Exception e)
             {

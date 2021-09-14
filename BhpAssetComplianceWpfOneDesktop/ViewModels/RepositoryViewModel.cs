@@ -81,6 +81,21 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             set { SetProperty(ref _myConcentrateQualityExcelFilePath, value); }
         }
 
+        private string _myBlastingInventoryExcelFilePath;
+        public string MyBlastingInventoryExcelFilePath
+        {
+            get { return _myBlastingInventoryExcelFilePath; }
+            set { SetProperty(ref _myBlastingInventoryExcelFilePath, value); }
+        }
+
+        private string _myBlastingInventoryCSVFilePath;
+        public string MyBlastingInventoryCSVFilePath
+        {
+            get { return _myBlastingInventoryCSVFilePath; }
+            set { SetProperty(ref _myBlastingInventoryCSVFilePath, value); }
+        }
+
+
         private string _myHistoricalRecordExcelFilePath;
         public string MyHistoricalRecordExcelFilePath
         {
@@ -98,6 +113,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         public DelegateCommand SelectQuartersReconciliationFactorsDataExcelFileCommand { get; set; }
         public DelegateCommand SelectProcessComplianceDataExcelFileCommand { get; set; }
         public DelegateCommand SelectConcentrateQualityDataExcelFileCommand { get; set; }
+        public DelegateCommand SelectBlastingInventoryDataExcelFileCommand { get; set; }
+        public DelegateCommand SelectBlastingInventoryDataCSVFileCommand { get; set; }
         public DelegateCommand SelectHistoricalRecordDataExcelFileCommand { get; set; }
 
         public RepositoryViewModel()
@@ -112,6 +129,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             MyQuartersReconciliationFactorsExcelFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.QuartersReconciliationFactorsExcelFilePath;
             MyProcessComplianceExcelFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ProcessComplianceExcelFilePath;
             MyConcentrateQualityExcelFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ConcentrateQualityExcelFilePath;
+            MyBlastingInventoryExcelFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.BlastingInventoryExcelFilePath;
+            MyBlastingInventoryCSVFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.BlastingInventoryCSVFilePath;
             MyHistoricalRecordExcelFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.HistoricalRecordExcelFilePath;
             SelectMineSequenceDataExcelFileCommand = new DelegateCommand(SelectMineSequenceDataExcelFile);
             SelectMineSequenceDataCSVFileCommand = new DelegateCommand(SelectMineSequenceDataCSVFile);
@@ -123,6 +142,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             SelectQuartersReconciliationFactorsDataExcelFileCommand = new DelegateCommand(SelectQuartersReconciliationFactorsDataExcelFile);
             SelectProcessComplianceDataExcelFileCommand = new DelegateCommand(SelectProcessComplianceDataExcelFile);
             SelectConcentrateQualityDataExcelFileCommand = new DelegateCommand(SelectConcentrateQualityDataExcelFile);
+            SelectBlastingInventoryDataExcelFileCommand = new DelegateCommand(SelectBlastingInventoryDataExcelFile);
+            SelectBlastingInventoryDataCSVFileCommand = new DelegateCommand(SelectBlastingInventoryDataCSVFile);
             SelectHistoricalRecordDataExcelFileCommand = new DelegateCommand(SelectHistoricalRecordDataExcelFile);
         }       
 
@@ -272,6 +293,36 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             {
                 MyConcentrateQualityExcelFilePath = new FileInfo(openFileDialog.FileName).FullName;
                 BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ConcentrateQualityExcelFilePath = MyConcentrateQualityExcelFilePath;
+                BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.Save();
+            }
+        }
+
+        private void SelectBlastingInventoryDataExcelFile()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Title = StringResources.SelectFile,
+                Filter = "Excel Worksheets (*.xlsx)|*.xlsx"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                MyBlastingInventoryExcelFilePath = new FileInfo(openFileDialog.FileName).FullName;
+                BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.BlastingInventoryExcelFilePath = MyBlastingInventoryExcelFilePath;
+                BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.Save();
+            }
+        }
+
+        private void SelectBlastingInventoryDataCSVFile()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Title = StringResources.SelectFile,
+                Filter = "CSV file (*.csv)|*.csv"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                MyBlastingInventoryCSVFilePath = new FileInfo(openFileDialog.FileName).FullName;
+                BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.BlastingInventoryCSVFilePath = MyBlastingInventoryCSVFilePath;
                 BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.Save();
             }
         }

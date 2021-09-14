@@ -108,14 +108,15 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             OreToMillWorksheet.Column(1).Width = 11;
 
             var RecoveryWorksheet = excelPackage.Workbook.Worksheets.Add(ProcessComplianceConstants.RecoveryProcessComplianceWorksheet);
-            RecoveryWorksheet.Cells["B1:C1"].Style.Font.Bold = true;
-            RecoveryWorksheet.Cells["B1:C1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            RecoveryWorksheet.Cells["B1:C1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
-            RecoveryWorksheet.Cells["B1:C1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            RecoveryWorksheet.Cells["B1:D1"].Style.Font.Bold = true;
+            RecoveryWorksheet.Cells["B1:D1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            RecoveryWorksheet.Cells["B1:D1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.OrangeBackgroundProcessCompliance));
+            RecoveryWorksheet.Cells["B1:D1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             RecoveryWorksheet.Cells["B1"].Value = "Budget (%)";
             RecoveryWorksheet.Cells["C1"].Value = "Actual (%)";
+            RecoveryWorksheet.Cells["D1"].Value = "MD (%)";
 
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < 4; i++)
             {
                 RecoveryWorksheet.Cells[1, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                 RecoveryWorksheet.Cells[2, 1 + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
@@ -125,7 +126,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             RecoveryWorksheet.Cells["A2"].Style.Font.Bold = true;
             RecoveryWorksheet.Cells["A2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
             RecoveryWorksheet.Cells["A2"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(ProcessComplianceTemplateColors.GrayBackgroundProcessCompliance));
-            RecoveryWorksheet.Cells["A2:C2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            RecoveryWorksheet.Cells["A2:D2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             RecoveryWorksheet.Cells["A2"].Value = "Rec Global";
 
             RecoveryWorksheet.Cells["A5:E5"].Style.Font.Bold = true;
@@ -270,8 +271,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     try
                     {
                         // Check if the file is already open
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
 
                         var rows = oreToMillTemplateWorksheet.Dimension.Rows;
                         for (var i = 0; i < rows; i++)
@@ -311,14 +312,18 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                                 if (recoveryTemplateWorksheet.Cells[2, 3].Value == null)
                                     recoveryTemplateWorksheet.Cells[2, 3].Value = -99;
 
+                                if (recoveryTemplateWorksheet.Cells[2, 4].Value == null)
+                                    recoveryTemplateWorksheet.Cells[2, 4].Value = -99;
+
                                 for (var j = 0; j < 4; j++)
                                     if (recoveryTemplateWorksheet.Cells[6 + i, 2 + j].Value == null)
-                                        recoveryTemplateWorksheet.Cells[6 + i, 2 + j].Value = -99;
+                                        recoveryTemplateWorksheet.Cells[6 + i, 2 + j].Value = -9900;
 
                                 _recovery.Add(new ProcessComplianceRecovery()
                                 {
                                     RecGlobalBudget = double.Parse(recoveryTemplateWorksheet.Cells[2, 2].Value.ToString()),
                                     RecGlobalActual = double.Parse(recoveryTemplateWorksheet.Cells[2, 3].Value.ToString()),
+                                    RecGlobalMD = double.Parse(recoveryTemplateWorksheet.Cells[2, 4].Value.ToString()),
                                     Phase = recoveryTemplateWorksheet.Cells[6 + i, 1].Value.ToString(),
                                     RecoveryBudget = double.Parse(recoveryTemplateWorksheet.Cells[6 + i, 2].Value.ToString())/100,
                                     RecoveryActual = double.Parse(recoveryTemplateWorksheet.Cells[6 + i, 3].Value.ToString())/100,
@@ -330,13 +335,16 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
                         for (var i = 0; i < 3; i++)
                         {
-                            for (var j = 0; j < 3; j++)
+                            for (var j = 0; j < 2; j++)
                                 if (OLAPTemplateWorksheet.Cells[2 + i, 2 + j].Value == null)
                                     OLAPTemplateWorksheet.Cells[2 + i, 2 + j].Value = -99;
 
+                             if (OLAPTemplateWorksheet.Cells[2 + i, 4].Value == null)
+                                OLAPTemplateWorksheet.Cells[2 + i, 4].Value = -9900;
+
                             for (var j = 0; j < 2; j++)
                                 if (OLAPTemplateWorksheet.Cells[2 + i, 7 + j].Value == null)
-                                    OLAPTemplateWorksheet.Cells[2 + i, 7 + j].Value = -99;
+                                    OLAPTemplateWorksheet.Cells[2 + i, 7 + j].Value = -9900;
 
                             _OLAP.Add(new ProcessComplianceOLAP()
                             {
@@ -352,13 +360,16 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
 
                         for (var i = 0; i < 3; i++)
                         {
-                            for (var j = 0; j < 3; j++)
+                            for (var j = 0; j < 2; j++)
                                 if (sulphideTemplateWorksheet.Cells[2 + i, 2 + j].Value == null)
                                     sulphideTemplateWorksheet.Cells[2 + i, 2 + j].Value = -99;
 
+                            if (sulphideTemplateWorksheet.Cells[2 + i, 4].Value == null)
+                                sulphideTemplateWorksheet.Cells[2 + i, 4].Value = -9900;
+
                             for (var j = 0; j < 2; j++)
                                 if (sulphideTemplateWorksheet.Cells[2 + i, 7 + j].Value == null)
-                                    sulphideTemplateWorksheet.Cells[2 + i, 7 + j].Value = -99;
+                                    sulphideTemplateWorksheet.Cells[2 + i, 7 + j].Value = -9900;
 
                             _sulphide.Add(new ProcessComplianceSulphide()
                             {
@@ -372,6 +383,92 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             });
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ProcessComplianceExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var oreToMillWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.OreToMillProcessComplianceWorksheet];
+                            var recoveryWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.RecoveryProcessComplianceWorksheet];
+                            var OLAPWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.OLAPProcessComplianceWorksheet];
+                            var sulphideWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.SulphideProcessComplianceWorksheet];
+
+                            if (oreToMillWorksheet != null & recoveryWorksheet != null & OLAPWorksheet != null & sulphideWorksheet != null)
+                            {
+                                var newDate = new DateTime(MyMonthlyDate.Year, MyMonthlyDate.Month, 1, 00, 00, 00);
+                                var lastRow1 = oreToMillWorksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _oreToMill.Count; i++)
+                                {
+                                    oreToMillWorksheet.Cells[i + lastRow1, 1].Value = newDate;
+                                    oreToMillWorksheet.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    oreToMillWorksheet.Cells[i + lastRow1, 2].Value = _oreToMill[i].SpiGlobalBudget;
+                                    oreToMillWorksheet.Cells[i + lastRow1, 3].Value = _oreToMill[i].SpiGlobalActual;
+                                    oreToMillWorksheet.Cells[i + lastRow1, 4].Value = _oreToMill[i].Phase;
+                                    oreToMillWorksheet.Cells[i + lastRow1, 5].Value = _oreToMill[i].OretoMillBudget;
+                                    oreToMillWorksheet.Cells[i + lastRow1, 6].Value = _oreToMill[i].OretoMillActual;
+                                    oreToMillWorksheet.Cells[i + lastRow1, 7].Value = _oreToMill[i].HardnessBudget;
+                                    oreToMillWorksheet.Cells[i + lastRow1, 8].Value = _oreToMill[i].HardnessActual;
+                                }
+
+                                var lastRow2 = recoveryWorksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _recovery.Count; i++)
+                                {
+                                    recoveryWorksheet.Cells[i + lastRow2, 1].Value = newDate;
+                                    recoveryWorksheet.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    recoveryWorksheet.Cells[i + lastRow2, 2].Value = _recovery[i].RecGlobalBudget;
+                                    recoveryWorksheet.Cells[i + lastRow2, 3].Value = _recovery[i].RecGlobalActual;
+                                    recoveryWorksheet.Cells[i + lastRow2, 4].Value = _recovery[i].Phase;
+                                    recoveryWorksheet.Cells[i + lastRow2, 5].Value = _recovery[i].RecoveryBudget;
+                                    recoveryWorksheet.Cells[i + lastRow2, 6].Value = _recovery[i].RecoveryActual;
+                                    recoveryWorksheet.Cells[i + lastRow2, 7].Value = _recovery[i].FeedCuBudget;
+                                    recoveryWorksheet.Cells[i + lastRow2, 8].Value = _recovery[i].FeedCuActual;
+                                    recoveryWorksheet.Cells[i + lastRow2, 9].Value = _recovery[i].RecGlobalMD;
+                                }
+
+                                var lastRow3 = OLAPWorksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _OLAP.Count; i++)
+                                {
+                                    OLAPWorksheet.Cells[i + lastRow3, 1].Value = newDate;
+                                    OLAPWorksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    OLAPWorksheet.Cells[i + lastRow3, 2].Value = _OLAP[i].FeedGrade;
+                                    OLAPWorksheet.Cells[i + lastRow3, 3].Value = _OLAP[i].Budget;
+                                    OLAPWorksheet.Cells[i + lastRow3, 4].Value = _OLAP[i].Actual;
+                                    OLAPWorksheet.Cells[i + lastRow3, 5].Value = _OLAP[i].Compliance;
+                                    OLAPWorksheet.Cells[i + lastRow3, 6].Value = _OLAP[i].Distribution;
+                                    OLAPWorksheet.Cells[i + lastRow3, 7].Value = _OLAP[i].DistributionBudget;
+                                    OLAPWorksheet.Cells[i + lastRow3, 8].Value = _OLAP[i].DistributionActual;
+                                }
+
+                                var lastRow4 = sulphideWorksheet.Dimension.End.Row + 1;
+                                for (var i = 0; i < _sulphide.Count; i++)
+                                {
+                                    sulphideWorksheet.Cells[i + lastRow4, 1].Value = newDate;
+                                    sulphideWorksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    sulphideWorksheet.Cells[i + lastRow4, 2].Value = _sulphide[i].FeedGrade;
+                                    sulphideWorksheet.Cells[i + lastRow4, 3].Value = _sulphide[i].Budget;
+                                    sulphideWorksheet.Cells[i + lastRow4, 4].Value = _sulphide[i].Actual;
+                                    sulphideWorksheet.Cells[i + lastRow4, 5].Value = _sulphide[i].Compliance;
+                                    sulphideWorksheet.Cells[i + lastRow4, 6].Value = _sulphide[i].Distribution;
+                                    sulphideWorksheet.Cells[i + lastRow4, 7].Value = _sulphide[i].DistributionBudget;
+                                    sulphideWorksheet.Cells[i + lastRow4, 8].Value = _sulphide[i].DistributionActual;
+                                }
+                                byte[] fileText2 = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText2);
+                                MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -381,122 +478,6 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                 else
                 {
                     var wrongFileMessage = $"{StringResources.WrongUploadedFile} {openFilePath.FullName} {StringResources.IsTheRightOne}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
-
-
-
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.ProcessComplianceExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-
-
-                if (loadFileInfo.Exists)
-                {
-                   try
-                   {
-                        var package = new ExcelPackage(loadFileInfo);
-                        var oreToMillWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.OreToMillProcessComplianceWorksheet];
-                        var recoveryWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.RecoveryProcessComplianceWorksheet];
-                        var OLAPWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.OLAPProcessComplianceWorksheet];
-                        var sulphideWorksheet = package.Workbook.Worksheets[ProcessComplianceConstants.SulphideProcessComplianceWorksheet];
-
-                        if (oreToMillWorksheet != null & recoveryWorksheet != null & OLAPWorksheet != null & sulphideWorksheet != null)
-                        {
-                            var newDate = new DateTime(MyMonthlyDate.Year, MyMonthlyDate.Month, 1, 00, 00, 00);
-                            var lastRow1 = oreToMillWorksheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _oreToMill.Count; i++)
-                            {
-                                oreToMillWorksheet.Cells[i + lastRow1, 1].Value = newDate;
-                                oreToMillWorksheet.Cells[i + lastRow1, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                oreToMillWorksheet.Cells[i + lastRow1, 2].Value = _oreToMill[i].SpiGlobalBudget;
-                                oreToMillWorksheet.Cells[i + lastRow1, 3].Value = _oreToMill[i].SpiGlobalActual;
-                                oreToMillWorksheet.Cells[i + lastRow1, 4].Value = _oreToMill[i].Phase;
-                                oreToMillWorksheet.Cells[i + lastRow1, 5].Value = _oreToMill[i].OretoMillBudget;
-                                oreToMillWorksheet.Cells[i + lastRow1, 6].Value = _oreToMill[i].OretoMillActual;
-                                oreToMillWorksheet.Cells[i + lastRow1, 7].Value = _oreToMill[i].HardnessBudget;
-                                oreToMillWorksheet.Cells[i + lastRow1, 8].Value = _oreToMill[i].HardnessActual;
-                            }
-
-                            var lastRow2 = recoveryWorksheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _recovery.Count; i++)
-                            {
-                                recoveryWorksheet.Cells[i + lastRow2, 1].Value = newDate;
-                                recoveryWorksheet.Cells[i + lastRow2, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                recoveryWorksheet.Cells[i + lastRow2, 2].Value = _recovery[i].RecGlobalBudget;
-                                recoveryWorksheet.Cells[i + lastRow2, 3].Value = _recovery[i].RecGlobalActual;
-                                recoveryWorksheet.Cells[i + lastRow2, 4].Value = _recovery[i].Phase;
-                                recoveryWorksheet.Cells[i + lastRow2, 5].Value = _recovery[i].RecoveryBudget;
-                                recoveryWorksheet.Cells[i + lastRow2, 6].Value = _recovery[i].RecoveryActual;
-                                recoveryWorksheet.Cells[i + lastRow2, 7].Value = _recovery[i].FeedCuBudget;
-                                recoveryWorksheet.Cells[i + lastRow2, 8].Value = _recovery[i].FeedCuActual;
-                            }
-
-                            var lastRow3 = OLAPWorksheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _OLAP.Count; i++)
-                            {
-                                OLAPWorksheet.Cells[i + lastRow3, 1].Value = newDate;
-                                OLAPWorksheet.Cells[i + lastRow3, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                OLAPWorksheet.Cells[i + lastRow3, 2].Value = _OLAP[i].FeedGrade;
-                                OLAPWorksheet.Cells[i + lastRow3, 3].Value = _OLAP[i].Budget;
-                                OLAPWorksheet.Cells[i + lastRow3, 4].Value = _OLAP[i].Actual;
-                                OLAPWorksheet.Cells[i + lastRow3, 5].Value = _OLAP[i].Compliance;
-                                OLAPWorksheet.Cells[i + lastRow3, 6].Value = _OLAP[i].Distribution;
-                                OLAPWorksheet.Cells[i + lastRow3, 7].Value = _OLAP[i].DistributionBudget;
-                                OLAPWorksheet.Cells[i + lastRow3, 8].Value = _OLAP[i].DistributionActual;
-                            }
-
-                            var lastRow4 = sulphideWorksheet.Dimension.End.Row + 1;
-                            for (var i = 0; i < _sulphide.Count; i++)
-                            {
-                                sulphideWorksheet.Cells[i + lastRow4, 1].Value = newDate;
-                                sulphideWorksheet.Cells[i + lastRow4, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                sulphideWorksheet.Cells[i + lastRow4, 2].Value = _sulphide[i].FeedGrade;
-                                sulphideWorksheet.Cells[i + lastRow4, 3].Value = _sulphide[i].Budget;
-                                sulphideWorksheet.Cells[i + lastRow4, 4].Value = _sulphide[i].Actual;
-                                sulphideWorksheet.Cells[i + lastRow4, 5].Value = _sulphide[i].Compliance;
-                                sulphideWorksheet.Cells[i + lastRow4, 6].Value = _sulphide[i].Distribution;
-                                sulphideWorksheet.Cells[i + lastRow4, 7].Value = _sulphide[i].DistributionBudget;
-                                sulphideWorksheet.Cells[i + lastRow4, 8].Value = _sulphide[i].DistributionActual;
-                            }
-                            byte[] fileText2 = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText2);
-                            MyLastDateRefreshMonthlyValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        else
-                        {
-                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                        }
-
-                   }
-                   catch (Exception ex)
-                   {
-                        MessageBox.Show(ex.Message, StringResources.UploadError);
-                   }
-
-                    //if (oreToMillWorksheet != null & recoveryWorksheet != null & OLAPWorksheet != null & sulphideWorksheet != null)
-                    //{
-                    //    try
-                    //    {
-                    //        //var openWriteCheck = File.OpenWrite(loadFilePath);
-                    //        //openWriteCheck.Close();
-
-                            
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        MessageBox.Show(ex.Message, StringResources.UploadError);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                    //    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    //}                   
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
             }

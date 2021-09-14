@@ -1,0 +1,128 @@
+﻿<UserControl x:Class="BhpAssetComplianceWpfOneDesktop.Views.BlastingInventoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:resources="clr-namespace:BhpAssetComplianceWpfOneDesktop.Resources"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="650">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ContentControl Content="{Binding MyPosterHeader}" Grid.Row="0"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="{x:Static resources:StringResources.Escondida}" Grid.Column="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="219"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Image  Source="{Binding MyEscondidaImageSource}"  />
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Button Content="{x:Static resources:StringResources.SelectImage}"
+                        Command="{Binding SelectEscondidaImageCommand}"/>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="{x:Static resources:StringResources.EscondidaNorte}" Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="219"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Image  Source="{Binding MyEscondidaNorteImageSource}"  />
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Button Content="{x:Static resources:StringResources.SelectImage}"
+                        Command="{Binding SelectEscondidaNorteImageCommand}"/>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <GroupBox Header="{x:Static resources:StringResources.Pictures}" Grid.Row="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:StringResources.Date}"
+                                   Style="{StaticResource TextBlockStyle}" Grid.Column="0"/>
+                            <DatePicker  SelectedDate="{Binding MyDateActual}" Grid.Column="1"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Button Content="{x:Static resources:StringResources.LoadImages}" Command="{Binding LoadImagesCommand}"/>
+                        </Grid>
+
+
+                        <Grid Grid.Row="2">
+                            <TextBlock Text="{Binding MyLastDateRefreshImages}" Style="{StaticResource TextBlockStyle}" />
+                        </Grid>
+
+                    </Grid>
+
+                </GroupBox>
+
+                <GroupBox Header="{x:Static resources:StringResources.Template}" Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+
+                        <Grid Grid.Row="0">
+                            <Button Content="{x:Static resources:StringResources.GenerateTemplate}" Command="{Binding  GenerateBlastingInventoryTemplateCommand}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Button Content="{x:Static resources:StringResources.LoadTemplate}" Command="{Binding LoadBlastingInventoryTemplateCommand}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <TextBlock Text="{Binding MyLastRefreshValues}" Style="{StaticResource TextBlockStyle}" />
+                        </Grid>
+
+                    </Grid>
+
+                </GroupBox>
+
+
+            </Grid>
+
+           
+        </Grid>
+    </Grid>
+</UserControl>

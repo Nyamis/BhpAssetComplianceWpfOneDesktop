@@ -40,13 +40,16 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         {
             get
             {
-                return new List<string>() { StringResources.MineSequence, 
-                    StringResources.MineCompliance, 
-                    StringResources.DepressurizationCompliance, 
-                    StringResources.Geotechnical, 
-                    StringResources.QuartersReconciliationFactors, 
-                    StringResources.ProcessCompliance, 
+                return new List<string>() {
+                    StringResources.All,
+                    StringResources.MineSequence,
+                    StringResources.MineCompliance,
+                    StringResources.DepressurizationCompliance,
+                    StringResources.Geotechnical,
+                    StringResources.QuartersReconciliationFactors,
+                    StringResources.ProcessCompliance,
                     StringResources.ConcentrateQuality,
+                    StringResources.BlastingInventory,
                     StringResources.Other };
             }
             set
@@ -89,7 +92,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             var openWriteCheck = File.OpenWrite(loadFilePath);
                             openWriteCheck.Close();
 
-                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, MyDateActual.Day, 00, 00, 00);
                             var lastRow = worksheet.Dimension.End.Row + 1;
 
                             worksheet.Cells[lastRow, 1].Value = newDate;

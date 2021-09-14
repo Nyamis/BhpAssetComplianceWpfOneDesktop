@@ -10,6 +10,7 @@ namespace BhpAssetComplianceWpfOneDesktop.Models.ProcessComplianceModels
     {
         public double RecGlobalBudget { get; set; }
         public double RecGlobalActual { get; set; }
+        public double RecGlobalMD { get; set; }
         public string Phase { get; set; }
         public double RecoveryBudget { get; set; }
         public double RecoveryActual { get; set; }

@@ -70,6 +70,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string All {
+            get {
+                return ResourceManager.GetString("All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BHP AssetCompliance.
         /// </summary>
         public static string ApplicationName {
@@ -93,6 +102,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         public static string Area {
             get {
                 return ResourceManager.GetString("Area", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blasting Inventory.
+        /// </summary>
+        public static string BlastingInventory {
+            get {
+                return ResourceManager.GetString("BlastingInventory", resourceCulture);
             }
         }
         
@@ -367,6 +385,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pictures.
+        /// </summary>
+        public static string Pictures {
+            get {
+                return ResourceManager.GetString("Pictures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Poster.
         /// </summary>
         public static string Poster {
@@ -453,6 +480,15 @@ namespace BhpAssetComplianceWpfOneDesktop.Resources {
         public static string SelectImage {
             get {
                 return ResourceManager.GetString("SelectImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Table Image.
+        /// </summary>
+        public static string SelectTableImage {
+            get {
+                return ResourceManager.GetString("SelectTableImage", resourceCulture);
             }
         }
         

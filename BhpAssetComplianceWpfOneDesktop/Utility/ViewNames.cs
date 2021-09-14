@@ -13,5 +13,6 @@ namespace BhpAssetComplianceWpfOneDesktop.Utility
         public const string QuartersReconciliationFactorsView = "QuartersReconciliationFactorsView";
         public const string HistoricalRecordView = "HistoricalRecordView";
         public const string RepositoryView = "RepositoryView";
+        public const string BlastingInventoryView = "BlastingInventoryView";
     }
 }

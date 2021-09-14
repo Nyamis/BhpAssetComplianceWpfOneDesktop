@@ -65,6 +65,48 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             set { SetProperty(ref _isEnabledLoadEscondidaNorteImagePath, value); }
         }
 
+        private string _myEscondidaTable;
+        public string MyEscondidaTable
+        {
+            get { return _myEscondidaTable; }
+            set { SetProperty(ref _myEscondidaTable, value); }
+        }
+
+        private string _myEscondidaNorteTable;
+        public string MyEscondidaNorteTable
+        {
+            get { return _myEscondidaNorteTable; }
+            set { SetProperty(ref _myEscondidaNorteTable, value); }
+        }
+
+        private ImageSource _myEscondidaTableSource;
+        public ImageSource MyEscondidaTableSource
+        {
+            get { return _myEscondidaTableSource; }
+            set { SetProperty(ref _myEscondidaTableSource, value); }
+        }
+
+        private ImageSource _myEscondidaNorteTableSource;
+        public ImageSource MyEscondidaNorteTableSource
+        {
+            get { return _myEscondidaNorteTableSource; }
+            set { SetProperty(ref _myEscondidaNorteTableSource, value); }
+        }
+
+        private bool _isEnabledLoadEscondidaTablePath;
+        public bool IsEnabledLoadEscondidaTablePath
+        {
+            get { return _isEnabledLoadEscondidaTablePath; }
+            set { SetProperty(ref _isEnabledLoadEscondidaTablePath, value); }
+        }
+
+        private bool _isEnabledLoadEscondidaNorteTablePath;
+        public bool IsEnabledLoadEscondidaNorteTablePath
+        {
+            get { return _isEnabledLoadEscondidaNorteTablePath; }
+            set { SetProperty(ref _isEnabledLoadEscondidaNorteTablePath, value); }
+        }
+
         private bool _isEnabledGenerateTemplate;
         public bool IsEnabledGenerateTemplate
         {
@@ -95,6 +137,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         
         public DelegateCommand SelectEscondidaImageCommand { get; private set; }
         public DelegateCommand SelectEscondidaNorteImageCommand { get; private set; }
+        public DelegateCommand SelectEscondidaTableCommand { get; private set; }
+        public DelegateCommand SelectEscondidaNorteTableCommand { get; private set; }
         public DelegateCommand LoadImagesCommand { get; private set; }
         public DelegateCommand GenerateGeotechnicalNotesTemplateCommand { get; private set; }
         public DelegateCommand LoadGeotechnicalNotesTemplateCommand { get; private set; }
@@ -105,11 +149,15 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
         {
             IsEnabledLoadEscondidaImagePath = false;
             IsEnabledLoadEscondidaNorteImagePath = false;
+            IsEnabledLoadEscondidaTablePath = false;
+            IsEnabledLoadEscondidaNorteTablePath = false;
             IsEnabledGenerateTemplate = false;
             MyDateActual = DateTime.Now;
             SelectEscondidaImageCommand = new DelegateCommand(EscondidaImagePath);
             SelectEscondidaNorteImageCommand = new DelegateCommand(EscondidaNorteImagePath);
-            LoadImagesCommand = new DelegateCommand(LoadImages,CanProcess).ObservesProperty(() => IsEnabledLoadEscondidaImagePath).ObservesProperty(() => IsEnabledLoadEscondidaNorteImagePath);
+            SelectEscondidaTableCommand = new DelegateCommand(EscondidaTablePath);
+            SelectEscondidaNorteTableCommand = new DelegateCommand(EscondidaNorteTablePath);
+            LoadImagesCommand = new DelegateCommand(LoadImages,CanProcess).ObservesProperty(() => IsEnabledLoadEscondidaImagePath).ObservesProperty(() => IsEnabledLoadEscondidaNorteImagePath).ObservesProperty(() => IsEnabledLoadEscondidaTablePath).ObservesProperty(() => IsEnabledLoadEscondidaNorteTablePath);
             GenerateGeotechnicalNotesTemplateCommand = new DelegateCommand(GenerateGeotechnicalNotesTemplate);
             LoadGeotechnicalNotesTemplateCommand = new DelegateCommand(LoadGeotechnicalNotesTemplate).ObservesCanExecute(() => IsEnabledGenerateTemplate);
         }
@@ -148,9 +196,43 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             IsEnabledLoadEscondidaNorteImagePath = true;
         }
 
+        private void EscondidaTablePath()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Title = "Select a picture",
+                Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+              "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+              "Portable Network Graphic (*.png)|*.png"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                MyEscondidaTable = openFileDialog.FileName;
+                MyEscondidaTableSource = new BitmapImage(new Uri(MyEscondidaTable));
+            }
+            IsEnabledLoadEscondidaTablePath = true;
+        }
+
+        private void EscondidaNorteTablePath()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Title = "Select a picture",
+                Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+              "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+              "Portable Network Graphic (*.png)|*.png"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                MyEscondidaNorteTable = openFileDialog.FileName;
+                MyEscondidaNorteTableSource = new BitmapImage(new Uri(MyEscondidaNorteTable));
+            }
+            IsEnabledLoadEscondidaNorteTablePath = true;
+        }
+
         private bool CanProcess()
         {
-            if (IsEnabledLoadEscondidaImagePath & IsEnabledLoadEscondidaNorteImagePath)
+            if (IsEnabledLoadEscondidaImagePath & IsEnabledLoadEscondidaNorteImagePath & IsEnabledLoadEscondidaTablePath & IsEnabledLoadEscondidaNorteTablePath)
             {
                 return true;
             }
@@ -163,34 +245,34 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
             var loadFileInfo = new FileInfo(targetFilePath);
             if (loadFileInfo.Exists)
             {
-                if (targetFilePath.Substring(targetFilePath.Length - 27) == "GeotechnicalPictureData.csv")
+                if (targetFilePath.Substring(targetFilePath.Length - 28) == "GeotechnicalPicturesData.csv")
                 {
                     try
                     {
                         var openWriteCheck = File.OpenWrite(targetFilePath);
                         openWriteCheck.Close();
-
                         var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
-                        var findEscondidaImageOnDate = ExportImageToCsv.SearchByDate("Escondida Pit", newDate, targetFilePath);
-                        if (findEscondidaImageOnDate == -1)
+
+                        var findImageOnDate = ExportImageToCsv.SearchByDateGeotechnical("Pictures", newDate, targetFilePath);
+                        if (findImageOnDate == -1)
                         {
-                            ExportImageToCsv.AppendImageToCSV(MyEscondidaImage, "Escondida Pit", newDate, targetFilePath);
+                            ExportImageToCsv.AppendImageGeotechnicalToCSV(MyEscondidaImage, MyEscondidaNorteImage, "Pictures", newDate, targetFilePath);
                         }
                         else
                         {
-                            ExportImageToCsv.RemoveItem(targetFilePath, findEscondidaImageOnDate);
-                            ExportImageToCsv.AppendImageToCSV(MyEscondidaImage, "Escondida Pit", newDate, targetFilePath);
+                            ExportImageToCsv.RemoveItem(targetFilePath, findImageOnDate);
+                            ExportImageToCsv.AppendImageGeotechnicalToCSV(MyEscondidaImage, MyEscondidaNorteImage, "Pictures", newDate, targetFilePath);
                         }
 
-                        var findEscondidaNorteImageOnDate = ExportImageToCsv.SearchByDate("Escondida Norte Pit", newDate, targetFilePath);
-                        if (findEscondidaNorteImageOnDate == -1)
+                        var findTableOnDate = ExportImageToCsv.SearchByDateGeotechnical("Tables", newDate, targetFilePath);
+                        if (findTableOnDate == -1)
                         {
-                            ExportImageToCsv.AppendImageToCSV(MyEscondidaNorteImage, "Escondida Norte Pit", newDate, targetFilePath);
+                            ExportImageToCsv.AppendImageGeotechnicalToCSV(MyEscondidaTable, MyEscondidaNorteTable, "Tables", newDate, targetFilePath);
                         }
                         else
                         {
-                            ExportImageToCsv.RemoveItem(targetFilePath, findEscondidaNorteImageOnDate);
-                            ExportImageToCsv.AppendImageToCSV(MyEscondidaNorteImage, "Escondida Norte Pit", newDate, targetFilePath);
+                            ExportImageToCsv.RemoveItem(targetFilePath, findTableOnDate);
+                            ExportImageToCsv.AppendImageGeotechnicalToCSV(MyEscondidaTable, MyEscondidaNorteTable, "Tables", newDate, targetFilePath);
                         }
                         MyLastDateRefreshImages = $"{StringResources.Updated}: {DateTime.Now}";
                     }
@@ -338,8 +420,8 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     try
                     {
                         // Check if the file is already open
-                        var fileStream = File.OpenWrite(openFileDialog.FileName);
-                        fileStream.Close();
+                        var openWriteCheck = File.OpenWrite(openFileDialog.FileName);
+                        openWriteCheck.Close();
 
                         var rows = escondidaWorksheet.Dimension.Rows;
                         for (var i = 1; i < rows; i++)
@@ -387,6 +469,58 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                             }
                         }
                         excelPackage.Dispose();
+
+                        var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.GeotechnicalNotesExcelFilePath;
+                        var loadFileInfo = new FileInfo(loadFilePath);
+
+                        if (loadFileInfo.Exists)
+                        {
+                            var package = new ExcelPackage(loadFileInfo);
+                            var worksheet = package.Workbook.Worksheets[GeotechnicalNotesConstants.NotesGeotechnicalNotesSpotfireWorksheet];
+
+                            if (worksheet != null)
+                            {
+                                var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
+                                var lastRow = worksheet.Dimension.End.Row + 1;
+
+                                for (var i = 0; i < _notes.Count; i++)
+                                {
+                                    worksheet.Cells[i + lastRow, 1].Value = newDate;
+                                    worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
+                                    worksheet.Cells[i + lastRow, 2].Value = _notes[i].Place;
+                                    worksheet.Cells[i + lastRow, 3].Value = _notes[i].NoteType;
+                                    worksheet.Cells[i + lastRow, 4].Value = _notes[i].Phase;
+                                    worksheet.Cells[i + lastRow, 5].Value = _notes[i].State;
+
+                                    if (_notes[i].State == "Positive")
+                                    {
+                                        worksheet.Cells[i + lastRow, 6].Value = 0;
+                                    }
+                                    else if (_notes[i].State == "Negative")
+                                    {
+                                        worksheet.Cells[i + lastRow, 6].Value = 1;
+                                    }
+                                    else if (_notes[i].State == "Neutral")
+                                    {
+                                        worksheet.Cells[i + lastRow, 6].Value = 2;
+                                    }
+                                    worksheet.Cells[i + lastRow, 7].Value = _notes[i].Note;
+                                }
+                                byte[] fileText = package.GetAsByteArray();
+                                File.WriteAllBytes(loadFilePath, fileText);
+                                MyLastRefreshValues = $"{StringResources.Updated}: {DateTime.Now}";
+                            }
+                            else
+                            {
+                                var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
+                                MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                            }
+                        }
+                        else
+                        {
+                            var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
+                            MessageBox.Show(wrongFileMessage, StringResources.UploadError);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -399,67 +533,7 @@ namespace BhpAssetComplianceWpfOneDesktop.ViewModels
                     MessageBox.Show(wrongFileMessage, StringResources.UploadError);
                 }
 
-                var loadFilePath = BhpAssetComplianceWpfOneDesktop.Resources.FilePaths.Default.GeotechnicalNotesExcelFilePath;
-                var loadFileInfo = new FileInfo(loadFilePath);
-
-                if (loadFileInfo.Exists)
-                {
-                    var package = new ExcelPackage(loadFileInfo);
-                    var worksheet = package.Workbook.Worksheets[GeotechnicalNotesConstants.NotesGeotechnicalNotesSpotfireWorksheet];
-
-                    if (worksheet != null)
-                    {
-                        try
-                        {
-                            var openWriteCheck = File.OpenWrite(loadFilePath);
-                            openWriteCheck.Close();
-
-                            var newDate = new DateTime(MyDateActual.Year, MyDateActual.Month, 1, 00, 00, 00);
-                            var lastRow = worksheet.Dimension.End.Row + 1;
-
-                            for (var i = 0; i < _notes.Count; i++)
-                            {
-                                worksheet.Cells[i + lastRow, 1].Value = newDate;
-                                worksheet.Cells[i + lastRow, 1].Style.Numberformat.Format = "yyyy-MM-dd";
-                                worksheet.Cells[i + lastRow, 2].Value = _notes[i].Place;
-                                worksheet.Cells[i + lastRow, 3].Value = _notes[i].NoteType;
-                                worksheet.Cells[i + lastRow, 4].Value = _notes[i].Phase;
-                                worksheet.Cells[i + lastRow, 5].Value = _notes[i].State;
-
-                                if (_notes[i].State == "Positive")
-                                {
-                                    worksheet.Cells[i + lastRow, 6].Value = 0;
-                                }
-                                else if (_notes[i].State == "Negative")
-                                {
-                                    worksheet.Cells[i + lastRow, 6].Value = 1;
-                                }
-                                else if (_notes[i].State == "Neutral")
-                                {
-                                    worksheet.Cells[i + lastRow, 6].Value = 2;
-                                }
-                                worksheet.Cells[i + lastRow, 7].Value = _notes[i].Note;
-                            }
-                            byte[] fileText = package.GetAsByteArray();
-                            File.WriteAllBytes(loadFilePath, fileText);
-                            MyLastRefreshValues = $"{StringResources.Updated}: {DateTime.Now}";
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, StringResources.UploadError);
-                        }
-                    }
-                    else
-                    {
-                        var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.IsTheRightOne}";
-                        MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                    }                 
-                }
-                else
-                {
-                    var wrongFileMessage = $"{StringResources.WorksheetNotExist} {loadFilePath} {StringResources.ExistsOrNotSelect}";
-                    MessageBox.Show(wrongFileMessage, StringResources.UploadError);
-                }
+                
             }
         }       
     }

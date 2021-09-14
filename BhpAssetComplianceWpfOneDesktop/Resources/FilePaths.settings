@@ -35,5 +35,11 @@
     <Setting Name="HistoricalRecordExcelFilePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">Select Excel file path</Value>
     </Setting>
+    <Setting Name="BlastingInventoryExcelFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select Excel file path</Value>
+    </Setting>
+    <Setting Name="BlastingInventoryCSVFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Select CSV file path</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
